@@ -45,6 +45,7 @@ shinyUI(
 						 							 # load Javascript snippet to parse the query string.
 						 							 #tags$script(includeScript("www/js/parse_input.js")),
 						 							 tags$head(includeScript("www/js/google-analytics.js")),
+						 							 tags$head(HTML("<script async type='text/javascript' src='https://dap.digitalgov.gov/Universal-Federated-Analytics-Min.js?agency=HHS&subagency=NCI' id='_fed_an_ua_tag'> </script>")),
 						 							 tags$head(
 						 								 tags$style(HTML(paste0("
 															 .rChart {
