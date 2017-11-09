@@ -613,17 +613,17 @@ shinyServer(function(input, output, session) {
                      DT::dataTableOutput("patternComparison"))
 
 		#if(input$hasRCharts == "TRUE") {
-		if (FALSE) {
-			tsPanel <- tabsetPanel(type="tabs",
-									#tabPanel("Plot Data", htmlOutput("genUrl"), showOutput("rCharts", "highcharts")),
-									tabPanel("Plot Data", showOutput("rCharts", "highcharts")),
-									tab1, tab2, tab3
-			)
-		} else {
+#		if (FALSE) {
+#			tsPanel <- tabsetPanel(type="tabs",
+#									#tabPanel("Plot Data", htmlOutput("genUrl"), showOutput("rCharts", "highcharts")),
+#									tabPanel("Plot Data", showOutput("rCharts", "highcharts")),
+#									tab1, tab2, tab3
+#			)
+#		} else {
 			plotPanel <- tabPanel("Plot Data", plotlyOutput("rChartsAlternative", width = plotWidth, height = plotHeight),
 														br(), br(), p("Plot point tooltips provide additional information."))
 			tsPanel <- tabsetPanel(plotPanel, tab1, tab2, tab3)
-		}
+#		}
 
 		return(tsPanel)
 	})

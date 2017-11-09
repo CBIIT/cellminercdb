@@ -8,7 +8,8 @@ regressionModelsInput <- function(id, dataSourceChoices) {
 					 		sidebarPanel(
 					 			width=3, 
 					 			tags$div(
-					 				id="rm_input_container", 
+					 				id="rm_input_container",
+					 				tags$a(id="skiplink"),
 					 				selectInput(ns("dataset"), "Dataset", choices=dataSourceChoices, selected = "nci60"),
 					 				uiOutput(ns("responseDataTypeUi")),
 					 				textInput(ns("responseId"), "Response ID:", "topotecan"),

@@ -24,16 +24,18 @@ metaChoices <- setNames(names(metaConfig),
 												vapply(metaConfig, function(x) { x[["displayName"]] }, 
 															 character(1)))
 
-if("rCharts" %in% installed.packages()) {
-	options(RCHART_LIB='highcharts')	
-	library(rCharts)
-	hasRCharts <- TRUE
-} else {
-	hasRCharts <- FALSE
-}
+#if("rCharts" %in% installed.packages()) {
+#	options(RCHART_LIB='highcharts')	
+#	library(rCharts)
+#	hasRCharts <- TRUE
+#} else {
+#	hasRCharts <- FALSE
+#}
 ## ---
 
 shinyUI(
+  fluidPage(
+  tags$a(href="#skiplink","Skip over navigation",style="font-size: 10px"),
 	navbarPage(appTitle, 
 						 inverse=FALSE,
 						 header = list(tags$head(includeCSS("www/css/hacks.css")),
@@ -45,17 +47,18 @@ shinyUI(
 						 							 # load Javascript snippet to parse the query string.
 						 							 #tags$script(includeScript("www/js/parse_input.js")),
 						 							 tags$head(includeScript("www/js/google-analytics.js")),
-						 							 tags$head(HTML("<script async type='text/javascript' src='https://dap.digitalgov.gov/Universal-Federated-Analytics-Min.js?agency=HHS&subagency=NCI' id='_fed_an_ua_tag'> </script>")),
-						 							 tags$head(
-						 								 tags$style(HTML(paste0("
-															 .rChart {
-												  		 display: block;
-												  		 margin-left: auto; 
-												  		 margin-right: auto;
-												  		 width: ", plotWidth, "px;
-												  		 height: ", plotHeight, "px;
-														 }")))
-													 )),
+						 							 tags$head(HTML("<script async type='text/javascript' src='https://dap.digitalgov.gov/Universal-Federated-Analytics-Min.js?agency=HHS&subagency=NCI' id='_fed_an_ua_tag'> </script>"))
+						 							# tags$head(
+						 							#	 tags$style(HTML(paste0("
+													#		 .rChart {
+												  #		 display: block;
+												  #		 margin-left: auto; 
+												  #		 margin-right: auto;
+												  #		 width: ", plotWidth, "px;
+												  #		 height: ", plotHeight, "px;
+													#	 }")))
+													#)
+													 ),
 		#------[NavBar Tab: Univariate Analyses]---------------------------------------------------------
 		tabPanel("Univariate Analyses",
 			fluidPage(
@@ -64,7 +67,8 @@ shinyUI(
 	        sidebarPanel(
 	        	width=3, 
 	        	tags$div(
-	          	id="input_container", 
+	        	  id="input_container",
+	        	  tags$a(id="skiplink"),
 	            selectInput("xDataset", "x-Axis Dataset", choices=dataSourceChoices, selected = "nci60"),
 	            uiOutput("xPrefixUi"),
 	            textInput("xId", "ID: (e.g. topotecan or SLFN11)", "SLFN11"),
@@ -79,10 +83,11 @@ shinyUI(
 
 	          	radioButtons("tissueSelectionMode", "Select Tissues", c("Include", "Exclude")),
 	          	uiOutput("selectTissuesUi"),
-	            uiOutput("showColorTissuesUi"),
+	            uiOutput("showColorTissuesUi")
 	            
 	            # Generate a hidden input with TRUE or FALSE if rCharts is installed
-	        		tags$input(id="hasRCharts", type="text", value=hasRCharts, style="display:none")
+	          	#tags$label("hasRCharts"),
+	        		#tags$input(id="hasRCharts", type="text", value=hasRCharts, style="display:none")
 	        	)
 	        ),
         mainPanel(
@@ -101,6 +106,7 @@ shinyUI(
 						 			width=3, 
 						 			tags$div(
 						 				id="input_container", 
+						 				tags$a(id="skiplink"),
 						 				selectInput("mdataSource", "Data Source", choices=metaChoices, selected = "nci60")
 						 				#uiOutput(""),
 						 			)
@@ -114,9 +120,12 @@ shinyUI(
 		), #end tabPane 
 		#-----[NavBar Tab: About]------------------------------------------------------------------------
     tabPanel("About",
+             tags$a(id="skiplink"),
     	includeMarkdown("www/files/about.md")
     	#h1("For testing"),
     	#textOutput("ipAddress")
     )
 	)
+ # tags$a(id="skiplink")
+  )
 )
