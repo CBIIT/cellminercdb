@@ -2,6 +2,17 @@
 regressionModelsInput <- function(id, dataSourceChoices) {
 	# Create a namespace function using the provided id
 	ns <- NS(id)
+	voptions = "";
+	for(y in 1:length(dataSourceChoices)){
+	  if (dataSourceChoices[y]=="nci60")
+	  {
+	    voptions =  paste0(voptions,"<option value=",dataSourceChoices[y]," selected>",names(dataSourceChoices)[y],"</option>;")
+	  }
+	  else
+	  {
+	    voptions =  paste0(voptions,"<option value=",dataSourceChoices[y],">",names(dataSourceChoices)[y],"</option>;");
+	  }
+	}
 	tabPanel("Regression Models",
 					 fluidPage(
 					 	sidebarLayout(
@@ -10,7 +21,10 @@ regressionModelsInput <- function(id, dataSourceChoices) {
 					 			tags$div(
 					 				id="rm_input_container",
 					 				tags$a(id="skiplink"),
-					 				selectInput(ns("dataset"), "Dataset", choices=dataSourceChoices, selected = "nci60"),
+					 				#selectInput(ns("dataset"), "Dataset", choices=dataSourceChoices, selected = "nci60"),
+					 				HTML(
+					 				  paste("<label class='control-label' for=",ns("dataset"),">Dataset</label>","<select id=",ns("dataset"),">",voptions,"</select>")
+					 				),
 					 				uiOutput(ns("responseDataTypeUi")),
 					 				textInput(ns("responseId"), "Response ID:", "topotecan"),
 					 				uiOutput(ns("predDataTypesUi")),
@@ -20,9 +34,12 @@ regressionModelsInput <- function(id, dataSourceChoices) {
 					 				textInput(ns("predIds"), "Predictor IDS: (Case-Sensitive, e.g. SLFN11 BPTF)", "SLFN11 BPTF"),
 					 				radioButtons(ns("tissueSelectionMode"), "Select Tissues", c("Include", "Exclude")),
 					 				uiOutput(ns("selectTissuesUi")),
-					 				selectInput(ns("algorithm"), "Algorithm", 
-					 										choices=c("Linear Regression", "Lasso"), 
-					 										selected = "Linear Regression"),
+					 				#selectInput(ns("algorithm"), "Algorithm", 
+					 				#						choices=c("Linear Regression", "Lasso"), 
+					 				#					selected = "Linear Regression"),
+					 				HTML(
+					 				  paste("<label class='control-label' for=",ns("algorithm"),">Algorithm</label>","<select id=",ns("algorithm"),"><option selected>Linear Regression</option><option>Lasso</option></select>")
+					 				),
 					 				# Only show these panels if selected algorithm is Lasso.
 					 				conditionalPanel(
 					 					# condition must be a Javascript expression.

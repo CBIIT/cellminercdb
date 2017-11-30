@@ -602,13 +602,20 @@ shinyServer(function(input, output, session) {
 		tab3 <- tabPanel("Compare Patterns",
 										 includeMarkdown("www/files/help.md"),
 										 fluidRow(
-                     	column(3, selectInput("patternComparisonType", "Pattern Comparison",
-                                 						choices=c("Molecular Data"="molData", "Drug Data"="drug"), 
-                     												selected="molData")),
-										 	column(3, selectInput("patternComparisonSeed", "With Respect to",
-										 												choices=c("x-Axis Entry"="xPattern", 
-										 																	"y-Axis Entry"="yPattern"), 
-										 												selected="xPattern"))
+                     	#column(3, selectInput("patternComparisonType", "Pattern Comparison",
+                      #           						choices=c("Molecular Data"="molData", "Drug Data"="drug"), 
+                     	#											selected="molData")),
+                     	
+                     	column(3, HTML(
+                     	  paste("<label class='control-label' for='patternComparisonType'>Pattern Comparison</label>","<select id='patternComparisonType'><option value='moldata' selected>Molecular Data</option><option value='drug'>Drug Data</option></select>")
+                     	)),
+										 	#column(3, selectInput("patternComparisonSeed", "With Respect to",
+										 	#											choices=c("x-Axis Entry"="xPattern", 
+										 	#																"y-Axis Entry"="yPattern"), 
+										 	#											selected="xPattern"))
+										 	column(3, HTML(
+										 	  paste("<label class='control-label' for='patternComparisonSeed'>With Respect to</label>","<select id='patternComparisonSeed'><option value='xPattern' selected>x-Axis Entry</option><option value='yPattern'>y-Axis Entry</option></select>")
+										 	))
 										 ),
                      DT::dataTableOutput("patternComparison"))
 
@@ -705,7 +712,21 @@ shinyServer(function(input, output, session) {
   	if ((is.null(selectedPrefix)) || (!(selectedPrefix %in% prefixChoices))){
   		selectedPrefix <- srcContent[[input$xDataset]][["defaultFeatureX"]]
   	}
-  	selectInput("xPrefix", "x-Axis Type", choices = prefixChoices, selected = selectedPrefix)
+  	opt = "";
+  	for(y in 1:length(prefixChoices)){
+  	  if (prefixChoices[y]==selectedPrefix)
+  	  {
+  	    opt =  paste0(opt,"<option value=",prefixChoices[y]," selected>",names(prefixChoices)[y],"</option>;")
+  	  }
+  	  else
+  	  {
+  	    opt =  paste0(opt,"<option value=",prefixChoices[y],">",names(prefixChoices)[y],"</option>;");
+  	  }
+  	}
+  	# selectInput("xPrefix", "x-Axis Type", choices = prefixChoices, selected = selectedPrefix)
+  	HTML(
+  	  paste("<label class='control-label' for='xPrefix'>x-Axis Type</label>","<select id='xPrefix'>",opt,"</select>")
+  	)
   })
 
   output$yPrefixUi <- renderUI({
@@ -715,7 +736,21 @@ shinyServer(function(input, output, session) {
   	if ((is.null(selectedPrefix)) || (!(selectedPrefix %in% prefixChoices))){
   		selectedPrefix <- srcContent[[input$yDataset]][["defaultFeatureY"]]
   	}
-  	selectInput("yPrefix", "y-Axis Type", choices = prefixChoices, selected = selectedPrefix)
+  	opt = "";
+  	for(y in 1:length(prefixChoices)){
+  	  if (prefixChoices[y]==selectedPrefix)
+  	  {
+  	    opt =  paste0(opt,"<option value=",prefixChoices[y]," selected>",names(prefixChoices)[y],"</option>;")
+  	  }
+  	  else
+  	  {
+  	    opt =  paste0(opt,"<option value=",prefixChoices[y],">",names(prefixChoices)[y],"</option>;");
+  	  }
+  	}
+  	#selectInput("yPrefix", "y-Axis Type", choices = prefixChoices, selected = selectedPrefix)
+  	HTML(
+  	  paste("<label class='control-label' for='yPrefix'>y-Axis Type</label>","<select id='yPrefix'>",opt,"</select>")
+  	)
   })
   
   output$xAxisRangeUi <- renderUI({
@@ -776,13 +811,37 @@ shinyServer(function(input, output, session) {
   	tissueToSamplesMap <- srcContent[[input$xDataset]][["tissueToSamplesMap"]]
   	tissueTypes <- sort(unique(names(tissueToSamplesMap)))
   	
+  	#if (input$tissueSelectionMode == "Include"){
+  	#	selectInput("selectedTissues", label = NULL, choices=c("all", tissueTypes),
+  	#							multiple=TRUE, selected="all")
+  	#} else{ # input$tissueSelectionMode == "Exclude"
+  	#	selectInput("selectedTissues", label = NULL, choices=c("none", tissueTypes),
+  	#							multiple=TRUE, selected="none")
+  	#}
+  	
+  	## new code
   	if (input$tissueSelectionMode == "Include"){
-  		selectInput("selectedTissues", label = NULL, choices=c("all", tissueTypes),
-  								multiple=TRUE, selected="all")
+  	       choices=c("all", tissueTypes); mysel="all"
+  	              
   	} else{ # input$tissueSelectionMode == "Exclude"
-  		selectInput("selectedTissues", label = NULL, choices=c("none", tissueTypes),
-  								multiple=TRUE, selected="none")
+  	       choices=c("none", tissueTypes); mysel="none"
   	}
+  	opt = "";
+  	for(y in 1:length(choices)){
+  	  # style works only for browser Chrome
+  	  if (choices[y]==mysel)
+  	  {
+  	    opt =  paste0(opt,"<option style='white-space: pre-wrap' selected>",choices[y],"</option>;");
+  	  }
+  	  else {
+  	  opt =  paste0(opt,"<option style='white-space: pre-wrap'>",choices[y],"</option>;");
+  	  }
+  	}
+  	HTML(
+  	  paste("<label class='control-label' for='selectedTissues'>Which ones?</label>","<select id='selectedTissues' style='word-wrap:break-word; width: 100%;' multiple>",opt,"</select>")
+  	)
+  	
+  	## 
   })
 
   output$showColorTissuesUi <- renderUI({
@@ -792,8 +851,15 @@ shinyServer(function(input, output, session) {
   		dataSource = input$xDataset, 
   		srcContent = srcContentReactive()
   		) 
-  	selectInput("showColorTissues", "Tissues to Color",
-  							choices = tissueChoices, multiple = TRUE)
+  	opt = "";
+  	for(y in 1:length(tissueChoices)){
+  	    # style works only for browser Chrome
+  	    opt =  paste0(opt,"<option style='white-space: pre-wrap'>",tissueChoices[y],"</option>;");
+  	}
+  	HTML(
+  	  paste("<label class='control-label' for='showColorTissues'>Tissues to Color</label>","<select id='showColorTissues' style='word-wrap:break-word; width: 100%;' multiple>",opt,"</select>")
+  	)
+  	# selectInput("showColorTissues", "Tissues to Color",choices = tissueChoices, multiple = TRUE)
 	})
   
   output$ipAddress <- renderText({

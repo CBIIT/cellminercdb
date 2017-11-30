@@ -19,11 +19,34 @@ if (!is.null(appConfig$appName)){
 dataSourceChoices <- setNames(names(config),
 															vapply(config, function(x) { x[["displayName"]] }, 
 																		 character(1)))
+options = "";
+for(y in 1:length(dataSourceChoices)){
+  if (dataSourceChoices[y]=="nci60")
+  {
+    options =  paste0(options,"<option value=",dataSourceChoices[y]," selected>",names(dataSourceChoices)[y],"</option>;")
+  }
+  else
+   {
+   options =  paste0(options,"<option value=",dataSourceChoices[y],">",names(dataSourceChoices)[y],"</option>;");
+   }
+  }
 
+#print(options)
 metaChoices <- setNames(names(metaConfig),
 												vapply(metaConfig, function(x) { x[["displayName"]] }, 
 															 character(1)))
 
+metaoptions = "";
+for(y in 1:length(metaChoices)){
+  if (metaChoices[y]=="nci60")
+  {
+    metaoptions =  paste0(metaoptions,"<option value=",metaChoices[y]," selected>",names(metaChoices)[y],"</option>;")
+  }
+  else
+  {
+    metaoptions =  paste0(metaoptions,"<option value=",metaChoices[y],">",names(metaChoices)[y],"</option>;");
+  }
+}
 #if("rCharts" %in% installed.packages()) {
 #	options(RCHART_LIB='highcharts')	
 #	library(rCharts)
@@ -69,13 +92,19 @@ shinyUI(
 	        	tags$div(
 	        	  id="input_container",
 	        	  tags$a(id="skiplink"),
-	            selectInput("xDataset", "x-Axis Dataset", choices=dataSourceChoices, selected = "nci60"),
-	            uiOutput("xPrefixUi"),
+	            #selectInput("xDataset", "x-Axis Dataset", choices=dataSourceChoices, selected = "nci60"),
+	        	  HTML(
+	        	    paste("<label class='control-label' for='xDataset'>x-Axis Dataset</label>","<select id='xDataset'>",options,"</select>")
+	        	  ),
+	        	  uiOutput("xPrefixUi"),
 	            textInput("xId", "ID: (e.g. topotecan or SLFN11)", "SLFN11"),
 	          	uiOutput("xAxisRangeUi"),
 	          	
-	            selectInput("yDataset", "y-Axis Dataset", choices=dataSourceChoices, selected = "nci60"),
-	            uiOutput("yPrefixUi"),
+	            #selectInput("yDataset", "y-Axis Dataset", choices=dataSourceChoices, selected = "nci60"),
+	        	  HTML(
+	        	    paste("<label class='control-label' for='yDataset'>y-Axis Dataset</label>","<select id='yDataset'>",options,"</select>")
+	        	  ),
+	        	  uiOutput("yPrefixUi"),
 	          	textInput("yId", "ID: (e.g. topotecan or SLFN11)", "topotecan"),
 	          	uiOutput("yAxisRangeUi"),
 	          	
@@ -107,7 +136,10 @@ shinyUI(
 						 			tags$div(
 						 				id="input_container", 
 						 				tags$a(id="skiplink"),
-						 				selectInput("mdataSource", "Data Source", choices=metaChoices, selected = "nci60")
+						 				#selectInput("mdataSource", "Data Source", choices=metaChoices, selected = "nci60")
+						 				HTML(
+						 				  paste("<label class='control-label' for='mdataSource'>Data Source</label>","<select id='mdataSource'>",metaoptions,"</select>")
+						 				)
 						 				#uiOutput(""),
 						 			)
 						 		), #end sidebarPanel
