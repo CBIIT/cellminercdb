@@ -725,7 +725,7 @@ shinyServer(function(input, output, session) {
   	}
   	# selectInput("xPrefix", "x-Axis Type", choices = prefixChoices, selected = selectedPrefix)
   	HTML(
-  	  paste("<label class='control-label' for='xPrefix'>x-Axis Type</label>","<select id='xPrefix'>",opt,"</select>")
+  	  paste("<label class='control-label' for='xPrefix'>x-Axis Type</label>","<select id='xPrefix' style='word-wrap:break-word; width: 100%;'>",opt,"</select>")
   	)
   })
 
@@ -749,7 +749,7 @@ shinyServer(function(input, output, session) {
   	}
   	#selectInput("yPrefix", "y-Axis Type", choices = prefixChoices, selected = selectedPrefix)
   	HTML(
-  	  paste("<label class='control-label' for='yPrefix'>y-Axis Type</label>","<select id='yPrefix'>",opt,"</select>")
+  	  paste("<label class='control-label' for='yPrefix'>y-Axis Type</label>","<select id='yPrefix' style='word-wrap:break-word; width: 100%;'>",opt,"</select>")
   	)
   })
   

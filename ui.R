@@ -58,8 +58,10 @@ for(y in 1:length(metaChoices)){
 
 shinyUI(
   fluidPage(
+  tags$html(lang="en"),  
   tags$a(href="#skiplink","Skip over navigation",style="font-size: 10px"),
-	navbarPage(appTitle, 
+   #navbarPage(h6(style="vertical-align:top;font-size: 24px;color: dodgerblue;",appTitle), 
+  	navbarPage(HTML("<p style='font-size: 24px;color: dodgerblue;'>", appTitle,"</p>"), 
 						 inverse=FALSE,
 						 header = list(tags$head(includeCSS("www/css/hacks.css")),
 						 							 #tags$head(includeCSS("www/css/tooltip.css")),
@@ -70,18 +72,33 @@ shinyUI(
 						 							 # load Javascript snippet to parse the query string.
 						 							 #tags$script(includeScript("www/js/parse_input.js")),
 						 							 tags$head(includeScript("www/js/google-analytics.js")),
-						 							 tags$head(HTML("<script async type='text/javascript' src='https://dap.digitalgov.gov/Universal-Federated-Analytics-Min.js?agency=HHS&subagency=NCI' id='_fed_an_ua_tag'> </script>"))
-						 							# tags$head(
-						 							#	 tags$style(HTML(paste0("
+						 							 tags$head(HTML("<script async type='text/javascript' src='https://dap.digitalgov.gov/Universal-Federated-Analytics-Min.js?agency=HHS&subagency=NCI' id='_fed_an_ua_tag'> </script>")),
+						 							 tags$head(
+						 							   tags$style(type="text/css", ".irs-grid-text { font-size: 8pt;color: black; }",
+						 							              ".irs-min { font-size: 8pt; background: white; }", ".irs-max { font-size: 8pt; background: white;}",
+						 							              ".irs-from { font-size: 8pt; color: black;background: white;}", ".irs-to { font-size: 8pt;  color: black;background: white;}"
+						 							              )
+						 							 ),
+						 							 tags$head(
+						 								 tags$style(HTML(
+						 							#paste0("
 													#		 .rChart {
 												  #		 display: block;
 												  #		 margin-left: auto; 
 												  #		 margin-right: auto;
 												  #		 width: ", plotWidth, "px;
 												  #		 height: ", plotHeight, "px;
-													#	 }")))
-													#)
+													#	 }"))
+						 								   #paste0(".navbar-header { font-size: 32px;
+                              	#		 }")
+						 								   paste0(".navbar-nav { font-size: 24px; color: black}")
+						 								 )
+													
+													
+													   )
+													 )
 													 ),
+		#background-color: blue; font-color: white;
 		#------[NavBar Tab: Univariate Analyses]---------------------------------------------------------
 		tabPanel("Univariate Analyses",
 			fluidPage(
@@ -145,7 +162,8 @@ shinyUI(
 						 		), #end sidebarPanel
 						 		mainPanel(
 						 			uiOutput('metadataPanel'),
-						 			h4(htmlOutput('sourceLink'))
+						 			#h4(htmlOutput('sourceLink'))
+						 			htmlOutput('sourceLink')
 						 		)
 						 	)
 						 ) #end fluidPage

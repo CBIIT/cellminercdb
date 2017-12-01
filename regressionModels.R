@@ -38,7 +38,7 @@ regressionModelsInput <- function(id, dataSourceChoices) {
 					 				#						choices=c("Linear Regression", "Lasso"), 
 					 				#					selected = "Linear Regression"),
 					 				HTML(
-					 				  paste("<label class='control-label' for=",ns("algorithm"),">Algorithm</label>","<select id=",ns("algorithm"),"><option selected>Linear Regression</option><option>Lasso</option></select>")
+			   		 				  paste("<br><label class='control-label' for=",ns("algorithm"),">Algorithm</label>","<select id=",ns("algorithm"),"><option selected>Linear Regression</option><option>Lasso</option></select>")
 					 				),
 					 				# Only show these panels if selected algorithm is Lasso.
 					 				conditionalPanel(
@@ -1042,18 +1042,50 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 	output$responseDataTypeUi <- renderUI({
 		ns <- session$ns
 		srcContent <- srcContentReactive()
-		selectInput(ns("responseDataType"), "Response Data Type",
-								choices  = srcContent[[input$dataset]][["featurePrefixes"]],
-								selected = srcContent[[input$dataset]][["defaultFeatureY"]])
+		#selectInput(ns("responseDataType"), "Response Data Type",
+		#						choices  = srcContent[[input$dataset]][["featurePrefixes"]],
+		#						selected = srcContent[[input$dataset]][["defaultFeatureY"]])
+		vopt = "";
+		choices  = srcContent[[input$dataset]][["featurePrefixes"]]
+		mych= srcContent[[input$dataset]][["defaultFeatureY"]]
+		for(y in 1:length(choices)){
+		  if (choices[y]==mych)
+		  {
+		    vopt =  paste0(vopt,"<option value=",choices[y]," selected>",names(choices)[y],"</option>;")
+		  }
+		  else
+		  {
+		    vopt =  paste0(vopt,"<option value=",choices[y],">",names(choices)[y],"</option>;");
+		  }
+		}
+		HTML(
+		  paste("<label class='control-label' for=",ns("responseDataType"),">Response Data Type</label>","<select id=",ns("responseDataType"),"style='word-wrap:break-word; width: 100%;' >",vopt,"</select>")
+		)
 	})
 	
 	output$predDataTypesUi <- renderUI({
 		ns <- session$ns
 		srcContent <- srcContentReactive()
-		selectInput(ns("predDataTypes"), "Predictor Data Types",
-								choices  = srcContent[[input$dataset]][["featurePrefixes"]],
-								selected = srcContent[[input$dataset]][["defaultFeatureX"]],
-								multiple=TRUE)
+		#selectInput(ns("predDataTypes"), "Predictor Data Types",
+		#						choices  = srcContent[[input$dataset]][["featurePrefixes"]],
+		#						selected = srcContent[[input$dataset]][["defaultFeatureX"]],
+		#						multiple=TRUE)
+		vopt = ""
+		choices  = srcContent[[input$dataset]][["featurePrefixes"]]
+		mych= srcContent[[input$dataset]][["defaultFeatureX"]]
+		for(y in 1:length(choices)){
+		  if (choices[y]==mych)
+		  {
+		    vopt =  paste0(vopt,"<option value=",choices[y]," selected>",names(choices)[y],"</option>;")
+		  }
+		  else
+		  {
+		    vopt =  paste0(vopt,"<option value=",choices[y],">",names(choices)[y],"</option>;");
+		  }
+		}
+		HTML(
+		  paste("<label class='control-label' for=",ns("predDataTypes"),">Predictor Data Type</label>","<select id=",ns("predDataTypes"),"style='word-wrap:break-word; width: 100%;' multiple>",vopt,"</select>")
+		)
 	})
 	
 	output$selectTissuesUi <- renderUI({
@@ -1061,13 +1093,36 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 		srcContent <- srcContentReactive()
 		tissueTypes <- sort(unique(names(srcContent[[input$dataset]][["tissueToSamplesMap"]])))
 
+		#if (input$tissueSelectionMode == "Include"){
+		#	selectInput(ns("selectedTissues"), label = NULL, choices=c("all", tissueTypes),
+		#							multiple=TRUE, selected="all")
+		#} else{ # input$tissueSelectionMode == "Exclude"
+		#	selectInput(ns("selectedTissues"), label = NULL, choices=c("none", tissueTypes),
+		#							multiple=TRUE, selected="none")
+		#}
+		## new code
 		if (input$tissueSelectionMode == "Include"){
-			selectInput(ns("selectedTissues"), label = NULL, choices=c("all", tissueTypes),
-									multiple=TRUE, selected="all")
+		  choices=c("all", tissueTypes); mysel="all"
+		  
 		} else{ # input$tissueSelectionMode == "Exclude"
-			selectInput(ns("selectedTissues"), label = NULL, choices=c("none", tissueTypes),
-									multiple=TRUE, selected="none")
+		  choices=c("none", tissueTypes); mysel="none"
 		}
+		opt = "";
+		for(y in 1:length(choices)){
+		  # style works only for browser Chrome
+		  if (choices[y]==mysel)
+		  {
+		    opt =  paste0(opt,"<option style='white-space: pre-wrap' selected>",choices[y],"</option>;");
+		  }
+		  else {
+		    opt =  paste0(opt,"<option style='white-space: pre-wrap'>",choices[y],"</option>;");
+		  }
+		}
+		HTML(
+		  paste("<label class='control-label' for=",ns("selectedTissues"),">Which ones?</label>","<select id=",ns("selectedTissues")," style='word-wrap:break-word; width: 100%;' multiple>",opt,"</select>")
+		)
+		
+		## 
 	})
 	
 	output$selectInputGeneSetsUi <- renderUI({
