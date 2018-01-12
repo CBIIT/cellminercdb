@@ -642,7 +642,21 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 			pcResults <- rcellminer::parCorPatternComparison(x = responseVec,
 																											 Y = comparisonData,
 																											 Z = currentPredictorData,
-																											 updateProgress = updateProgress)	
+																											 updateProgress = updateProgress)
+			pcResults$ANNOT <- ""
+			
+			for (i in seq_len(nrow(pcResults))){
+			  name <- rcellminer::removeMolDataType(pcResults[i, "NAME"])
+			  if (name %in% rownames(geneSetPathwayAnalysis::geneAnnotTab)){
+			    pcResults[i, "ANNOT"] <-  geneSetPathwayAnalysis::geneAnnotTab[name, "SHORT_ANNOT"]
+			  } 
+			}
+			pcResults$PARCOR <- round(pcResults$PARCOR, 3)
+			pcResults$PVAL   <- signif(pcResults$PVAL, 3)
+			
+			DT::datatable(pcResults, rownames=FALSE, colnames=colnames(pcResults), filter='top', 
+			              style='bootstrap', selection = "none",
+			              options=list(lengthMenu = c(10, 25, 50, 100), pageLength = 10))
 		}
 		
 		return(pcResults)
@@ -923,20 +937,20 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 	#----[Show Partial Correlation Results in 'Partial Correlations' Tab]-------------------
 	output$patternCompResults <- DT::renderDataTable({
 		pcResults <- parCorPatternCompResults()
-		pcResults$ANNOT <- ""
+		#pcResults$ANNOT <- ""
 		
-		for (i in seq_len(nrow(pcResults))){
-			name <- rcellminer::removeMolDataType(pcResults[i, "NAME"])
-			if (name %in% rownames(geneSetPathwayAnalysis::geneAnnotTab)){
-				pcResults[i, "ANNOT"] <-  geneSetPathwayAnalysis::geneAnnotTab[name, "SHORT_ANNOT"]
-			} 
-		}
-		pcResults$PARCOR <- round(pcResults$PARCOR, 3)
-		pcResults$PVAL   <- signif(pcResults$PVAL, 3)
+		#for (i in seq_len(nrow(pcResults))){
+		#	name <- rcellminer::removeMolDataType(pcResults[i, "NAME"])
+		#	if (name %in% rownames(geneSetPathwayAnalysis::geneAnnotTab)){
+		#		pcResults[i, "ANNOT"] <-  geneSetPathwayAnalysis::geneAnnotTab[name, "SHORT_ANNOT"]
+		#	} 
+		#}
+	#	pcResults$PARCOR <- round(pcResults$PARCOR, 3)
+	#	pcResults$PVAL   <- signif(pcResults$PVAL, 3)
 		
-		DT::datatable(pcResults, rownames=FALSE, colnames=colnames(pcResults), filter='top', 
-									style='bootstrap', selection = "none",
-									options=list(lengthMenu = c(10, 25, 50, 100), pageLength = 10))
+		# DT::datatable(pcResults, rownames=FALSE, colnames=colnames(pcResults), filter='top', 
+			#						style='bootstrap', selection = "none",
+			#						options=list(lengthMenu = c(10, 25, 50, 100), pageLength = 10))
 	})
 	
 	#----[Show Differential Expression Results in 'Differential Expression' Tab]-------------------
@@ -969,9 +983,48 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 	#----[Organize Above Tabs for Display]--------------------------------------------------
 	output$tabsetPanel = renderUI({
 		maxNumHiLoResponseLines <- 100
-		
-		# TABS: Plot, Cross-Validation, Data, Heatmap, Technical Details
 		ns <- session$ns
+		##
+		choices = c(names(geneSetPathwayAnalysis::geneSets), "All Genes")
+		# print(choices)
+		mysel = "All Gene Sets"
+		opt0 = ""
+		for(y in 1:length(choices)){
+		  # style works only for browser Chrome
+		  
+		  if (choices[y] == mysel)
+		  {
+		    opt0 =  paste0(opt0,"<option style='white-space: pre-wrap' selected>",choices[y],"</option>;");
+		  }
+		   else 
+		    {
+		    opt0 =  paste0(opt0,"<option style='white-space: pre-wrap'>",choices[y],"</option>;");
+		  }
+		}
+		## xx=paste0(opt0,"end")
+		## print(xx)
+		## print("*")
+		choices1 = srcContentReactive()[[input$dataset]][["featurePrefixes"]]
+		mysel1 = input$predDataTypes # could cause issue if NULL
+		opt1 = ""
+		for(k in 1:length(choices1)){
+		  # style works only for browser Chrome
+		  
+		  if (choices1[k] == mysel1)
+		  {
+		    opt1 =  paste0(opt1,"<option value=",choices1[k]," style='white-space: pre-wrap' selected>",names(choices1)[k],"</option>;");
+		  }
+		  else 
+		    {
+		    opt1 =  paste0(opt1,"<option value=",choices1[k]," style='white-space: pre-wrap'>",names(choices1)[k],"</option>;");
+		   }
+		}
+		## yy=paste0(opt1,"end")
+		## print(yy)
+		## print("**")
+		##
+		# TABS: Plot, Cross-Validation, Data, Heatmap, Technical Details
+		#ns <- session$ns
 		dataTabPanel <- tabPanel("Data", DT::dataTableOutput(ns("data")))
 		heatmapTabPanel <- tabPanel("Heatmap", 
 																sliderInput(ns("numHiLoResponseLines"), 
@@ -983,15 +1036,16 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 															    p("Select cell line or feature name to highlight heatmap columns or rows, respectively."))
 		techDetailsTabPanel <- tabPanel("Technical Details", verbatimTextOutput(ns("techDetails")))
 		diffExpTabPanel <- tabPanel("Differential Expression", 
-																selectInput(ns("deGeneSets"), "Select Gene Sets",
-																						choices  = c(names(geneSetPathwayAnalysis::geneSets), "All Genes"),
+																 selectInput(ns("deGeneSets"), "Select Gene Sets",
+																					 choices  = c(names(geneSetPathwayAnalysis::geneSets), "All Genes"),
 																						#choices = names(geneSetPathwayAnalysis::geneSets),
-																						selected = "All Gene Sets",
-																						multiple=TRUE),
+																				   selected = "All Gene Sets",
+																			     multiple=TRUE),
 																selectInput(ns("deDataTypes"), "Select Data Types",
-																						choices  = srcContentReactive()[[input$dataset]][["featurePrefixes"]],
-																						selected = input$predDataTypes,
-																						multiple=TRUE),
+																					choices  = srcContentReactive()[[input$dataset]][["featurePrefixes"]],
+																					selected = input$predDataTypes,
+																					multiple=TRUE),
+																
 																sliderInput(ns("minDiffExpDataValueRange"), 
 																						"Minimum Range (First Listed Data Type):", 
 																						min=0, max=5, value=0, step = 0.25),
@@ -1004,15 +1058,27 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 																tags$hr(),
 																DT::dataTableOutput(ns("enrichmentResults")))
 		patternCompTabPanel <- tabPanel("Partial Correlation", 
-																		selectInput(ns("pcGeneSets"), "Select Gene Sets",
-																								choices  = c(names(geneSetPathwayAnalysis::geneSets), "All Genes"),
+																		## selectInput(ns("pcGeneSets"), "Select Gene Sets",
+																		##						choices  = c(names(geneSetPathwayAnalysis::geneSets), "All Genes"),
 																								#choices = names(geneSetPathwayAnalysis::geneSets),
-																								selected = "All Gene Sets",
-																								multiple=TRUE),
-																		selectInput(ns("pcDataTypes"), "Select Data Types",
-																								choices  = srcContentReactive()[[input$dataset]][["featurePrefixes"]],
-																								selected = input$predDataTypes,
-																								multiple=TRUE),
+																		##						selected = "All Gene Sets",
+																		##						multiple=TRUE),
+																	 ##	selectInput(ns("pcDataTypes"), "Select Data Types",
+																		##						choices  = srcContentReactive()[[input$dataset]][["featurePrefixes"]],
+																		##						selected = input$predDataTypes,
+																		##						multiple=TRUE),
+																		##
+																		
+																		HTML(
+																		  paste("<label class='control-label' for=",ns("pcGeneSets"),">Select Gene Sets</label>","<select id=",ns("pcGeneSets")," style='word-wrap:break-word;' multiple>",opt0,"</select>")
+																		),
+																		#
+																		HTML("<br>"),
+																		HTML(
+																		  paste("<label class='control-label' for=",ns("pcDataTypes"),">Select Data Types</label>","<select id=",ns("pcDataTypes")," style='word-wrap:break-word;' multiple>",opt1,"</select>")
+																		),
+																		HTML("<br>"),
+																		##
 																		sliderInput(ns("minParCorDataValueRange"), 
 																								"Minimum Range (First Listed Data Type):", 
 																								min=0, max=5, value=0, step = 0.25),
@@ -1127,11 +1193,28 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 	
 	output$selectInputGeneSetsUi <- renderUI({
 		ns <- session$ns
-		selectInput(ns("inputGeneSets"), "Select Gene Sets",
+		## selectInput(ns("inputGeneSets"), "Select Gene Sets",
 								#choices  = c(names(geneSetPathwayAnalysis::geneSets), "All Genes"),
-								choices = names(geneSetPathwayAnalysis::geneSets),
-								selected = "All Gene Sets",
-								multiple=TRUE)
+			##					choices = names(geneSetPathwayAnalysis::geneSets),
+			##					selected = "All Gene Sets",
+			##					multiple=TRUE)
+		choices = names(geneSetPathwayAnalysis::geneSets)
+		mysel="All Gene Sets"
+		opt = "";
+		for(y in 1:length(choices)){
+		  # style works only for browser Chrome
+		  if (choices[y]==mysel)
+		  {
+		    opt =  paste0(opt,"<option style='white-space: pre-wrap' selected>",choices[y],"</option>;");
+		  }
+		  else {
+		    opt =  paste0(opt,"<option style='white-space: pre-wrap'>",choices[y],"</option>;");
+		  }
+		}
+		HTML(
+		  paste("<label class='control-label' for=",ns("inputGeneSets"),">Select Gene Sets</label>","<select id=",ns("inputGeneSets")," style='word-wrap:break-word; width: 100%;' multiple>",opt,"</select>")
+		)
+		
 	})
 	#--------------------------------------------------------------------------------------
 	
