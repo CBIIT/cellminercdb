@@ -27,7 +27,7 @@ CellMinerCDB integrates data from the following sources, which provide additiona
 * [NCI/DTP Small Cell Lung Cancer Project (SCLC)](https://sclccelllines.cancer.gov/sclc/)
 
 # Usage<a name="usage"></a>
-**For detailed instructions, please refer to our [video tutorial](https://youtu.be/WJ_A_kzxO-Y).**
+**For detailed instructions, please refer to our [video tutorial](https://www.youtube.com/watch?v=2HicAgcyJHI).**
 
 CellMinerCDB simplifies exploration of cancer cell line pharmacogenomic data from the above sources. Users can plot and more
 broadly interrelate molecular and drug activity profiling data, both within and across data sources.
