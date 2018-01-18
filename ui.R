@@ -164,7 +164,13 @@ shinyUI(
     	includeMarkdown("www/files/about.md")
     	#h1("For testing"),
     	#textOutput("ipAddress")
-    )
+    ),
+		tabPanel("Help",
+		         tags$a(id="skiplink"),
+		         includeMarkdown("www/files/guide.md")
+		         #h1("For testing"),
+		         #textOutput("ipAddress")
+		)
 	)
  # tags$a(id="skiplink")
   )
