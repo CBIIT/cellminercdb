@@ -449,36 +449,42 @@ shinyServer(function(input, output, session) {
   # Generate an HTML table view of the data
   # Note: Searchable data is derived from the x-axis data source.
 	output$ids <- DT::renderDataTable({
-		srcContent <- srcContentReactive()
-    drugIds   <- srcContent[[input$xDataset]][["drugInfo"]][, "ID"]
-    drugNames <- srcContent[[input$xDataset]][["drugInfo"]][, "NAME"]
-    moaNames  <- srcContent[[input$xDataset]][["drugInfo"]][, "MOA"]
-
-    results <- data.frame(availableIds = drugIds, idNames=drugNames, properties=moaNames,
-                          stringsAsFactors=FALSE)
-
-    # Make molecular data data.frame
-    molPharmData <- srcContent[[input$xDataset]][["molPharmData"]]
-    molData <- molPharmData[setdiff(names(molPharmData), "act")]
-    molDataIds <- as.vector(unlist(lapply(molData, function(x) { rownames(x) })))
-    molDataNames <- rep("", length(molDataIds))
-    moaNames <- rep("", length(molDataIds))
-
-    tmp <- data.frame(availableIds=molDataIds, idNames=molDataNames, properties=moaNames,
-                      stringsAsFactors=FALSE)
-
-    # Join data.frames
-    results <- rbind(results, tmp)
-
-    # Reverse Order
-    results <- results[rev(rownames(results)),]
-    colnames(results) <- c("ID", "Name", "Drug MOA")
-
-    DT::datatable(results, rownames=FALSE, colnames=colnames(results),
-    							filter='top', style='bootstrap', selection = "none",
-    							options=list(pageLength = 10))
-  })
-	#--------------------------------------------------------------------------------------
+	  srcContent <- srcContentReactive()
+	  drugIds   <- srcContent[[input$xDataset]][["drugInfo"]][, "ID"]
+	  drugNames <- srcContent[[input$xDataset]][["drugInfo"]][, "NAME"]
+	  moaNames  <- srcContent[[input$xDataset]][["drugInfo"]][, "MOA"]
+	  exptype <- rep("act", length(drugIds))
+	  
+	  results <- data.frame(availableTypes=exptype, availableIds = drugIds, idNames=drugNames, properties=moaNames,
+	                        stringsAsFactors=FALSE)
+	  
+	  # Make molecular data data.frame
+	  molPharmData <- srcContent[[input$xDataset]][["molPharmData"]]
+	  molData <- molPharmData[setdiff(names(molPharmData), "act")]
+	  molDataIds <- as.vector(unlist(lapply(molData, function(x) { rownames(x) })))
+	  
+	  exptype2 <- substr(molDataIds,1,3)
+	  molDataIds <- substr(molDataIds,4,nchar(molDataIds))
+	  
+	  molDataNames <- rep("", length(molDataIds))
+	  moaNames <- rep("", length(molDataIds))
+	  
+	  tmp <- data.frame(availableTypes=exptype2,availableIds=molDataIds, idNames=molDataNames, properties=moaNames,
+	                    stringsAsFactors=FALSE)
+	  
+	  # Join data.frames
+	  results <- rbind(results, tmp)
+	  
+	  # Reverse Order/ no need for reverse for me
+	  #results <- results[rev(rownames(results)),]
+	  
+	  colnames(results) <- c("Data type","ID ", "Drug Name", "Drug MOA")
+	  selsource=metaConfig[[input$xDataset]][["fullName"]]
+	  DT::datatable(results, rownames=FALSE, colnames=colnames(results),
+	                filter='top', style='bootstrap', selection = "none",
+	                options=list(pageLength = 10), caption=htmltools::tags$caption(paste0("Ids table for ",selsource),style="color:dodgerblue; font-size: 18px"))
+	})
+		#--------------------------------------------------------------------------------------
 
 	#----[Render Data Table in 'Compare Patterns' Tab]-------------------------------------
 	output$patternComparison <- DT::renderDataTable({
