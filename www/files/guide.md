@@ -56,8 +56,9 @@ Figure 3
 ![Screenshot of CellMinerCDB Application](files/Slide03.jpg)
 
 #### Search IDs<a name="search"></a>
-This option is defined to help users looking for identifiers (genes, drugs, etc.) relative to a data source (see figure below). Once the user specifies the data source in the x-axis dataset, all available features with their ID are displayed for all data types. The user can scroll down the whole list or can search by feature name or drug mode of action MOA. The user can filter the features list by entering the data type abbreviation or prefix (exp, act, …) in the ID field.
-Figure 4
+The purpose of this page is to list the identifiers (ID) that are available for comparison for the "x-Axis: Data set" chosen. Each Data set will have different types and amounts of data available.. For the molecular data, the Data type and gene names (ID) are provided. For the drugs and compounds, the Data type (activity), identifiers (ID),  Drug name (when available), and Drug MOA (when available) are displayed. For the NCI-60 and NCI/DTP SCLC, the drug identifiers (ID) are NSC's. For the CCLE, GTRP, and CTRP, the drug identifiers are the Drug names. The results  are displayed as a table with 4 columns: Data type, ID, Drug Name, and Drug MOA The user can scroll down the whole  list of IDs, or search specific ID(s) by entering a value in the header of any column or Search textbox. For instance, if the user is looking for NCI60 ID for the drug Topotecan, he needs to select "NCI60" as the x-axis dataset and type "topotecan" in header of column "Drug name". The user can limit the search to drug IDs by entering "act" in header of  column "Data type"
+See figure 4 below for example.
+
 ![Screenshot of CellMinerCDB Application](files/Slide04.jpg)
 
 #### Compare Patterns<a name="compare"></a>

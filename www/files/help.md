@@ -4,7 +4,7 @@ Here is the list of data types with 3 letters abbreviation and related identifie
 * DNA Mutation (**mut**), ID: gene name
 * RNA Expression using z-score (**exp**), ID: gene name
 * RNA Expression using Avg. log2 Intensity (**xai**), ID: gene name
-* RPLA Protein (**pro**), ID: rpla probe name
+* RPLA Protein (**pro**), ID: rpla gene name
 * MicroRNA (**mir**), ID: microRNA name
 * Metadata (**mda**), ID: metadata name
-* SWATH-MS Protein (**swa**), ID: swath probe name
+* SWATH-MS Protein (**swa**), ID: swath gene name
