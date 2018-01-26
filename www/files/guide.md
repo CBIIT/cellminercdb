@@ -5,6 +5,8 @@
   - [Plot Data](#plot)
   - [Download Data](#download)
   - [Search IDs](#search)
+      - [Drug IDs](#drugid)
+      - [Gene IDs](#geneid)
   - [Compare Patterns](#compare)
 -	[Regression Models](#regression)
   - [Heatmap](#heatmap)
@@ -56,9 +58,16 @@ Figure 3
 ![Screenshot of CellMinerCDB Application](files/Slide03.jpg)
 
 #### Search IDs<a name="search"></a>
-The purpose of this page is to list the identifiers (ID) that are available for comparison for the "x-Axis: Data set" chosen. Each Data set will have different types and amounts of data available.. For the molecular data, the Data type and gene names (ID) are provided. For the drugs and compounds, the Data type (activity), identifiers (ID),  Drug name (when available), and Drug MOA (when available) are displayed. For the NCI-60 and NCI/DTP SCLC, the drug identifiers (ID) are NSC's. For the CCLE, GTRP, and CTRP, the drug identifiers are the Drug names. The results  are displayed as a table with 4 columns: Data type, ID, Drug Name, and Drug MOA The user can scroll down the whole  list of IDs, or search specific ID(s) by entering a value in the header of any column or Search textbox. For instance, if the user is looking for NCI60 ID for the drug Topotecan, he needs to select "NCI60" as the x-axis dataset and type "topotecan" in header of column "Drug name". The user can limit the search to drug IDs by entering "act" in header of  column "Data type"
-See figure 4 below for example.
+The purpose of this page is to list the identifiers (ID) that are available for comparison for the "x-Axis: Data set" chosen. Each Data set will have different types and amounts of data available. For the molecular data, the Data type and gene names (ID) are provided. For the drugs and compounds, the Data type (activity), identifiers (ID),  Drug name (when available), and Drug MOA (when available) are displayed. The results  are displayed as a table with 4 columns: Data type, ID, Drug Name, and Drug MOA The user can scroll down the whole  list of IDs, or search specific ID(s) by entering a value in the header of any column or Search textbox. For instance, if the user is looking for NCI60 ID for the drug Topotecan, he needs to select "NCI60" as the x-axis dataset and type "topotecan" in header of column "Drug name". The user can limit the search to drug IDs by entering "act" in header of  column "Data type". See figure 4 below for example.
 
+#### Drug IDs<a name="drugid"></a>
+For the NCI-60 and NCI/DTP SCLC, the drug identifiers (ID) are NSC's. For the CCLE, GTRP, and CTRP, the drug identifiers are the Drug names.
+
+#### Gene IDs<a name="geneid"></a>
+For all data sources, the gene ID is the gene name (Hugo name)
+
+
+Figure 4
 ![Screenshot of CellMinerCDB Application](files/Slide04.jpg)
 
 #### Compare Patterns<a name="compare"></a>
