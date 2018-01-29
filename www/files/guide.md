@@ -4,9 +4,6 @@
 -	[Univariate Analyses](#univariate)
   - [Plot Data](#plot)
   - [Download Data](#download)
-  - [Search IDs](#search)
-      - [Drug IDs](#drugid)
-      - [Gene IDs](#geneid)
   - [Compare Patterns](#compare)
 -	[Regression Models](#regression)
   - [Heatmap](#heatmap)
@@ -16,6 +13,9 @@
   - [Technical Details](#details)
   - [Partial correlations](#partialcorr)
 -	[Metadata](#metadata)
+- [Search IDs](#search)
+      - [Drug IDs](#drugid)
+      - [Gene IDs](#geneid)
 -	[About](#about)
 -	[Navigation guide](#navigation)
   - [Multiple selection](#multiple)
@@ -57,24 +57,12 @@ Figure 3 below shows the selected values for SLFN11 gene expression (x-axis) and
 Figure 3
 ![Screenshot of CellMinerCDB Application](files/Slide03.jpg)
 
-#### Search IDs<a name="search"></a>
-The purpose of this page is to list the identifiers (ID) that are available for comparison for the "x-Axis: Data set" chosen. Each Data set will have different types and amounts of data available. For the molecular data, the Data type and gene names (ID) are provided. For the drugs and compounds, the Data type (activity), identifiers (ID),  Drug name (when available), and Drug MOA (when available) are displayed. The results  are displayed as a table with 4 columns: Data type, ID, Drug Name, and Drug MOA The user can scroll down the whole  list of IDs, or search specific ID(s) by entering a value in the header of any column or Search textbox. For instance, if the user is looking for NCI60 ID for the drug Topotecan, he needs to select "NCI60" as the x-axis dataset and type "topotecan" in header of column "Drug name". The user can limit the search to drug IDs by entering "act" in header of  column "Data type". See figure 4 below for example.
-
-#### Drug IDs<a name="drugid"></a>
-For the NCI-60 and NCI/DTP SCLC, the drug identifiers (ID) are NSC's. For the CCLE, GTRP, and CTRP, the drug identifiers are the Drug names.
-
-#### Gene IDs<a name="geneid"></a>
-For all data sources, the gene ID is the gene name (Hugo name)
-
-
-Figure 4
-![Screenshot of CellMinerCDB Application](files/Slide04.jpg)
 
 #### Compare Patterns<a name="compare"></a>
 This option allows one to compute the correlation between a feature from a data source with either all drug data or all molecular data from the same source. Pearson’s correlations are provided, with reported p-values not adjusted for multiple comparisons. This could be used to identify highly co-correlated features with useful information such as target pathway for genes and mode of action for drugs. The first step is to fill the x-axis, y-axis or tissue information (or keep current information if no change – see plot data section). The next step is to choose the data source from the x-axis or y-axis dataset and finally you select either drug or molecular features to compare with. Once done, a table will display all Pearson correlation value between the selected feature (in the left panel) and all features selected (in main panel). 
 
 The following figure shows correlation results for SLFN11 gene with all other molecular features for all NCI60 datasets sorted by correlation value with gene location and target pathways (annotation field).
-Figure 5
+Figure 4
 ![Screenshot of CellMinerCDB Application](files/Slide05.jpg)
 
 # Regression Models<a name="regression"></a>
@@ -100,31 +88,31 @@ Once all the above information is entered, a regression model is built and the r
 
 #### Heatmap<a name="heatmap"></a>
 This option provides the observed response and predictor variables across all source cell lines in an interactive heatmap. The user can restrict the number of cell lines to those that have the highest or lowest response values. The following figure shows a heatmap where we selected topotecan as a response variable and SLFLN11 and BPTF gene expression as predictor variables. We chose to display only 40 cell lines that have the most 20 highest and 20 lowest values for topotecan activity.
-Figure 6
+Figure 5
 ![Screenshot of CellMinerCDB Application](files/Slide06.jpg)
 
 In case, the Lasso algorithm is selected	more predicted variables are shown based on model result as shown below (STK17B and ABCD3 new genes added)
-Figure 7
+Figure 6
 ![Screenshot of CellMinerCDB Application](files/Slide07.jpg)
 
 #### Data<a name="data"></a>
 This option shows the detailed data for the model variables for each cell line as well as the predicted and cross-validation (10-fold cross validation) predicted responses. The data is displayed as a table with filtering options for each column. You can see below, the data related to the simple linear regression model presented in the previous section.
-Figure 8
+Figure 7
 ![Screenshot of CellMinerCDB Application](files/Slide08.jpg)
 
 #### Plot<a name="plotpred"></a>
 This option enables one to plot and compare the observed response values versus the predicted response values. The figure below shows a plot comparing Topotecan observed vs. predicted activity with high correlation value of 0.84
-Figure 9
+Figure 8
 ![Screenshot of CellMinerCDB Application](files/Slide09.jpg)
 
 #### Cross-Validation<a name="cv"></a>
 This option enables to plot the observed response values versus the 10-fold cross-validation predicted response values and assess model generalization beyond the training data. The figure below shows a plot comparing Topotecan observed vs. cross-validation predicted activity with still high correlation value of 0.82
-Figure 10
+Figure 9
 ![Screenshot of CellMinerCDB Application](files/Slide10.jpg)
 
 #### Technical Details<a name="details"></a>
 This option enables to view the R statistical and other technical details related to the constructed response model. Below is an example of regular regression model fitting results.
-Figure 11
+Figure 10
 ![Screenshot of CellMinerCDB Application](files/Slide11.jpg)
 
 #### Partial correlations<a name="partialcorr"></a>
@@ -134,13 +122,27 @@ In order to run a partial correlation analysis, the user should first construct 
 -	Data types: the user can select one or more data type such as gene expression, methylation or copy number variation (step 6 in figure)
 -	And optionally, minimum range for the first listed data type (step 7 in figure)
 And finally click on button run (step 8 in figure). A table with partial correlation results for all candidate variables with gene sets annotation
-Figure 12
+Figure 11
 ![Screenshot of CellMinerCDB Application](files/Slide12.jpg)
 
 # Metadata<a name="metadata"></a>
 This option enumerates for each data source, the available data types that could be queried within the app providing the data type abbreviation or prefix, description, feature value unit (z-score, intensity, probability …), platform or experiment and related publication reference (pubmed). The following figure shows all data types for NCI60.
-Figure 13
+Figure 12
 ![Screenshot of CellMinerCDB Application](files/Slide13.jpg)
+#### Search IDs<a name="search"></a>
+This page lists the identifiers (ID) that are available for comparison for the selected "x-Axis: Dataset". Each Dataset has different types and amounts of data available. For the molecular data, the Data type and gene names (ID) are provided. For the drugs and compounds, the Data type (activity), identifiers (ID),  Drug name (when available), and Drug MOA (when available) are displayed. 
+The results  are displayed as a table with 4 columns: **Data type, ID, Drug Name, and Drug MOA** The user can scroll down the whole  list of IDs, or search specific ID(s) by entering a value in the header of any column or Search textbox. For instance, if the user is looking for NCI60 ID for the drug Topotecan, he needs to select "NCI60" as the x-axis dataset and type "topotecan" in header of column "Drug name". The user can limit the search to drug IDs by entering "act" in header of  column "Data type". See figure 13 below for example.
+
+#### Drug IDs<a name="drugid"></a>
+For the NCI-60 and NCI/DTP SCLC, the drug identifiers (ID) are NSC's or names. For the CCLE, GTRP, and CTRP, the drug identifiers are the Drug names.
+
+#### Gene IDs<a name="geneid"></a>
+For all data sources, the gene ID is the gene name (Hugo name)
+
+
+Figure 13
+![Screenshot of CellMinerCDB Application](files/Slide04.jpg)
+
 # About<a name="about"></a>
 The about option gives references to the data sources, main publications, collaborators and presents the group team as well as the contact information. (need to update the page) 
 Figure 14
