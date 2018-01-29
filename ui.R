@@ -158,8 +158,34 @@ shinyUI(
 						 	)
 						 ) #end fluidPage
 		), #end tabPane 
+		#-----[NavBar Tab: Metadata]---------------------------------------------------------------------
+		tabPanel("Search IDs",
+		         fluidPage(
+		           sidebarLayout(
+		             sidebarPanel(
+		               width=3,
+		               tags$div(
+		                 id="input_container",
+		                 tags$a(id="skiplink"),
+		                 #selectInput("mdataSource", "Data Source", choices=metaChoices, selected = "nci60")
+		                 HTML(
+		                   paste("<label class='control-label' for='dataSrc'>Data Source</label>","<select id='dataSrc'>",options,"</select>")
+		                 )
+		                 #uiOutput(""),
+		               )
+		             ), #end sidebarPanel
+		             mainPanel(
+		               includeMarkdown("www/files/help.md"),
+		               DT::dataTableOutput("ids2")
+	#	               uiOutput('searchPanel'),
+		               #h4(htmlOutput('sourceLink'))
+	 #              htmlOutput('sourceLink')
+		             )
+		           )
+		         ) #end fluidPage
+		), #end tabPane
 		#-----[NavBar Tab: About]------------------------------------------------------------------------
-    tabPanel("About",
+		   tabPanel("About",
              tags$a(id="skiplink"),
     	includeMarkdown("www/files/about.md")
     	#h1("For testing"),

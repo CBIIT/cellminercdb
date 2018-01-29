@@ -486,6 +486,48 @@ shinyServer(function(input, output, session) {
 	})
 		#--------------------------------------------------------------------------------------
 
+	#----[Render Data Table in 'SearchIDs' Tab]-------------------------------------------
+	# Generate an HTML table view of the data
+	# Note: Searchable data is derived from the x-axis data source.
+	output$ids2 <- DT::renderDataTable({
+	  srcContent <- srcContentReactive()
+	  drugIds   <- srcContent[[input$dataSrc]][["drugInfo"]][, "ID"]
+	  drugNames <- srcContent[[input$dataSrc]][["drugInfo"]][, "NAME"]
+	  moaNames  <- srcContent[[input$dataSrc]][["drugInfo"]][, "MOA"]
+	  exptype <- rep("act", length(drugIds))
+	  
+	  results <- data.frame(availableTypes=exptype, availableIds = drugIds, idNames=drugNames, properties=moaNames,
+	                        stringsAsFactors=FALSE)
+	  
+	  # Make molecular data data.frame
+	  molPharmData <- srcContent[[input$dataSrc]][["molPharmData"]]
+	  molData <- molPharmData[setdiff(names(molPharmData), "act")]
+	  molDataIds <- as.vector(unlist(lapply(molData, function(x) { rownames(x) })))
+	  
+	  exptype2 <- substr(molDataIds,1,3)
+	  molDataIds <- substr(molDataIds,4,nchar(molDataIds))
+	  
+	  molDataNames <- rep("", length(molDataIds))
+	  moaNames <- rep("", length(molDataIds))
+	  
+	  tmp <- data.frame(availableTypes=exptype2,availableIds=molDataIds, idNames=molDataNames, properties=moaNames,
+	                    stringsAsFactors=FALSE)
+	  
+	  # Join data.frames
+	  results <- rbind(results, tmp)
+	  
+	  # Reverse Order/ no need for reverse for me
+	  #results <- results[rev(rownames(results)),]
+	  
+	  colnames(results) <- c("Data type","ID ", "Drug Name", "Drug MOA")
+	  selsource=metaConfig[[input$dataSrc]][["fullName"]]
+	  DT::datatable(results, rownames=FALSE, colnames=colnames(results),
+	                filter='top', style='bootstrap', selection = "none",
+	                options=list(pageLength = 10, dom='flipt'), caption=htmltools::tags$caption(paste0("Ids table for ",selsource),style="color:dodgerblue; font-size: 18px"))
+	})
+	#--------------------------------------------------------------------------------------
+	
+	
 	#----[Render Data Table in 'Compare Patterns' Tab]-------------------------------------
 	output$patternComparison <- DT::renderDataTable({
 		srcContent <- srcContentReactive()
@@ -635,7 +677,8 @@ shinyServer(function(input, output, session) {
 #		} else {
 			plotPanel <- tabPanel("Plot Data", plotlyOutput("rChartsAlternative", width = plotWidth, height = plotHeight),
 														br(), br(), p("Plot point tooltips provide additional information."))
-			tsPanel <- tabsetPanel(plotPanel, tab1, tab2, tab3)
+			#tsPanel <- tabsetPanel(plotPanel, tab1, tab2, tab3)
+			tsPanel <- tabsetPanel(plotPanel, tab1, tab3)
 #		}
 
 		return(tsPanel)
@@ -662,6 +705,16 @@ shinyServer(function(input, output, session) {
 								)
 		)
 	})
+	##*********************************************************
+	output$searchPanel = renderUI({
+	  #verbatimTextOutput("log") can be used for debugging
+	  #tabPanel("Plot", verbatimTextOutput("genUrl"), showOutput("rCharts", "highcharts")),
+	  
+	  includeMarkdown("www/files/help.md")
+	  DT::dataTableOutput("ids2")
+	 
+	})
+	##*********************************************************
 	#**************************************************************************************
 	output$sourceLink <- renderUI({
 		
