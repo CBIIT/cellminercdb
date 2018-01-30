@@ -9,7 +9,7 @@
   - [Heatmap](#heatmap)
   - [Data](#data)
   - [Plot](#plotpred)
-  - [Cross-Validation](@cv)
+  - [Cross-Validation](#cross)
   - [Technical Details](#details)
   - [Partial correlations](#partialcorr)
 -	[Metadata](#metadata)
@@ -105,10 +105,10 @@ This option enables one to plot and compare the observed response values versus 
 Figure 8
 ![Screenshot of CellMinerCDB Application](files/Slide08.jpg)
 
-#### Cross-Validation<a name="cv"></a>
+#### Cross-Validation<a name="cross"></a>
 This option enables to plot the observed response values versus the 10-fold cross-validation predicted response values and assess model generalization beyond the training data. The figure below shows a plot comparing Topotecan observed vs. cross-validation predicted activity with still high correlation value of 0.82
 Figure 9
-![Screenshot of CellMinerCDB Application](files/Slide9.jpg)
+![Screenshot of CellMinerCDB Application](files/Slide09.jpg)
 
 #### Technical Details<a name="details"></a>
 This option enables to view the R statistical and other technical details related to the constructed response model. Below is an example of regular regression model fitting results.
