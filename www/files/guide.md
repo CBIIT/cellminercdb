@@ -63,7 +63,7 @@ This option allows one to compute the correlation between a feature from a data 
 
 The following figure shows correlation results for SLFN11 gene with all other molecular features for all NCI60 datasets sorted by correlation value with gene location and target pathways (annotation field).
 Figure 4
-![Screenshot of CellMinerCDB Application](files/Slide05.jpg)
+![Screenshot of CellMinerCDB Application](files/Slide04.jpg)
 
 # Regression Models<a name="regression"></a>
 The ‘Regression Models’ option (or module) has multiple features (described below), and allows construction and assessment of multivariate linear response prediction models. For instance, we can assess prediction of a drug activity based on some genes expression. To construct a regression model, you need to specify:
@@ -89,31 +89,31 @@ Once all the above information is entered, a regression model is built and the r
 #### Heatmap<a name="heatmap"></a>
 This option provides the observed response and predictor variables across all source cell lines in an interactive heatmap. The user can restrict the number of cell lines to those that have the highest or lowest response values. The following figure shows a heatmap where we selected topotecan as a response variable and SLFLN11 and BPTF gene expression as predictor variables. We chose to display only 40 cell lines that have the most 20 highest and 20 lowest values for topotecan activity.
 Figure 5
-![Screenshot of CellMinerCDB Application](files/Slide06.jpg)
+![Screenshot of CellMinerCDB Application](files/Slide05.jpg)
 
 In case, the Lasso algorithm is selected	more predicted variables are shown based on model result as shown below (STK17B and ABCD3 new genes added)
 Figure 6
-![Screenshot of CellMinerCDB Application](files/Slide07.jpg)
+![Screenshot of CellMinerCDB Application](files/Slide06.jpg)
 
 #### Data<a name="data"></a>
 This option shows the detailed data for the model variables for each cell line as well as the predicted and cross-validation (10-fold cross validation) predicted responses. The data is displayed as a table with filtering options for each column. You can see below, the data related to the simple linear regression model presented in the previous section.
 Figure 7
-![Screenshot of CellMinerCDB Application](files/Slide08.jpg)
+![Screenshot of CellMinerCDB Application](files/Slide07.jpg)
 
 #### Plot<a name="plotpred"></a>
 This option enables one to plot and compare the observed response values versus the predicted response values. The figure below shows a plot comparing Topotecan observed vs. predicted activity with high correlation value of 0.84
 Figure 8
-![Screenshot of CellMinerCDB Application](files/Slide09.jpg)
+![Screenshot of CellMinerCDB Application](files/Slide08.jpg)
 
 #### Cross-Validation<a name="cv"></a>
 This option enables to plot the observed response values versus the 10-fold cross-validation predicted response values and assess model generalization beyond the training data. The figure below shows a plot comparing Topotecan observed vs. cross-validation predicted activity with still high correlation value of 0.82
 Figure 9
-![Screenshot of CellMinerCDB Application](files/Slide10.jpg)
+![Screenshot of CellMinerCDB Application](files/Slide9.jpg)
 
 #### Technical Details<a name="details"></a>
 This option enables to view the R statistical and other technical details related to the constructed response model. Below is an example of regular regression model fitting results.
 Figure 10
-![Screenshot of CellMinerCDB Application](files/Slide11.jpg)
+![Screenshot of CellMinerCDB Application](files/Slide10.jpg)
 
 #### Partial correlations<a name="partialcorr"></a>
 Additional predictive variables for a multivariate linear model can be selected using the partials correlations results. Conceptually, the aim is to identify variables that are independently correlated with the response variable, after accounting for the influence of the existing predictor set. Computationally, a linear model is fit, with respect to the existing predictor set, for both the response variable and each candidate predictor variable. The partial correlation is then computed as the Pearson’s correlation between the resulting pairs of model residual vectors (which capture the variation not explained by the existing predictor set). The p-values reported for the correlation and linear modeling analyses assume multivariate normal data. The two-variable plot feature of CellMinerCDB allows informal assessment of this assumption, with clear indication of outlying observations. The reported p-values are less reliable as the data deviate from multivariate normality.
@@ -123,14 +123,14 @@ In order to run a partial correlation analysis, the user should first construct 
 -	And optionally, minimum range for the first listed data type (step 7 in figure)
 And finally click on button run (step 8 in figure). A table with partial correlation results for all candidate variables with gene sets annotation
 Figure 11
-![Screenshot of CellMinerCDB Application](files/Slide12.jpg)
+![Screenshot of CellMinerCDB Application](files/Slide11.jpg)
 
 # Metadata<a name="metadata"></a>
 This option enumerates for each data source, the available data types that could be queried within the app providing the data type abbreviation or prefix, description, feature value unit (z-score, intensity, probability …), platform or experiment and related publication reference (pubmed). The following figure shows all data types for NCI60.
 Figure 12
-![Screenshot of CellMinerCDB Application](files/Slide13.jpg)
+![Screenshot of CellMinerCDB Application](files/Slide12.jpg)
 #### Search IDs<a name="search"></a>
-This page lists the identifiers (ID) that are available for comparison for the selected "x-Axis: Dataset". Each Dataset has different types and amounts of data available. For the molecular data, the Data type and gene names (ID) are provided. For the drugs and compounds, the Data type (activity), identifiers (ID),  Drug name (when available), and Drug MOA (when available) are displayed. 
+This page lists the identifiers (ID) that are available for comparison for the selected data source. Each data source has different types and amounts of data available. For the molecular data, the Data type and gene names (ID) are provided. For the drugs and compounds, the Data type (activity), identifiers (ID),  Drug name (when available), and Drug MOA (when available) are displayed. 
 The results  are displayed as a table with 4 columns: **Data type, ID, Drug Name, and Drug MOA** The user can scroll down the whole  list of IDs, or search specific ID(s) by entering a value in the header of any column or Search textbox. For instance, if the user is looking for NCI60 ID for the drug Topotecan, he needs to select "NCI60" as the x-axis dataset and type "topotecan" in header of column "Drug name". The user can limit the search to drug IDs by entering "act" in header of  column "Data type". See figure 13 below for example.
 
 #### Drug IDs<a name="drugid"></a>
@@ -141,7 +141,7 @@ For all data sources, the gene ID is the gene name (Hugo name)
 
 
 Figure 13
-![Screenshot of CellMinerCDB Application](files/Slide04.jpg)
+![Screenshot of CellMinerCDB Application](files/Slide13.jpg)
 
 # About<a name="about"></a>
 The about option gives references to the data sources, main publications, collaborators and presents the group team as well as the contact information. (need to update the page) 
