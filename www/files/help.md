@@ -1,10 +1,15 @@
 Here is the list of data types with 3 letters abbreviation and related identifier ID
-* Drug activity (**act**), ID: drug ID
-* DNA Copy Number (**cop**)  , ID: gene name
-* DNA Mutation (**mut**), ID: gene name
-* RNA Expression using z-score (**exp**), ID: gene name
-* RNA Expression using Avg. log2 Intensity (**xai**), ID: gene name
-* RPLA Protein (**pro**), ID: gene name
-* MicroRNA (**mir**), ID: microRNA name
-* Metadata (**mda**), ID: metadata name
-* SWATH-MS Protein (**swa**), ID: gene name
+
+| | | |
+------------------------------|:---:|:-----------------------:
+**Data type** | **Abbreviation** | **Identifier ID**
+Drug activity |  **act**  | drug NSC or name 
+DNA Copy Number |  **cop**  | gene name
+DNA Mutation |  **mut**  | gene name
+RNA Expression using z-score     |  **exp**  | gene name
+RNA Expression using Avg.log2    |  **xai**  | gene name
+RPLA Protein |  **pro**  | gene name
+MicroRNA |  **mir**  | microRNA ID
+Metadata |  **mda**  | metadata name
+SWATH-MS Protein |  **swa**  | gene name
+
