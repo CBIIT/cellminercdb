@@ -146,7 +146,11 @@ shinyUI(
 						 				#selectInput("mdataSource", "Data Source", choices=metaChoices, selected = "nci60")
 						 				HTML(
 						 				  paste("<label class='control-label' for='mdataSource'>Data Source</label>","<select id='mdataSource'>",metaoptions,"</select>")
-						 				)
+						 				),
+						 				br(),br(),
+						 				uiOutput("dataTypeUi"),
+						 				br(),
+						 				downloadButton('downloadExp', 'Download data')
 						 				#uiOutput(""),
 						 			)
 						 		), #end sidebarPanel
@@ -171,6 +175,9 @@ shinyUI(
 		                 HTML(
 		                   paste("<label class='control-label' for='dataSrc'>Data Source</label>","<select id='dataSrc'>",options,"</select>")
 		                 )
+		                 # uiOutput("dataTypeUi"),
+		                 # br(),
+		                 # downloadButton('downloadExp', 'Download data for selected type')
 		                 #uiOutput(""),
 		               )
 		             ), #end sidebarPanel

@@ -760,6 +760,58 @@ shinyServer(function(input, output, session) {
     }
   )
 
+  ### data types for search ---------
+  output$dataTypeUi <- renderUI({
+    srcContent <- srcContentReactive()
+    
+    # The last selected (data type) prefix is recorded in 
+    # globalReactiveValues$xPrefix whenever xData() is updated. When the data set 
+    # is changed, we try to use this same data type prefix, if it is available.
+    prefixChoices <- srcContent[[input$mdataSource]][["featurePrefixes"]]
+    selectedPrefix <- globalReactiveValues$xPrefix
+    if ((is.null(selectedPrefix)) || (!(selectedPrefix %in% prefixChoices))){
+      selectedPrefix <- srcContent[[input$mdataSource]][["defaultFeatureX"]]
+    }
+    opt = "";
+    for(y in 1:length(prefixChoices)){
+      if (prefixChoices[y]==selectedPrefix)
+      {
+        opt =  paste0(opt,"<option value=",prefixChoices[y]," selected>",names(prefixChoices)[y],"</option>;")
+      }
+      else
+      {
+        opt =  paste0(opt,"<option value=",prefixChoices[y],">",names(prefixChoices)[y],"</option>;");
+      }
+    }
+    # selectInput("xPrefix", "x-Axis Type", choices = prefixChoices, selected = selectedPrefix)
+    HTML(
+      paste("<label class='control-label' for='dataType'>Please select data Type to download</label>","<select id='dataType' style='word-wrap:break-word; width: 100%;'>",opt,"</select>")
+    )
+  })
+  
+  
+  ### Download data
+  output$downloadExp <- downloadHandler(
+    
+    # This function returns a string which tells the client
+    # browser what name to use when saving the file.
+    filename = function() {
+      paste0(input$mdataSource,"_",input$dataType,".txt")
+    },
+    
+    # This function should write data to a file given to it by
+    # the argument 'file'.
+    content = function(file) {
+      
+      # Write to a file specified by the 'file' argument
+      write.table(srcContent[[input$mdataSource]][["molPharmData"]][[input$dataType]], file, sep = "\t",
+                  row.names = FALSE)
+    }
+  )
+
+  
+  ###
+  
   output$xPrefixUi <- renderUI({
   	srcContent <- srcContentReactive()
   	
