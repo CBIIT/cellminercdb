@@ -805,7 +805,7 @@ shinyServer(function(input, output, session) {
       
       # Write to a file specified by the 'file' argument
       write.table(srcContent[[input$mdataSource]][["molPharmData"]][[input$dataType]], file, sep = "\t",
-                  row.names = FALSE)
+                  col.names = NA)
     }
   )
 
