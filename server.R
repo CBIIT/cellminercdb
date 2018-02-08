@@ -523,7 +523,7 @@ shinyServer(function(input, output, session) {
 	  selsource=metaConfig[[input$dataSrc]][["fullName"]]
 	  DT::datatable(results, rownames=FALSE, colnames=colnames(results),
 	                filter='top', style='bootstrap', selection = "none",
-	                options=list(pageLength = 10, dom='flipt'), caption=htmltools::tags$caption(paste0("Ids table for ",selsource),style="color:dodgerblue; font-size: 18px"))
+	                options=list(pageLength = 10, dom='lipt'), caption=htmltools::tags$caption(paste0("Ids table for ",selsource),style="color:dodgerblue; font-size: 18px"))
 	})
 	#--------------------------------------------------------------------------------------
 	
@@ -785,7 +785,7 @@ shinyServer(function(input, output, session) {
     }
     # selectInput("xPrefix", "x-Axis Type", choices = prefixChoices, selected = selectedPrefix)
     HTML(
-      paste("<label class='control-label' for='dataType'>Please select data Type to download</label>","<select id='dataType' style='word-wrap:break-word; width: 100%;'>",opt,"</select>")
+      paste("<label class='control-label' for='dataType'>Select data type to download</label>","<select id='dataType' style='word-wrap:break-word; width: 100%;'>",opt,"</select>")
     )
   })
   
@@ -836,7 +836,7 @@ shinyServer(function(input, output, session) {
   	}
   	# selectInput("xPrefix", "x-Axis Type", choices = prefixChoices, selected = selectedPrefix)
   	HTML(
-  	  paste("<label class='control-label' for='xPrefix'>x-Axis Type</label>","<select id='xPrefix' style='word-wrap:break-word; width: 100%;'>",opt,"</select>")
+  	  paste("<label class='control-label' for='xPrefix'>x-Axis Data Type</label>","<select id='xPrefix' style='word-wrap:break-word; width: 100%;'>",opt,"</select>")
   	)
   })
 
@@ -860,7 +860,7 @@ shinyServer(function(input, output, session) {
   	}
   	#selectInput("yPrefix", "y-Axis Type", choices = prefixChoices, selected = selectedPrefix)
   	HTML(
-  	  paste("<label class='control-label' for='yPrefix'>y-Axis Type</label>","<select id='yPrefix' style='word-wrap:break-word; width: 100%;'>",opt,"</select>")
+  	  paste("<label class='control-label' for='yPrefix'>y-Axis Data Type</label>","<select id='yPrefix' style='word-wrap:break-word; width: 100%;'>",opt,"</select>")
   	)
   })
   

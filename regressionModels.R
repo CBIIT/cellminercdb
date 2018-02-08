@@ -23,7 +23,7 @@ regressionModelsInput <- function(id, dataSourceChoices) {
 					 				tags$a(id="skiplink"),
 					 				#selectInput(ns("dataset"), "Dataset", choices=dataSourceChoices, selected = "nci60"),
 					 				HTML(
-					 				  paste("<label class='control-label' for=",ns("dataset"),">Dataset</label>","<select id=",ns("dataset"),">",voptions,"</select>")
+					 				  paste("<label class='control-label' for=",ns("dataset"),">Cell line set</label>","<select id=",ns("dataset"),">",voptions,"</select>")
 					 				),
 					 				uiOutput(ns("responseDataTypeUi")),
 					 				textInput(ns("responseId"), "Response ID:", "topotecan"),

@@ -99,9 +99,9 @@ shinyUI(
 	        	tags$div(
 	        	  id="input_container",
 	        	  tags$a(id="skiplink"),
-	            #selectInput("xDataset", "x-Axis Dataset", choices=dataSourceChoices, selected = "nci60"),
+	            #selectInput("xDataset", "x-Axis Cell line set", choices=dataSourceChoices, selected = "nci60"),
 	        	  HTML(
-	        	    paste("<label class='control-label' for='xDataset'>x-Axis Dataset</label>","<select id='xDataset'>",options,"</select>")
+	        	    paste("<label class='control-label' for='xDataset'>x-Axis Cell line set</label>","<select id='xDataset'>",options,"</select>")
 	        	  ),
 	        	  uiOutput("xPrefixUi"),
 	            textInput("xId", "ID: (e.g. topotecan or SLFN11)", "SLFN11"),
@@ -109,7 +109,7 @@ shinyUI(
 	          	
 	            #selectInput("yDataset", "y-Axis Dataset", choices=dataSourceChoices, selected = "nci60"),
 	        	  HTML(
-	        	    paste("<label class='control-label' for='yDataset'>y-Axis Dataset</label>","<select id='yDataset'>",options,"</select>")
+	        	    paste("<label class='control-label' for='yDataset'>y-Axis Cell line set</label>","<select id='yDataset'>",options,"</select>")
 	        	  ),
 	        	  uiOutput("yPrefixUi"),
 	          	textInput("yId", "ID: (e.g. topotecan or SLFN11)", "topotecan"),
@@ -150,7 +150,7 @@ shinyUI(
 						 				br(),br(),
 						 				uiOutput("dataTypeUi"),
 						 				br(),
-						 				downloadButton('downloadExp', 'Download data')
+						 				downloadButton('downloadExp', 'Download data type')
 						 				#uiOutput(""),
 						 			)
 						 		), #end sidebarPanel
