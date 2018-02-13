@@ -180,6 +180,11 @@
             "eSetListName":"exp",
             "featurePrefix":"exp",
             "displayName":"mRNA Expression (log2)"
+          },
+           {
+            "eSetListName":"met",
+            "featurePrefix":"met",
+            "displayName":"DNA Methylation"
           }
         ],
         "DrugData":[

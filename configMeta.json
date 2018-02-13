@@ -197,6 +197,13 @@
         		"platform":"Affymetrix GeneChip Human Exon 1.0 ST array",
         		"ref_pmid":"27247353"
         	},
+        	{
+        		"dataType":"met",
+        		"description":"DNA methylation",
+        		"units":"average of beta values for gene-associated probes; 0 (no methylation), 1 (complete methylation)",
+        		"platform":"Illumina ...",
+        		"ref_pmid":"na"
+        	},
           {
         		"dataType":"act",
         		"description":"drug activity",
