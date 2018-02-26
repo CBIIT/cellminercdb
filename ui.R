@@ -145,9 +145,9 @@ shinyUI(
 						 				tags$a(id="skiplink"),
 						 				#selectInput("mdataSource", "Data Source", choices=metaChoices, selected = "nci60")
 						 				HTML(
-						 				  paste("<label class='control-label' for='mdataSource'>Data Source</label>","<select id='mdataSource'>",metaoptions,"</select>")
+						 				  paste("<label class='control-label' for='mdataSource'>Cell line set</label>","<select id='mdataSource'>",metaoptions,"</select>")
 						 				),
-						 				br(),br(),
+						 				br(),br(),br(),br(),br(),br(),
 						 				uiOutput("dataTypeUi"),
 						 				br(),
 						 				downloadButton('downloadExp', 'Download data type')

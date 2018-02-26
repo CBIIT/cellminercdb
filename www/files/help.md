@@ -10,6 +10,6 @@ RNA Expression using z-score     |  **exp**  | gene name
 RNA Expression using Avg.log2    |  **xai**  | gene name
 RPLA Protein |  **pro**  | gene name
 MicroRNA |  **mir**  | microRNA ID
-Metadata |  **mda**  | metadata name
+Miscellaneous phenotypic |  **mda**  | Miscellaneous phenotypic name
 SWATH-MS Protein |  **swa**  | gene name
 <br>
