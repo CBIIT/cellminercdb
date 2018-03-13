@@ -9,9 +9,9 @@
         	{
         		"dataType":"act",
         		"description":"drug activity",
-        		"units":"z-score from negative log10[GI50(molar)] data across NCI-60",
+        		"units":"z-score from negative log10[GI50(molar)] data across NCI-60 for single drug and combo-score for paired drug",
         		"platform":"sulforhodamine B total protein cytotoxicity assay, 48hrs post-treatment",
-        		"ref_pmid":"26048278"
+        		"ref_pmid":"26048278-28446463"
         	},
         	{
         		"dataType":"exp",
@@ -100,6 +100,13 @@
         		"units":"average of beta values for gene-associated probes; 0 (no methylation), 1 (complete methylation)",
         		"platform":"Illumina Infinium Human Methylation 450",
         		"ref_pmid":"27397505"
+        	},
+        	{
+        		"dataType":"mda",
+        		"description":"cell line metadata (phenotypic measures)",
+        		"units":"measure-specific",
+        		"platform":"measure-specific",
+        		"ref_pmid":"na"
         	}
 	  	 ]
 	  	}
@@ -139,6 +146,13 @@
         		"units":"gene-level copy number estimate",
         		"platform":"Affymetrix SNP6.0 Arrays",
         		"ref_pmid":"22460905"
+        	},
+        	{
+        		"dataType":"mda",
+        		"description":"cell line metadata (phenotypic measures)",
+        		"units":"measure-specific",
+        		"platform":"measure-specific",
+        		"ref_pmid":"na"
         	}
         ]
       }

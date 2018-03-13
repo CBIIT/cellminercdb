@@ -37,7 +37,7 @@
           {
             "eSetListName":"mda",
             "featurePrefix":"mda",
-            "displayName":"Metadata"
+            "displayName":"Miscellaneous phenotypic data"
           },
           {
             "eSetListName":"pro",
@@ -85,7 +85,7 @@
           {
             "eSetListName":"mda",
             "featurePrefix":"mda",
-            "displayName":"Metadata"
+            "displayName":"Miscellaneous phenotypic data"
           }
         ],
         "DrugData":[
@@ -123,7 +123,7 @@
           {
             "eSetListName":"mda",
             "featurePrefix":"mda",
-            "displayName":"Metadata"
+            "displayName":"Miscellaneous phenotypic data"
           }
         ],
         "DrugData":[

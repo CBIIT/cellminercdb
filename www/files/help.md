@@ -1,4 +1,3 @@
-
 | | | |
 ------------------------------|:---:|:-----------------------:
 **Data type** | **Abbreviation** | **Identifier ID**
@@ -13,3 +12,4 @@ MicroRNA |  **mir**  | microRNA ID
 Miscellaneous phenotypic |  **mda**  | Miscellaneous phenotypic name
 SWATH-MS Protein |  **swa**  | gene name
 <br>
+

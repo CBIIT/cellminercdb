@@ -78,6 +78,7 @@ shinyUI(
 						 							   tags$style(type="text/css", ".irs-grid-text { font-size: 8pt;color: black; }",
 						 							              ".irs-min { font-size: 8pt; background: white; }", ".irs-max { font-size: 8pt; background: white;}",
 						 							              ".irs-from { font-size: 8pt; color: black;background: white;}", ".irs-to { font-size: 8pt;  color: black;background: white;}"
+						 							              , "body {font-size: 12pt}"
 						 							   )
 						 							 ),
 						 							 tags$head(
