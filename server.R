@@ -521,10 +521,11 @@ shinyServer(function(input, output, session) {
 	  
 	  colnames(results) <- c("Data type","ID ", "Drug Name", "Drug MOA")
 	  selsource=metaConfig[[input$dataSrc]][["fullName"]]
-	  DT::datatable(results, rownames=FALSE, colnames=colnames(results),
+	  DT::datatable(results, rownames=FALSE, colnames=colnames(results),extensions='Buttons',
 	                filter='top', style='bootstrap', selection = "none",
-	                options=list(pageLength = 10, dom='lipt'), caption=htmltools::tags$caption(paste0("Ids table for ",selsource),style="color:dodgerblue; font-size: 18px"))
-	})
+	                options=list(pageLength = 10, dom='lipBt',buttons = list('copy', 'print', list(extend = 'collection',buttons = c('csv', 'excel', 'pdf'),text = 'Download')))
+	                , caption=htmltools::tags$caption(paste0("Identifier search for ",selsource),style="color:dodgerblue; font-size: 18px")
+	)})
 	#--------------------------------------------------------------------------------------
 	
 	
@@ -949,7 +950,7 @@ shinyServer(function(input, output, session) {
   	  }
   	}
   	HTML(
-  	  paste("<label class='control-label' for='selectedTissues'>Which ones?</label>","<select id='selectedTissues' style='word-wrap:break-word; width: 100%;' multiple>",opt,"</select>")
+  	  paste("<label class='control-label' for='selectedTissues'>Select tissues of origin subsets</label>","<select id='selectedTissues' style='word-wrap:break-word; width: 100%;' multiple>",opt,"</select>")
   	)
   	
   	## 

@@ -1,6 +1,6 @@
 library(shiny)
 library(rcellminer)
-
+# library(microplot)
 #--------------------------------------------------------------------------------------------------
 # LOAD CONFIGURATION AND REQUIRED DATA SOURCE PACKAGES.
 #--------------------------------------------------------------------------------------------------
@@ -58,11 +58,18 @@ for(y in 1:length(metaChoices)){
 
 shinyUI(
   fluidPage(
-  tags$html(lang="en"),  
+  tags$html(lang="en"), 
+  #tags$head(tags$style(type="text/css", "img {display: block;}",".clear {clear:both}")),
   tags$a(href="#skiplink","Skip over navigation",style="font-size: 10px"),
+  tags$a(href="https://discover.nci.nih.gov/cellminer/","CellMiner NCI-60",style="font-size: 14px;float: right;"),
+  
+  #tags$p("CellMinerCDB",style="font-size: 24px;color: white;background-color: dodgerblue;text-align:center;height:50px;"),
+  # tags$img(src = "files/banner.jpg",height="110px",width="1650px"),
+  tags$img(src = "files/banner.png",alt= "banner",height="100%",width="100%", border="0"),
+  #tags$img(src = "files/banner.png",alt= "banner",height="100%",width="100%", border="0", style="padding: 0px; display: block; line-height: 0; font-size: 0px; border: 0px; clear: both; vertical-align: top; margin: 0px 0px 0px 0px;"),
    #navbarPage(h6(style="vertical-align:top;font-size: 24px;color: dodgerblue;",appTitle), 
    # navbarPage(HTML("<p style='font-size: 24px;color: dodgerblue;'>", appTitle,"</p>"), 
-  	navbarPage(appTitle,
+  	navbarPage(title="",
 						 inverse=FALSE,
 						 header = list(tags$head(includeCSS("www/css/hacks.css")),
 						 							 #tags$head(includeCSS("www/css/tooltip.css")),
@@ -78,7 +85,7 @@ shinyUI(
 						 							   tags$style(type="text/css", ".irs-grid-text { font-size: 8pt;color: black; }",
 						 							              ".irs-min { font-size: 8pt; background: white; }", ".irs-max { font-size: 8pt; background: white;}",
 						 							              ".irs-from { font-size: 8pt; color: black;background: white;}", ".irs-to { font-size: 8pt;  color: black;background: white;}"
-						 							              , "body {font-size: 12pt}"
+						 							              , "body {font-size: 12pt;}", "img {display: block;}", ".clear {clear: both}"
 						 							   )
 						 							 ),
 						 							 tags$head(
