@@ -199,12 +199,12 @@ shinyUI(
 		         ) #end fluidPage
 		), #end tabPane
 		#-----[NavBar Tab: About]------------------------------------------------------------------------
-		   tabPanel("About",
-             tags$a(id="skiplink"),
-    	includeMarkdown("www/files/about.md")
-    	#h1("For testing"),
-    	#textOutput("ipAddress")
-    ),
+# 		   tabPanel("About",
+#              tags$a(id="skiplink"),
+#     	includeMarkdown("www/files/about.md")
+#     	#h1("For testing"),
+#     	#textOutput("ipAddress")
+#     ),
 		tabPanel("Help",
 		         tags$a(id="skiplink"),
 		         includeMarkdown("www/files/guide.md")

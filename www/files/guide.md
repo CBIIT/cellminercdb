@@ -16,7 +16,6 @@
 - [Search IDs](#search)
       - [Drug IDs](#drugid)
       - [Gene IDs](#geneid)
--	[About](#about)
 -	[Navigation guide](#navigation)
   - [Multiple selection](#multiple)
   - [X-axis or Y-axis range](#range)
@@ -25,7 +24,14 @@
 -	[Methods](#methods)
   - [Linear regression](#linear)
   - [Lasso model](#lasso)
-- [Main reference](#refer)
+- [Contact/Feedback](#contactfeedback)
+- [Data Sources](#data-sources)
+- [About the Data](#about-the-data)
+- [About CellMinerCDB](#about-cellminercdb)
+	- [NCI-DTB Genomics and Bioinformatics Group](#nci-dtb-genomics-and-bioinformatics-group)
+	- [Biostatistics and Computational Biology, Dana-Farber Cancer Institute, Harvard Medical School](#biostatistics-and-computational-biology-dana-farber-cancer-institute-harvard-medical-school)
+	- [MSKCC Computational Biology](#mskcc-computational-biology)
+- [References](#references)
 
 <!-- /TOC -->
 
@@ -159,12 +165,6 @@ Example of a search: if looking in the NCI-60 for the drug Topotecan, select "NC
 
 ![Screenshot of CellMinerCDB Application](files/Slide13.jpg)
 
-<h2 id="about">About</h2>
-The about option gives references to the data sources, main publications, collaborators and presents the group team as well as the contact information. (need to update the page) 
-
-#### Figure 14
-![Screenshot of CellMinerCDB Application](files/Slide14.jpg)
-
 <h2 id="navigation">Navigation guide</h2>
 <h3 id="multiple">Multiple selection</h3>
 In order to select multiple choice from a list, use “command” button for Mac or “alt” button for PC and then click
@@ -185,9 +185,66 @@ Basic linear regression models are implemented using the R stats package lm() fu
 <h3 id="lasso">Lasso Model</h3>
 Lasso (penalized linear regression models) are implemented using the glmnet R package. The lasso performs both variable selection and linear model coefficient fitting. The lasso lambda parameter controls the tradeoff between model fit and variable set size. Lambda is set to the value giving the minimum error with 10-fold cross-validation. For either standard linear regression or LASSO models, 10-fold cross validation is applied to fit model coefficients and predict response, while withholding portions of the data to better estimate robustness. 
 
-<h2 id="refer">Main reference</h2>
+<h2 id="contactfeedback">Contact/Feedback</h2>
+Please send comments and feedback to 
+* fathi.elloumi AT nih.gov 
+* aluna AT jimmy.harvard.edu 
+* vinodh.rajapakse AT nih.gov
 
-Manuscript coming soon
+<h2 id="data-sources">Data Sources</h2>
+CellMinerCDB integrates data from the following sources, which provide additional data and specialized analyses.
+* [CellMiner NCI-60](https://discover.nci.nih.gov/cellminer/)
+* [Sanger/Massachusetts General Hospital Genomics of Drug Sensitivity in Cancer (GDSC)](http://www.cancerrxgene.org/)
+* [Broad/Novartis Cancer Cell Line Encyclopedia (CCLE)](https://portals.broadinstitute.org/ccle)
+* [Broad Cancer Therapeutics Response Portal (CTRP)](https://portals.broadinstitute.org/ctrp/)
+* [NCI/DTP Small Cell Lung Cancer Project (SCLC)](https://sclccelllines.cancer.gov/sclc/)
+
+
+<h2 id="about-the-data">About the Data</h2>
+For specific information about the data made available for particular sources, please refer to the 'Metadata' navbar tab.
+
+Drug mechanism of action details:
+* [NCI60](https://raw.githubusercontent.com/cannin/rcellminer/devel/inst/extdata/Drug_MOA_Key.txt)
+* [GDSC](http://www.cancerrxgene.org/translation/Drug)
+* [CTRP](https://portals.broadinstitute.org/ctrp/?page=#ctd2Compounds)
+
+Gene sets used for annotation of analysis results or algorithm input filtering were curated by the
+NCI/DTB CellMiner team, based on surveys of the applicable research literature.
+
+<h2 id="about-cellminercdb">About CellMinerCDB</h2>
+The CellMinerCDB application is developed and maintained using R and Shiny by:
+
+* Augustin Luna; Research Fellow, Biostatistics and Computational Biology, Dana-Farber Cancer Institute, Harvard Medical School
+* Vinodh N. Rajapakse; Postdoctoral Fellow, Developmental Therapeutics Branch, National Cancer Institute
+* Fathi Elloumi; Bioinformatics Software Engineer, Developmental Therapeutics Branch, National Cancer Institute
+
+<h3 id="nci-dtb-genomics-and-bioinformatics-group">NCI-DTB Genomics and Bioinformatics Group</h3>
+* William C. Reinhold
+* Sudhir Varma
+* Margot Sunshine
+* Fathi Elloumi
+* Lisa Loman (Special Volunteer)
+* Fabricio G. Sousa
+* Kurt W. Kohn
+* Yves Pommier
+
+<h3 id="biostatistics-and-computational-biology-dana-farber-cancer-institute-harvard-medical-school">Biostatistics and Computational Biology, Dana-Farber Cancer Institute, Harvard Medical School</h3>
+* Chris Sander
+
+<h3 id="mskcc-computational-biology">MSKCC Computational Biology</h3>
+* Jianjiong Gao
+* Nikolaus Schultz
+
+<h2 id="references">References</h2>
+Shankavaram UT, Varma S, Kane D, Sunshine M, Chary KK, Reinhold WC, Pommier Y, Weinstein JN. [CellMiner: a relational database and query tool for the NCI-60 cancer cell lines. ](https://www.ncbi.nlm.nih.gov/pubmed/19549304) BMC Genomics. 2009 Jun 23;10:277. doi: 10.1186/1471-2164-10-277.
+
+Reinhold WC, Sunshine M, Liu H, Varma S, Kohn KW, Morris J, Doroshow J, Pommier Y.
+[CellMiner: a web-based suite of genomic and pharmacologic tools to explore transcript and drug patterns in the NCI-60 cell line set. ](https://www.ncbi.nlm.nih.gov/pubmed/22802077) Cancer Res. 2012 Jul 15;72(14):3499-511. doi: 10.1158/0008-5472.CAN-12-1370.
+
+Reinhold WC, Sunshine M, Varma S, Doroshow JH, Pommier Y. [Using CellMiner 1.6 for Systems Pharmacology and Genomic Analysis of the NCI-60. ](https://www.ncbi.nlm.nih.gov/pubmed/26048278) Clin Cancer Res. 2015 Sep 1;21(17):3841-52. doi: 10.1158/1078-0432.CCR-15-0335. Epub 2015 Jun 5.
+
+Luna A, Rajapakse VN, Sousa FG, Gao J, Schultz N, Varma S, Reinhold W, Sander C, Pommier Y. [rcellminer: exploring molecular profiles and drug response of the NCI-60 cell lines in R.](https://www.ncbi.nlm.nih.gov/pubmed/26635141) Bioinformatics. 2015 Dec 3. pii: btv701.
+
 
 
 
