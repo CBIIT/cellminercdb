@@ -61,7 +61,7 @@ shinyUI(
   tags$html(lang="en"), 
   #tags$head(tags$style(type="text/css", "img {display: block;}",".clear {clear:both}")),
   tags$a(href="#skiplink","Skip over navigation",style="font-size: 10px"),
-  tags$a(href="https://discover.nci.nih.gov/cellminer/","CellMiner NCI-60",style="font-size: 14px;float: right;"),
+  tags$a(href="https://discover.nci.nih.gov/cellminer/"," CellMiner NCI-60 ",style="font-size: 14px;float: right;background-color: steelblue;color: white;display: inline-block;margin: 5px 5px;padding: 10px 10px;",target="_blank"),
   
   #tags$p("CellMinerCDB",style="font-size: 24px;color: white;background-color: dodgerblue;text-align:center;height:50px;"),
   # tags$img(src = "files/banner.jpg",height="110px",width="1650px"),
@@ -114,7 +114,6 @@ shinyUI(
 	        	  uiOutput("xPrefixUi"),
 	            textInput("xId", "ID: (e.g. topotecan or SLFN11)", "SLFN11"),
 	          	uiOutput("xAxisRangeUi"),
-	          	
 	            #selectInput("yDataset", "y-Axis Dataset", choices=dataSourceChoices, selected = "nci60"),
 	        	  HTML(
 	        	    paste("<label class='control-label' for='yDataset'>y-Axis Cell line set</label>","<select id='yDataset'>",options,"</select>")
