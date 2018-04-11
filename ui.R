@@ -157,7 +157,9 @@ shinyUI(
 						 				br(),br(),br(),br(),br(),br(),
 						 				uiOutput("dataTypeUi"),
 						 				br(),
-						 				downloadButton('downloadExp', 'Download data type')
+						 				downloadButton('downloadExp', 'Download data type'),
+						 				br(),br(),
+						 				downloadButton('downloadFoot', 'Download data footnotes')
 						 				#uiOutput(""),
 						 			)
 						 		), #end sidebarPanel

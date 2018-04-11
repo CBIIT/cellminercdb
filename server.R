@@ -8,6 +8,7 @@ library(stringr)
 library(glmnet)
 library(ggplot2)
 library(plotly)
+library(xlsx)
 #library(svglite)
 #library(clusterProfiler)
 
@@ -797,19 +798,68 @@ shinyServer(function(input, output, session) {
     # This function returns a string which tells the client
     # browser what name to use when saving the file.
     filename = function() {
-      paste0(input$mdataSource,"_",input$dataType,".txt")
+      paste0("data_",input$mdataSource,"_",input$dataType,".txt")
     },
-    
+    # filename = function() {
+    #   paste0(input$mdataSource,"_",input$dataType,".zip")
+    # },
     # This function should write data to a file given to it by
     # the argument 'file'.
     content = function(file) {
       
       # Write to a file specified by the 'file' argument
       write.table(srcContent[[input$mdataSource]][["molPharmData"]][[input$dataType]], file, sep = "\t",
-                  col.names = NA)
+                   col.names = NA)      
+      
+      # myname=paste0(input$mdataSource,"_",input$dataType,".txt")
+      # write.table(srcContent[[input$mdataSource]][["molPharmData"]][[input$dataType]], myname, sep = "\t",
+      #             col.names = NA)
+      # configSelect <- metaConfig[[input$mdataSource]][["packages"]][[1]][["MetaData"]]
+      # jsonFrame <- as.data.frame(configSelect)
+      # 
+      # colnames(jsonFrame) <- c("DataType", "Description", "Units", 
+      #                          "Platform/Assay", "PubMed Ref. ID")
+      # write.table(t(jsonFrame[which(jsonFrame$DataType==input$dataType),]),"footnotes.txt",sep="\t",col.names=F)
+      # zip(zipfile=file, files=c(myname,"footnotes.txt"))
     }
   )
-
+##
+  ### Download footnotes
+  output$downloadFoot <- downloadHandler(
+    
+    # This function returns a string which tells the client
+    # browser what name to use when saving the file.
+    filename = function() {
+      paste0("footnotes_",input$mdataSource,"_",input$dataType,".csv")
+    },
+    # filename = function() {
+    #   paste0(input$mdataSource,"_",input$dataType,".zip")
+    # },
+    # This function should write data to a file given to it by
+    # the argument 'file'.
+    content = function(file) {
+      
+      # Write to a file specified by the 'file' argument
+      #write.table(srcContent[[input$mdataSource]][["molPharmData"]][[input$dataType]], file, sep = "\t",
+      #            col.names = NA)      
+      
+      # myname=paste0(input$mdataSource,"_",input$dataType,".txt")
+      # write.table(srcContent[[input$mdataSource]][["molPharmData"]][[input$dataType]], myname, sep = "\t",
+      #             col.names = NA)
+      configSelect <- metaConfig[[input$mdataSource]][["packages"]][[1]][["MetaData"]]
+      jsonFrame <- as.data.frame(configSelect)
+       
+      colnames(jsonFrame) <- c("DataType", "Description", "Units", 
+                                "Platform/Assay", "PubMed Ref. ID")
+      mydata=t(jsonFrame[which(jsonFrame$DataType==input$dataType),])
+      colnames(mydata)=paste("footnotes for data source:",input$mdataSource)
+       write.csv(mydata,file)
+       #write.table(t(jsonFrame[which(jsonFrame$DataType==input$dataType),]),file,sep="\t",col.names=F)
+       # zip(zipfile=file, files=c(myname,"footnotes.txt"))
+    }
+  )
+  
+  
   
   ###
   

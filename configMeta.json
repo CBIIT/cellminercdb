@@ -68,6 +68,13 @@
         		"units":"protein intensities",
         		"platform":"reverse-phase protein array",
         		"ref_pmid":"17339364"
+        	},
+        	{
+        		"dataType":"swa",
+        		"description":"protein expression (SWATH-MS)",
+        		"units":"protein intensities",
+        		"platform":"MS protein array",
+        		"ref_pmid":"NA"
         	}
         ]
       }
