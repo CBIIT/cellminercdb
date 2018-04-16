@@ -1150,7 +1150,7 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 		  }
 		}
 		HTML(
-		  paste("<label class='control-label' for=",ns("predDataTypes"),">Predictor Data Type</label>","<select id=",ns("predDataTypes"),"style='word-wrap:break-word; width: 100%;' multiple>",vopt,"</select>")
+		  paste("<label class='control-label' for=",ns("predDataTypes"),">Predictor Data Type/s</label>","<select id=",ns("predDataTypes"),"style='word-wrap:break-word; width: 100%;' multiple>",vopt,"</select>")
 		)
 	})
 	

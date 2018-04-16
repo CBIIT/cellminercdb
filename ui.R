@@ -114,6 +114,7 @@ shinyUI(
 	        	  uiOutput("xPrefixUi"),
 	            textInput("xId", "ID: (e.g. topotecan or SLFN11)", "SLFN11"),
 	          	uiOutput("xAxisRangeUi"),
+	        	  br(),
 	            #selectInput("yDataset", "y-Axis Dataset", choices=dataSourceChoices, selected = "nci60"),
 	        	  HTML(
 	        	    paste("<label class='control-label' for='yDataset'>y-Axis Cell line set</label>","<select id='yDataset'>",options,"</select>")
@@ -164,9 +165,10 @@ shinyUI(
 						 			)
 						 		), #end sidebarPanel
 						 		mainPanel(
-						 			uiOutput('metadataPanel'),
+						 		  htmlOutput('sourceLink'),
+						 			uiOutput('metadataPanel')
 						 			#h4(htmlOutput('sourceLink'))
-						 			htmlOutput('sourceLink')
+						 			# htmlOutput('sourceLink')
 						 		)
 						 	)
 						 ) #end fluidPage

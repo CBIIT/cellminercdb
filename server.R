@@ -416,7 +416,7 @@ shinyServer(function(input, output, session) {
 												 srcContent = srcContentReactive())
 		g1 <- ggplotly(p1, width=plotWidth, height=plotHeight, tooltip=tooltipCol)
 		g1 <- layout(g1, margin=list(t = 75))
-		g2 <- config(p = g1, collaborate=FALSE, cloud=FALSE, displaylogo=FALSE,
+		g2 <- config(p = g1, collaborate=FALSE, cloud=FALSE, displaylogo=FALSE, displayModeBar=TRUE,
 								 modeBarButtonsToRemove=c("select2d", "sendDataToCloud", "pan2d", "resetScale2d",
 								 												 "hoverClosestCartesian", "hoverCompareCartesian",
 								 												 "lasso2d", "zoomIn2d", "zoomOut2d"))
@@ -1000,7 +1000,7 @@ shinyServer(function(input, output, session) {
   	  }
   	}
   	HTML(
-  	  paste("<label class='control-label' for='selectedTissues'>Select tissues of origin subsets</label>","<select id='selectedTissues' style='word-wrap:break-word; width: 100%;' multiple>",opt,"</select>")
+  	  paste("<label class='control-label' for='selectedTissues'>Select tissues of origin subset/s</label>","<select id='selectedTissues' style='word-wrap:break-word; width: 100%;' multiple>",opt,"</select>")
   	)
   	
   	## 

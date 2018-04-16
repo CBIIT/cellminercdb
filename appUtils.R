@@ -1,4 +1,5 @@
 source("regressionModels.R")
+metaConfig <- jsonlite::fromJSON("configMeta.json")
 #--------------------------------------------------------------------------------------------------
 # Helper functions.
 #--------------------------------------------------------------------------------------------------
@@ -47,7 +48,8 @@ getFeatureData <- function(prefix, id, dataSource, srcContent) {
 	results <- list(name=name, data=data)
 	
 	# e.g., expTOP1 with dataSource=nci60 becomes TOP1 (exp, nci60)
-	results$plotLabel <- paste0(id, " (", prefix, ", ", dataSource, ")")
+	labs=metaConfig[[dataSource]][["displayName"]]
+	results$plotLabel <- paste0(id, " (", prefix, ", ", labs, ")")
 	
 	# e.g., expTOP1 with dataSource=nci60 becomes expTOP1_nci60; needed for 
 	# getPlotData() results (data.frame) with data for same feature from different sources.
