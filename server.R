@@ -773,6 +773,7 @@ shinyServer(function(input, output, session) {
     selectedPrefix <- globalReactiveValues$xPrefix
     if ((is.null(selectedPrefix)) || (!(selectedPrefix %in% prefixChoices))){
       selectedPrefix <- srcContent[[input$mdataSource]][["defaultFeatureX"]]
+      if (is.na(selectedPrefix)) selectedPrefix <- srcContent[[input$mdataSource]][["defaultFeatureY"]]
     }
     opt = "";
     for(y in 1:length(prefixChoices)){

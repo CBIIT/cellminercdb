@@ -198,5 +198,22 @@
         ]
       }
     }
+  },
+  "almanac":{
+    "displayName":"NCI/DTP ALMANAC",
+    "packages":{
+      "almanacData":{
+  
+        "DrugData":[
+          {
+            "featurePrefix":"act",
+            "displayName":"Drug Activity (comboscores)",
+            "drugAnnotIdCol":"NSC",
+            "drugAnnotNameCol":"NAME",
+            "drugAnnotMoaCol":"MOA"
+          }
+        ]
+      }
+    }
   }
 }

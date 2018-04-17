@@ -235,5 +235,23 @@
        	]
       }
     }
+  },
+  "almanac":{
+    "displayName":"NCI/DTP ALMANAC",
+    "fullName": "NCI/DTP FDA 105 paired Drug Project",
+    "url": "https://dtp.cancer.gov/ncialmanac/initializePage.do",
+    "packages":{
+      "almanacData":{
+        "MetaData":[
+          {
+        		"dataType":"act",
+        		"description":"drug activity",
+        		"units":"Combo scores",
+        		"platform":"sulforhodamine B total protein cytotoxicity assay, 48hrs post-treatment",
+        		"ref_pmid":"28446463"
+        	}
+       	]
+      }
+    }
   }
 }
