@@ -1139,6 +1139,7 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 		vopt = ""
 		choices  = srcContent[[input$dataset]][["featurePrefixes"]]
 		mych= srcContent[[input$dataset]][["defaultFeatureX"]]
+		if (is.na(mych)) mych= srcContent[[input$dataset]][["defaultFeatureY"]]
 		for(y in 1:length(choices)){
 		  if (choices[y]==mych)
 		  {
