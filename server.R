@@ -490,6 +490,41 @@ shinyServer(function(input, output, session) {
 	#----[Render Data Table in 'SearchIDs' Tab]-------------------------------------------
 	# Generate an HTML table view of the data
 	# Note: Searchable data is derived from the x-axis data source.
+	output$ids_s <- DT::renderDataTable({
+	  srcContent <- srcContentReactive()
+	  if (input$dataTyp=="act") {
+	    myframe=srcContent[[input$dataSrc]][["drugInfo"]]
+	    
+	  }
+	  else
+	  {
+	    mytype=paste0(input$dataTyp,"A")
+	    if (is.null(srcContent[[input$dataSrc]][["molPharmData"]][[mytype]]) | ncol(srcContent[[input$dataSrc]][["molPharmData"]][[mytype]])==0) {
+	      ID=unlist(lapply(rownames(srcContent[[input$dataSrc]][["molPharmData"]][[input$dataTyp]]),function(x) {return(substr(x,4,nchar(x)))}))
+	      myframe=data.frame(ID,stringsAsFactors = F)
+	    }
+	    else
+	    { myframe=srcContent[[input$dataSrc]][["molPharmData"]][[mytype]]
+	      if (input$dataTyp=="swa") {
+	        myframe=myframe[,c(2,1)]
+	      } else 
+	        if (input$dataTyp=="exp" & input$dataSrc=="nciSclc")
+	        { myframe=myframe[,c(4,3,5:13,1:2)] 
+	        }
+	      
+	      colnames(myframe)[1]="ID" 
+	    }
+	  }
+	  
+	  
+	  selsource=metaConfig[[input$dataSrc]][["fullName"]]
+	  DT::datatable(myframe, rownames=FALSE,extensions='Buttons',
+	                filter='top', style='bootstrap', selection = "none",
+	                options=list(pageLength = 10, dom='lipBt',buttons = list('copy', 'print', list(extend = 'collection',buttons = c('csv', 'excel', 'pdf'),text = 'Download')))
+	                , caption=htmltools::tags$caption(paste0("Identifier search for ",selsource),style="color:dodgerblue; font-size: 18px")
+	)})
+
+	## new version
 	output$ids2 <- DT::renderDataTable({
 	  srcContent <- srcContentReactive()
 	  drugIds   <- srcContent[[input$dataSrc]][["drugInfo"]][, "ID"]
@@ -526,8 +561,9 @@ shinyServer(function(input, output, session) {
 	                filter='top', style='bootstrap', selection = "none",
 	                options=list(pageLength = 10, dom='lipBt',buttons = list('copy', 'print', list(extend = 'collection',buttons = c('csv', 'excel', 'pdf'),text = 'Download')))
 	                , caption=htmltools::tags$caption(paste0("Identifier search for ",selsource),style="color:dodgerblue; font-size: 18px")
-	)})
-	#--------------------------------------------------------------------------------------
+	  )})
+	
+		#--------------------------------------------------------------------------------------
 	
 	
 	#----[Render Data Table in 'Compare Patterns' Tab]-------------------------------------
@@ -791,6 +827,36 @@ shinyServer(function(input, output, session) {
       paste("<label class='control-label' for='dataType'>Select data type to download</label>","<select id='dataType' style='word-wrap:break-word; width: 100%;'>",opt,"</select>")
     )
   })
+ ## new version for search tab
+  output$dataTypeUi_s <- renderUI({
+    srcContent <- srcContentReactive()
+    
+    # The last selected (data type) prefix is recorded in 
+    # globalReactiveValues$xPrefix whenever xData() is updated. When the data set 
+    # is changed, we try to use this same data type prefix, if it is available.
+    prefixChoices <- srcContent[[input$dataSrc]][["featurePrefixes"]]
+    selectedPrefix <- globalReactiveValues$xPrefix
+    if ((is.null(selectedPrefix)) || (!(selectedPrefix %in% prefixChoices))){
+      selectedPrefix <- srcContent[[input$dataSrc]][["defaultFeatureX"]]
+      if (is.na(selectedPrefix)) selectedPrefix <- srcContent[[input$dataSrc]][["defaultFeatureY"]]
+    }
+    opt = "";
+    for(y in 1:length(prefixChoices)){
+      if (prefixChoices[y]==selectedPrefix)
+      {
+        opt =  paste0(opt,"<option value=",prefixChoices[y]," selected>",names(prefixChoices)[y],"</option>;")
+      }
+      else
+      {
+        opt =  paste0(opt,"<option value=",prefixChoices[y],">",names(prefixChoices)[y],"</option>;");
+      }
+    }
+    # selectInput("xPrefix", "x-Axis Type", choices = prefixChoices, selected = selectedPrefix)
+    HTML(
+      paste("<label class='control-label' for='dataTyp'>Select data type</label>","<select id='dataTyp' style='word-wrap:break-word; width: 100%;'>",opt,"</select>")
+    )
+  })
+  
   
   
   ### Download data
@@ -874,6 +940,7 @@ shinyServer(function(input, output, session) {
   	selectedPrefix <- globalReactiveValues$xPrefix
   	if ((is.null(selectedPrefix)) || (!(selectedPrefix %in% prefixChoices))){
   		selectedPrefix <- srcContent[[input$xDataset]][["defaultFeatureX"]]
+  		if (is.na(selectedPrefix)) selectedPrefix <- srcContent[[input$xDataset]][["defaultFeatureY"]]
   	}
   	opt = "";
   	for(y in 1:length(prefixChoices)){

@@ -185,7 +185,9 @@ shinyUI(
 		                 #selectInput("mdataSource", "Data Source", choices=metaChoices, selected = "nci60")
 		                 HTML(
 		                   paste("<label class='control-label' for='dataSrc'>Data Source</label>","<select id='dataSrc'>",options,"</select>")
-		                 )
+		                 ),
+		                 br(),br(),br(),br(),
+		                 uiOutput("dataTypeUi_s")
 		                 # uiOutput("dataTypeUi"),
 		                 # br(),
 		                 # downloadButton('downloadExp', 'Download data for selected type')
@@ -193,8 +195,9 @@ shinyUI(
 		               )
 		             ), #end sidebarPanel
 		             mainPanel(
-		               includeMarkdown("www/files/help.md"),
-		               DT::dataTableOutput("ids2")
+		               #includeMarkdown("www/files/help.md"),
+		             ##  DT::dataTableOutput("ids2")
+		               DT::dataTableOutput("ids_s")
 	#	               uiOutput('searchPanel'),
 		               #h4(htmlOutput('sourceLink'))
 	 #              htmlOutput('sourceLink')
