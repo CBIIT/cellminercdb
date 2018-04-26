@@ -22,6 +22,11 @@ getMatchedIds <- function(prefix, id, dataSource, srcContent){
 		if (require(rcellminerUtils) && isDrugActivityDataType(prefix)){
 			matchedIds <- rcellminerUtils::getDbDrugIds(drugName = id, dbName = dataSource)
 			matchedIds <- intersect(matchedIds, idSet)
+			## new final search with drug name
+			if (length(matchedIds)==0 & nchar(id)>=3) {
+			  vnames <- srcContent[[dataSource]][["drugInfo"]]
+			  matchedIds <- vnames[grep(toupper(id),toupper(vnames[,2])),1]
+			}
 		}
 	}
 	
