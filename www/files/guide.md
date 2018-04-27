@@ -36,12 +36,12 @@
 <!-- /TOC -->
 
 <h2 id="introduction">Introduction</h2>
-CellMinerCDB is an interactive web application that simplifies access and exploration of cancer cell line pharmacogenomic data across different sources (see Metadata section for more details). Navigation in the application is done using main menu tabs (see figure below). It includes 5 tabs: Univariate Analyses, Regression Models, Metadata, About and Help. Univariate Analyses is selected by default when entering the site. Each option includes a side bar menu (to choose input) and a user interface output to display results. Analysis options are available on the top for both the Univariant Analysis and Regression model tabs (see sub-menu on figure). The sub-menu first option result is displayed by default (Figure 1).
+CellMinerCDB is an interactive web application that simplifies access and exploration of cancer cell line pharmacogenomic data across different sources (see Metadata section for more details). Navigation in the application is done using main menu tabs (see figure below). It includes 5 tabs: Univariate Analyses, Regression Models, Metadata, Search and Help. Univariate Analyses is selected by default when entering the site. Each option includes a side bar menu (to choose input) and a user interface output to display results. Analysis options are available on the top for both the Univariant Analysis and Regression model tabs (see sub-menu on figure). The sub-menu first option result is displayed by default (Figure 1).
 
 #### Figure 1
 ![Screenshot of CellMinerCDB Application](files/Slide01.jpg)
 <h2 id="univariate">Univariate Analyses</h2>
-Molecular and/or drug response patterns across sets of cell lines can be compared to look for possible association.  The univariate analysis panel includes 4 options: Plot data, Download Data, Search ID and Compare Patterns. Almost all options have the same input data in the left side panel.
+Molecular and/or drug response patterns across sets of cell lines can be compared to look for possible association.  The univariate analysis panel includes 3 options: Plot data, Download Data and Compare Patterns. Almost all options have the same input data in the left side panel.
 
 <h3 id="plot">Plot Data</h3>
 Any pair of features from different sources across common cell lines can be plotted (as a scatterplot) including the resultant Pearson correlation and p value. To generate a scatterplot, enter on the side bar panel:
@@ -142,28 +142,30 @@ And finally click on button run (step 8 in figure). A table with partial correla
 ![Screenshot of CellMinerCDB Application](files/Slide11.jpg)
 
 <h2 id="metadata">Metadata</h2>
-This option enumerates for each data source, the available data types that could be queried within the app providing the data type abbreviation or prefix, description, feature value unit (z-score, intensity, probability …), platform or experiment and related publication reference (pubmed). The following figure shows all data types for NCI60.
+This option enumerates for each cell line set or data source, the available data types that could be queried within the app providing the data type abbreviation or prefix, description, feature value unit (z-score, intensity, probability …), platform or experiment and related publication reference (pubmed). The user have the option to select and download any data or footnotes for the selected data source. The following figure shows all data types for NCI60.
 
 #### Figure 12
 ![Screenshot of CellMinerCDB Application](files/Slide12.jpg)
 <h3 id="search">Search IDs</h3>
-This page lists the identifiers (ID) that are available in the selected data source to use in the univariate analysis or regression models. Each data source has different types and amounts of data available. 
+This page lists the identifiers (ID) that are available in the selected data source to use in the univariate analysis or regression models. The user has to select the data source and data type to search all related ID for each combination.
 
-For the molecular data, the Data type and gene names (ID) are provided. For the drugs and compounds, the Data type (activity), identifiers (ID),  Drug name (when available), and Drug MOA (when available) are displayed. 
-
-The results  are displayed as a table with 4 columns: **Data type, ID, Drug Name, and Drug MOA** The user can scroll down the whole  list of IDs, or search specific ID(s) by entering a value in the header of any column.
+For the molecular data, the **gene names (ID) and specific data type information** are provided. For the drugs and compounds, **the identifiers (ID),  Drug name (when available), and Drug MOA (when available)** are displayed. The user can scroll down the whole  list of IDs, or search specific ID(s) by entering a value in the header of any column.
 
 <h3 id="drugid">Drug IDs</h3>
 For the NCI-60 and NCI/DTP SCLC, the drug identifiers (ID) are NSC's or names. For the CCLE, GTRP, and CTRP, the drug identifiers are the Drug names.
 
+#### Figure 13
+Example of a search: if looking for a drug ID in the NCI-60 select "NCI-60" as the cell line source and select "Drug Activity" as the data type. You can type in search box of column "Drug name" or "MOA".  See figure 13 below.
+
+![Screenshot of CellMinerCDB Application](files/Slide13.jpg)
+<br>
 <h3 id="geneid">Gene IDs</h3>
 For all data sources, the gene ID is the gene name (Hugo name)
 
-<br>
-#### Figure 13
-Example of a search: if looking in the NCI-60 for the drug Topotecan, select "NCI-60" as the cell line source and type "topotecan" in search box of column "Drug name". The search can be limited to drugs by entering "act" in the "Data type" search box. See figure 13 below.
+#### Figure 14
+Example of a search: if looking for a gene ID in the NCI-60 select "NCI-60" as the cell line source and select "gene expression" as the data type. You can type in search box of column "gene name" or "entrez gene id".  See figure 14 below.
 
-![Screenshot of CellMinerCDB Application](files/Slide13.jpg)
+![Screenshot of CellMinerCDB Application](files/Slide14.jpg)
 
 <h2 id="navigation">Navigation guide</h2>
 <h3 id="multiple">Multiple selection</h3>
