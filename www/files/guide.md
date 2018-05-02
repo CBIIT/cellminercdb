@@ -46,14 +46,18 @@ Molecular and/or drug response patterns across sets of cell lines can be compare
 <h3 id="plot">Plot Data</h3>
 Any pair of features from different sources across common cell lines can be plotted (as a scatterplot) including the resultant Pearson correlation and p value. To generate a scatterplot, enter on the side bar panel:
 
-1.	The x-axis data choice includes 3 fields to be filled by the user. Field one is the x-Axis Dataset (the data source). The user can choose: NCI60, CCLE, GDSC, CTRP or NCI/DTP SCLC (see about section for more details). In field two the user selects a specific data type to query. The options for this vary between sources, and appear in the x-Axis Type dropdown. See Metadata tab for data type descriptions and abbreviations. In field three, the user should enter the desired feature to query. For instance, if drug activity for the NCI-60 is selected, the user can enter a single drug name or drug ID (NSC number) or a paired drug ID (NSC1_NSC2). The “Search IDs” tab will help the user access potential identifiers for each dataset. The user has also the option to change the x-axis range for better visualization.
-2.	The y-axis choice is as explained above.
+1.	The **x-axis data** choice includes 4 fields to be filled by the user:
+  - **x-Axis Cell Line set** selects the data source. The user can choose: NCI60, CCLE, GDSC, CTRP or NCI/DTP SCLC (see Data Sources for more details). 
+  - **x-Axis Data Type** selects the data type to query. The options for this vary dependent on the source selected above, and appear in the x-Axis Data Type dropdown. See the Metadata tab for descriptions and abbreviations. 
+  - **Identifier** selects the identifier of interest for the above selected data type. For instance, if drug activity for the NCI-60 is selected, the user can enter a single drug name or drug ID (NSC number) or a paired drug ID (NSC1_NSC2). The Search IDs tab explore potential identifiers interactively, or to download datasets of interest. 
+  - **x-Axis Range** allows the user to control the x-axis range for better visualization.
 
-3.	To include or exclude cell lines from specific tissues, use the is  **Select Tissues of origin subsets** functionality at the bottom of the left-hand panel. On Macs, more than one tissue of origin may be selected using the "command" button. All cell lines were mapped to the four-level OncoTree cancer tissue type hierarchy developed at [Memorial Sloan-Kettering Cancer Center](http://www.cbioportal.org/oncotree/). In the CellminerCDB application, a tissue value is coded as an OncoTree node that can include elements from level 1 to level 4 separated by “:” character. For instance, the cell line MCF7 is a “breast” cell line but also more specifically it is a breast carcinoma. So MCF7 belong to different cancer tissue types (or hierarchical nodes) “breast” (level 1) and “breast: breast carcinoma (BRCA)” (level 2). There is no further sub-categorization for MCF7 however we can identify BT-549 cell line as “breast: breast carcinoma (BRCA): Breast Invasive Ductal Carcinoma (IDC)” (level 3).  
+2.	The **y-axis data** choice is as explained above for the x-axis.
 
-4.	In order to locate cell lines related to desired tissues within the scatter plot, the user has the option to color in red the selected cell lines and have remaining cell lines colored in blue.
+3.  The **selected tissues**	
+By default, all tissues are selected and included in the scatter plot. To include or exclude cell lines from specific tissues, use the is  **Select Tissues of origin subsets** functionality at the bottom of the left-hand panel. On Macs, more than one tissue of origin may be selected using the "command" button. On PC's use the "control" key. All cell lines were mapped to the four-level OncoTree cancer tissue type hierarchy developed at [Memorial Sloan-Kettering Cancer Center](http://www.cbioportal.org/oncotree/). In the CellminerCDB application, a tissue value is coded as an OncoTree node that can include elements from level 1 to level 4 separated by “:” character. For instance, the cell line MCF7 is a “breast” cell line but also more specifically it is a breast carcinoma. So MCF7 belong to different cancer tissue types (or hierarchical nodes) “breast” (level 1) and “breast: breast carcinoma (BRCA)” (level 2). There is no further sub-categorization for MCF7 however we can identify BT-549 cell line as “breast: breast carcinoma (BRCA): Breast Invasive Ductal Carcinoma (IDC)” (level 3). You can use **Tissues to color** to locate cell lines related to desired tissues within the scatter plot. Selecting a tissue makes related cell lines appear in red while remaining cell lines are colored in blue.
 
-Figure 2 shows a scatterplot between SLFN11 gene expression (x-axis) and Topotecan drug activity both from the NCI60. Since Topotecan has 2 different drug ids in the NCI-60, the one with the lowest number of missing data is selected (here 609699). However, the user can type in their specific drug ID of interest. The Pearson correlation value and p value appear at the top of the plot. A linear fitting curve is included. This is an interactive plot and whenever the user changes any input value, the plot will be updated. Any point in the plot can be hovered over to provide additional information about cell line, tissue, Onco tree designation,  and x and y coordinate values.
+Figure 2 shows an example scatterplot of SLFN11 gene expression (x-axis)  versus Topotecan drug activity (y-axis)/ both from the NCI60. Since Topotecan has 2 different drug ids in the NCI-60, the one with the lowest number of missing data is selected (here 609699). However, the user can type in their specific drug ID of interest. The Pearson correlation value and p value appear at the top of the plot. A linear fitting curve is included. This is an interactive plot and whenever the user changes any input value, the plot will be updated. Any point in the plot can be hovered over to provide additional information about cell line, tissue, Onco tree designation,  and x and y coordinate values.
 
 #### Figure 2
 ![Screenshot of CellMinerCDB Application](files/Slide02.jpg)
@@ -77,19 +81,20 @@ The following figure shows correlation results for SLFN11 gene with all other mo
 <h2 id="regression">Regression Models</h2>
 The ‘Regression Models’ option (or module) has multiple features (described below), and allows construction and assessment of multivariate linear response prediction models. For instance, we can assess prediction of a drug activity based on some genes expression. To construct a regression model, you need to specify:
 
-1. The response variable by selecting 
-  - the Dataset (data source)
-  - the Response Data Type (example: a drug or a molecular dataset)
-  - the Response ID (e.g., a specific drug or gene identifier)
+1. The Cell line set selects the data source. The user can choose: NCI60, CCLE, GDSC, CTRP or NCI/DTP SCLC (see Data Sources for more details). 
 
-2. The predictor variables from the same data source by selecting
-  - the Predictor Data Type. Use command button on Macs to select more than one dataset
-  - Minimal Value Range for the first listed data type (optional – default zero)
-  - one or more features (optional for Lasso model –see point4)
+2. The response variable by selecting 
+  - the Response Data Type (example: a drug or a molecular dataset). The options for this vary dependent on the source selected above, and appear in the Response Data Type dropdown. See the Metadata tab for data types description.
+  - the Response Identifier (e.g., a specific drug or gene identifier)
 
-3. The tissues: by default, all cell lines are included however you can selected some based-on tissue
+3. The predictor variables from the same data source by selecting
+  - the Predictor Data Type (as explained in response data type). Use command button on Macs or control key on PCs to select more than one dataset
+  - the Minimal Value Range for the first listed data type (optional – default zero)
+  - the predictor identifiers (optional for Lasso model –see point5)
 
-4. The algorithm: by default, the basic linear regression model is selected however you can select the Lasso model (penalized linear regression model). If Lasso algorithm is selected, you have to specify:
+4. The tissues: by default, all cell lines are included however you can selected some based-on tissue
+
+5. The algorithm: by default, the basic linear regression model is selected however you can select the Lasso model (penalized linear regression model). If Lasso algorithm is selected, you have to specify:
   - The gene sets: The gene selection is based on curated gene sets such as DNA Damage Repair DDR or Apoptosis. The user can select one or more gene sets.
   - The maximum of predictors (default 4)
 

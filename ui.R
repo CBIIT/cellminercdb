@@ -112,7 +112,7 @@ shinyUI(
 	        	    paste("<label class='control-label' for='xDataset'>x-Axis Cell line set</label>","<select id='xDataset'>",options,"</select>")
 	        	  ),
 	        	  uiOutput("xPrefixUi"),
-	            textInput("xId", "ID: (e.g. topotecan or SLFN11)", "SLFN11"),
+	            textInput("xId", "Identifier: (e.g. topotecan or SLFN11)", "SLFN11"),
 	          	uiOutput("xAxisRangeUi"),
 	        	  br(),
 	            #selectInput("yDataset", "y-Axis Dataset", choices=dataSourceChoices, selected = "nci60"),
@@ -120,7 +120,7 @@ shinyUI(
 	        	    paste("<label class='control-label' for='yDataset'>y-Axis Cell line set</label>","<select id='yDataset'>",options,"</select>")
 	        	  ),
 	        	  uiOutput("yPrefixUi"),
-	          	textInput("yId", "ID: (e.g. topotecan or SLFN11)", "topotecan"),
+	          	textInput("yId", "Identifier: (e.g. topotecan or SLFN11)", "topotecan"),
 	          	uiOutput("yAxisRangeUi"),
 	          	
 	            checkboxInput("showColor", "Show Color?", value=TRUE),
