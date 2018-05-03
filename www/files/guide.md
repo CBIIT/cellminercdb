@@ -137,11 +137,11 @@ This option enables to view the R statistical and other technical details relate
 
 <h3 id="partialcorr">Partial correlations</h3>
 Additional predictive variables for a multivariate linear model can be selected using the partials correlations results. Conceptually, the aim is to identify variables that are independently correlated with the response variable, after accounting for the influence of the existing predictor set. Computationally, a linear model is fit, with respect to the existing predictor set, for both the response variable and each candidate predictor variable. The partial correlation is then computed as the Pearson’s correlation between the resulting pairs of model residual vectors (which capture the variation not explained by the existing predictor set). The p-values reported for the correlation and linear modeling analyses assume multivariate normal data. The two-variable plot feature of CellMinerCDB allows informal assessment of this assumption, with clear indication of outlying observations. The reported p-values are less reliable as the data deviate from multivariate normality.
-In order to run a partial correlation analysis, the user should first construct a linear model (providing response and predictor variables as explained earlier - steps 1 to 4 in figure below-) and then select the:
--	Gene sets: The gene selection is based on curated gene sets. Here the user can select one or more gene sets and even all genes (step 5 in figure)
--	Data types: the user can select one or more data type such as gene expression, methylation or copy number variation (step 6 in figure)
--	And optionally, minimum range for the first listed data type (step 7 in figure)
-And finally click on button run (step 8 in figure). A table with partial correlation results for all candidate variables with gene sets annotation
+In order to run a partial correlation analysis, the user should first construct a linear model (providing response and predictor variables as explained earlier - steps 1 to 5 in figure below-) and then select the:
+-	Gene sets: The gene selection is based on curated gene sets. Here the user can select one or more gene sets and even all genes (step 6 in figure)
+-	Data types: the user can select one or more data type such as gene expression, methylation or copy number variation (step 7 in figure)
+-	And optionally, minimum range for the first listed data type (step 8 in figure)
+And finally click on button run (step 9 in figure). A table with partial correlation results for all candidate variables with gene sets annotation
 
 #### Figure 11
 ![Screenshot of CellMinerCDB Application](files/Slide11.jpg)
