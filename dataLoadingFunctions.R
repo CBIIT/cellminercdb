@@ -245,18 +245,22 @@ loadSourceContent <- function(srcConfig){
       drugAnnot <- rbind(drugAnnot, annot)
     }
   }
+  # end for package
   #-----------------------------------------------------------------------------
   
   # Assemble app data object to be returned. ---------------------------------
   src <- list()
   src$molPharmData <- molDataMats
-  if (drugFeaturePrefix %in% names(src$molPharmData)){
-    stop("Check config file: ", srcConfig$displayName, 
+  ## new test if package without drug data
+  if (!is.null(drugFeaturePrefix)) {
+     if (drugFeaturePrefix %in% names(src$molPharmData)){
+      stop("Check config file: ", srcConfig$displayName, 
          " drug featurePrefix must be different from all molecular data feature prefixes.")
+      }
+     src$molPharmData[[drugFeaturePrefix]] <- drugAct
+     src$drugInfo <- drugAnnot
   }
-  src$molPharmData[[drugFeaturePrefix]] <- drugAct
-  src$drugInfo <- drugAnnot
-  
+  ##
   src$sampleData <- sampleData
   rownames(src$sampleData) <- src$sampleData$Name
   

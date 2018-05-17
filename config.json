@@ -215,5 +215,19 @@
         ]
       }
     }
+  },
+  "mdaMills":{
+    "displayName":"MD.Anderson MCLP",
+    "packages":{
+      "mdaMillsData":{
+        "MolData":[
+          {
+            "eSetListName":"pro",
+            "featurePrefix":"pro",
+            "displayName":"Protein (RPPA)"
+          }
+        ]
+      }
+    }
   }
 }

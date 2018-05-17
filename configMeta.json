@@ -253,5 +253,23 @@
        	]
       }
     }
+  },
+  "mdaMills":{
+    "displayName":"MD.Anderson MCLP",
+    "fullName": "MD Anderson Cell Lines Project",
+    "url": "http://tcpaportal.org/mclp/#/",
+    "packages":{
+      "mdaMillsData":{
+        "MetaData":[
+          {
+        		"dataType":"pro",
+        		"description":"protein expression (RPPA)",
+        		"units":"protein intensities",
+        		"platform":"reverse-phase protein array",
+        		"ref_pmid":"28196595"
+        	}
+       	]
+      }
+    }
   }
 }
