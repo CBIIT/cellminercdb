@@ -107,9 +107,9 @@ shinyUI(
 	        	tags$div(
 	        	  id="input_container",
 	        	  tags$a(id="skiplink"),
-	            #selectInput("xDataset", "x-Axis Cell line set", choices=dataSourceChoices, selected = "nci60"),
+	            #selectInput("xDataset", "x-Axis Cell Line Set", choices=dataSourceChoices, selected = "nci60"),
 	        	  HTML(
-	        	    paste("<label class='control-label' for='xDataset'>x-Axis Cell line set</label>","<select id='xDataset'>",options,"</select>")
+	        	    paste("<label class='control-label' for='xDataset'>x-Axis Cell Line Set</label>","<select id='xDataset'>",options,"</select>")
 	        	  ),
 	        	  uiOutput("xPrefixUi"),
 	            textInput("xId", "Identifier: (e.g. topotecan or SLFN11)", "SLFN11"),
@@ -117,16 +117,19 @@ shinyUI(
 	        	  br(),
 	            #selectInput("yDataset", "y-Axis Dataset", choices=dataSourceChoices, selected = "nci60"),
 	        	  HTML(
-	        	    paste("<label class='control-label' for='yDataset'>y-Axis Cell line set</label>","<select id='yDataset'>",options,"</select>")
+	        	    paste("<label class='control-label' for='yDataset'>y-Axis Cell Line Set</label>","<select id='yDataset'>",options,"</select>")
 	        	  ),
 	        	  uiOutput("yPrefixUi"),
 	          	textInput("yId", "Identifier: (e.g. topotecan or SLFN11)", "topotecan"),
 	          	uiOutput("yAxisRangeUi"),
 	          	
-	            checkboxInput("showColor", "Show Color?", value=TRUE),
+	            # checkboxInput("showColor", "Show Color?", value=TRUE),
 
-	          	radioButtons("tissueSelectionMode", "Select Tissues", c("Include", "Exclude")),
+	          	radioButtons("tissueSelectionMode", "Select Tissue to", c("Include", "Exclude")),
 	          	uiOutput("selectTissuesUi"),
+	        	  
+	        	  checkboxInput("showColor", "Show Color?", value=TRUE),
+	        	  
 	            uiOutput("showColorTissuesUi")
 	            
 	            # Generate a hidden input with TRUE or FALSE if rCharts is installed
@@ -153,14 +156,14 @@ shinyUI(
 						 				tags$a(id="skiplink"),
 						 				#selectInput("mdataSource", "Data Source", choices=metaChoices, selected = "nci60")
 						 				HTML(
-						 				  paste("<label class='control-label' for='mdataSource'>Cell line set</label>","<select id='mdataSource'>",metaoptions,"</select>")
+						 				  paste("<label class='control-label' for='mdataSource'>Cell Line Set</label>","<select id='mdataSource'>",metaoptions,"</select>")
 						 				),
 						 				br(),br(),br(),br(),br(),br(),
 						 				uiOutput("dataTypeUi"),
 						 				br(),
-						 				downloadButton('downloadExp', 'Download data type'),
+						 				downloadButton('downloadExp', 'Download Data Type'),
 						 				br(),br(),
-						 				downloadButton('downloadFoot', 'Download data footnotes')
+						 				downloadButton('downloadFoot', 'Download Data Footnotes')
 						 				#uiOutput(""),
 						 			)
 						 		), #end sidebarPanel
@@ -184,7 +187,7 @@ shinyUI(
 		                 tags$a(id="skiplink"),
 		                 #selectInput("mdataSource", "Data Source", choices=metaChoices, selected = "nci60")
 		                 HTML(
-		                   paste("<label class='control-label' for='dataSrc'>Data Source</label>","<select id='dataSrc'>",options,"</select>")
+		                   paste("<label class='control-label' for='dataSrc'>Cell Line Set</label>","<select id='dataSrc'>",options,"</select>")
 		                 ),
 		                 br(),br(),br(),br(),
 		                 uiOutput("dataTypeUi_s")

@@ -824,7 +824,7 @@ shinyServer(function(input, output, session) {
     }
     # selectInput("xPrefix", "x-Axis Type", choices = prefixChoices, selected = selectedPrefix)
     HTML(
-      paste("<label class='control-label' for='dataType'>Select data type to download</label>","<select id='dataType' style='word-wrap:break-word; width: 100%;'>",opt,"</select>")
+      paste("<label class='control-label' for='dataType'>Select Data Type to Download</label>","<select id='dataType' style='word-wrap:break-word; width: 100%;'>",opt,"</select>")
     )
   })
  ## new version for search tab
@@ -853,7 +853,7 @@ shinyServer(function(input, output, session) {
     }
     # selectInput("xPrefix", "x-Axis Type", choices = prefixChoices, selected = selectedPrefix)
     HTML(
-      paste("<label class='control-label' for='dataTyp'>Select data type</label>","<select id='dataTyp' style='word-wrap:break-word; width: 100%;'>",opt,"</select>")
+      paste("<label class='control-label' for='dataTyp'>Select Data Type</label>","<select id='dataTyp' style='word-wrap:break-word; width: 100%;'>",opt,"</select>")
     )
   })
   
@@ -1068,7 +1068,7 @@ shinyServer(function(input, output, session) {
   	  }
   	}
   	HTML(
-  	  paste("<label class='control-label' for='selectedTissues'>Select tissues of origin subset/s</label>","<select id='selectedTissues' style='word-wrap:break-word; width: 100%;' multiple>",opt,"</select>")
+  	  paste("<label class='control-label' for='selectedTissues'>Select Tissues of Origin Subset/s</label>","<select id='selectedTissues' style='word-wrap:break-word; width: 100%;' multiple>",opt,"</select>")
   	)
   	
   	## 
@@ -1087,7 +1087,7 @@ shinyServer(function(input, output, session) {
   	    opt =  paste0(opt,"<option style='white-space: pre-wrap'>",tissueChoices[y],"</option>;");
   	}
   	HTML(
-  	  paste("<label class='control-label' for='showColorTissues'>Tissues to Color</label>","<select id='showColorTissues' style='word-wrap:break-word; width: 100%;' multiple>",opt,"</select>")
+  	  paste("<label class='control-label' for='showColorTissues'>Select Tissues to Color</label>","<select id='showColorTissues' style='word-wrap:break-word; width: 100%;' multiple>",opt,"</select>")
   	)
   	# selectInput("showColorTissues", "Tissues to Color",choices = tissueChoices, multiple = TRUE)
 	})

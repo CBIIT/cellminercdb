@@ -23,17 +23,19 @@ regressionModelsInput <- function(id, dataSourceChoices) {
 					 				tags$a(id="skiplink"),
 					 				#selectInput(ns("dataset"), "Dataset", choices=dataSourceChoices, selected = "nci60"),
 					 				HTML(
-					 				  paste("<label class='control-label' for=",ns("dataset"),">Cell line set</label>","<select id=",ns("dataset"),">",voptions,"</select>")
+					 				  paste("<label class='control-label' for=",ns("dataset"),">Cell Line Set</label>","<select id=",ns("dataset"),">",voptions,"</select>")
 					 				),
-					 				br(),
+					 				br(),br(),
 					 				uiOutput(ns("responseDataTypeUi")),
 					 				textInput(ns("responseId"), "Response Identifier:", "topotecan"),
+					 				br(),
 					 				uiOutput(ns("predDataTypesUi")),
 					 				sliderInput(ns("minPredValueRange"), 
 					 										"Minimum Value Range (First Listed Data Type):", 
 					 										min=0, max=5, value=0, step = 0.25),
 					 				textInput(ns("predIds"), "Predictor Identifiers: (Case-Sensitive, e.g. SLFN11 BPTF)", "SLFN11 BPTF"),
-					 				radioButtons(ns("tissueSelectionMode"), "Select Tissues", c("Include", "Exclude")),
+					 				br(),
+					 				radioButtons(ns("tissueSelectionMode"), "Select Tissues to", c("Include", "Exclude")),
 					 				uiOutput(ns("selectTissuesUi")),
 					 				#selectInput(ns("algorithm"), "Algorithm", 
 					 				#						choices=c("Linear Regression", "Lasso"), 
@@ -1187,7 +1189,7 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 		  }
 		}
 		HTML(
-		  paste("<label class='control-label' for=",ns("selectedTissues"),">Select tissues of origin subset/s</label>","<select id=",ns("selectedTissues")," style='word-wrap:break-word; width: 100%;' multiple>",opt,"</select>")
+		  paste("<label class='control-label' for=",ns("selectedTissues"),">Select Tissues of Origin Subset/s</label>","<select id=",ns("selectedTissues")," style='word-wrap:break-word; width: 100%;' multiple>",opt,"</select>")
 		)
 		
 		## 
