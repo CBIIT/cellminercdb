@@ -59,8 +59,11 @@ for(y in 1:length(metaChoices)){
 shinyUI(
   fluidPage(
   tags$html(lang="en"), 
-  #tags$head(tags$style(type="text/css", "img {display: block;}",".clear {clear:both}")),
-  tags$a(href="#skiplink","Skip over navigation",style="font-size: 10px"),
+  #tags$head(tags$style(type="text/css", ".body {color: blue;}",".clear {clear:both}")),
+  tags$a(href="#skiplink","Skip over navigation",style="font-size: 10px; float: left"),
+  #tags$h1("Internal",style="text-align: center"),
+  # br(),
+  tags$html("~Internal version~",style="text-align: center; font-size: 20px"),
   tags$a(href="https://discover.nci.nih.gov/cellminer/"," CellMiner NCI-60 ",style="font-size: 14px;float: right;background-color: steelblue;color: white;display: inline-block;margin: 5px 5px;padding: 10px 10px;",target="_blank"),
   
   #tags$p("CellMinerCDB",style="font-size: 24px;color: white;background-color: dodgerblue;text-align:center;height:50px;"),
