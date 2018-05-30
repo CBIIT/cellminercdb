@@ -129,7 +129,7 @@ shinyUI(
 	          	
 	            # checkboxInput("showColor", "Show Color?", value=TRUE),
 
-	          	radioButtons("tissueSelectionMode", "Select Tissue to", c("Include", "Exclude")),
+	          	radioButtons("tissueSelectionMode", "Select Tissues", c("To include", "To exclude")),
 	          	uiOutput("selectTissuesUi"),
 	        	  
 	        	  checkboxInput("showColor", "Show Color?", value=TRUE),

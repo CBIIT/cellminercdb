@@ -237,7 +237,7 @@
     }
   },
   "almanac":{
-    "displayName":"NCI/DTP ALMANAC",
+    "displayName":"NCI-60/DTP Almanac",
     "fullName": "NCI/DTP FDA 105 paired Drug Project",
     "url": "https://dtp.cancer.gov/ncialmanac/initializePage.do",
     "packages":{

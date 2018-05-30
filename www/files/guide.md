@@ -48,23 +48,25 @@ Molecular and/or drug response patterns across sets of cell lines can be compare
 <h3 id="plot">Plot Data</h3>
 Any pair of features from different sources across common cell lines can be plotted (as a scatterplot) including the resultant Pearson correlation and p value. To generate a scatterplot, enter on the side bar panel:
 
-1.	The **x-axis data** choice includes 4 fields to be filled by the user:
+1.	The x-axis data choices includes 4 fields to be filled by the user:
   - **x-Axis Cell Line Set** selects the data source. The user can choose: NCI60, CCLE, GDSC, CTRP or NCI/DTP SCLC (see Data Sources for more details). 
   - **x-Axis Data Type** selects the data type to query. The options for this vary dependent on the source selected above, and appear in the x-Axis Data Type dropdown. See the Metadata tab for descriptions and abbreviations. 
   - **Identifier** selects the identifier of interest for the above selected data type. For instance, if drug activity for the NCI-60 is selected, the user can enter a single drug name or drug ID (NSC number) or a paired drug ID (NSC1_NSC2). The Search IDs tab explores potential identifiers interactively, or to download datasets of interest. 
   - **x-Axis Range** allows the user to control the x-axis range for better visualization.
 
-2.	The **y-axis data** choice is as explained above for the x-axis.
+2.	The y-axis data choices are as explained above for the x-axis.
 
-3.  **Desired tissues to display**	
+3.  Selected tissues	
 By default, all tissues are selected and included in the scatter plot. To include or exclude cell lines from specific tissues, the user should specify:
-  - **Select Tissues to** include or exclude specific tissues
+  - **Select Tissues** to include or exclude specific tissues
   - **Select Tissues of Origin Subset/s** functionality at the bottom of the left-hand panel. On Macs, more than one tissue of origin may be selected using the "command" button. On PC's use the "control" key. All cell lines were mapped to the four-level OncoTree cancer tissue type hierarchy developed at [Memorial Sloan-Kettering Cancer Center](http://www.cbioportal.org/oncotree/). In the CellminerCDB application, a tissue value is coded as an OncoTree node that can include elements from level 1 to level 4 separated by “:” character. For instance, the cell line MCF7 is a “breast” cell line but also more specifically it is a breast carcinoma. So MCF7 belong to different cancer tissue types (or hierarchical nodes) “breast” (level 1) and “breast: breast carcinoma (BRCA)” (level 2). There is no further sub-categorization for MCF7 however we can identify BT-549 cell line as “breast: breast carcinoma (BRCA): Breast Invasive Ductal Carcinoma (IDC)” (level 3).
-  - **Tissues to Color** to locate cell lines related to desired tissues within the scatter plot. Selecting a tissue makes related cell lines appear in red while remaining cell lines are colored in blue.
+
+4. Color selection
+  - **Tissues to Color** to locate cell lines related to desired tissues within the scatter plot. Selecting a tissue makes related cell lines appear in red while remaining cell lines are colored in blue. The **Show Color** checkbox should be active.
 
 ![Screenshot of CellMinerCDB Application](files/Slide02.jpg)
 
-**Figure 2**: an example scatterplot of SLFN11 gene expression (x-axis)  versus Topotecan drug activity (y-axis)/ both from the NCI60. Since Topotecan has 2 different drug ids in the NCI-60, the one with the lowest number of missing data is selected (here 609699). However, the user can type in their specific drug ID of interest. The Pearson correlation value and p value appear at the top of the plot. A linear fitting curve is included. This is an interactive plot and whenever the user changes any input value, the plot will be updated. Any point in the plot can be hovered over to provide additional information about cell line, tissue, Onco tree designation,  and x and y coordinate values.
+**Figure 2**: An example scatterplot of SLFN11 gene expression (x-axis)  versus Topotecan drug activity (y-axis)/ both from the NCI60. Since Topotecan has 2 different drug ids in the NCI-60, the one with the lowest number of missing data is selected (here 609699). However, the user can type in their specific drug ID of interest. The Pearson correlation value and p value appear at the top of the plot. A linear fitting curve is included. This is an interactive plot and whenever the user changes any input value, the plot will be updated. Any point in the plot can be hovered over to provide additional information about cell line, tissue, Onco tree designation,  and x and y coordinate values.
 
 
 <h3 id="download">Download Data</h3>
@@ -87,21 +89,22 @@ The ‘Regression Models’ option (or module) has multiple tabs including Heatm
 1. **Cell Line Set** selects the data source. The user can choose: NCI60, CCLE, GDSC, CTRP or NCI/DTP SCLC (see Data Sources for more details). 
 
 2. The response variable by selecting 
-  - the **Response Data Type** (example: a drug or a molecular dataset). The options for this vary dependent on the source selected above, and appear in the Response Data Type dropdown. See the Metadata tab for data types description.
-  - the **Response Identifier** (e.g., a specific drug or gene identifier)
+  - **Response Data Type** (example: a drug or a molecular dataset). The options for this vary dependent on the source selected above, and appear in the Response Data Type dropdown. See the Metadata tab for data types description.
+  - **Response Identifier** (e.g., a specific drug or gene identifier)
 
 3. The predictor variables from the same data source by selecting
-  - the **Predictor Data Type/s** (as explained in response data type). Use command button on Macs or control key on PCs to select more than one dataset
-  - the **Minimal Value Range** for the first listed data type (optional – default zero)
-  - the **predictor identifiers** (optional for Lasso model –see point5)
+  - **Predictor Data Type/s** (as explained in response data type). Use command button on Macs or control key on PCs to select more than one dataset
+  - **Minimal Range Value** for the first listed data type (optional – default zero)
+  - **predictor identifiers** (optional for Lasso model –see point5)
 
-4. Desired tissues: by default, all cell lines are included however you can selected some based-on tissue
-  - **Select Tissues to** include or exclude specific tissues
-  - **Select Tissues of Origin Subset/s**  
+4. Selected tissues: by default, all cell lines are included however you can selected some based-on tissue
+  - **Select Tissues** to include or exclude specific tissues
+  - **Select Tissues of Origin Subset/s** : by default, all tissues are selected and included. The user may also select specific tissues (to include or exclude). On Macs, more than one tissue of origin may be selected using the “command” key. On PC's use the "control" key.
 
-5. The **Algorithm**: by default, the basic linear regression model is selected however you can select the Lasso model (penalized linear regression model). If Lasso algorithm is selected, you have to:
+
+5. **Algorithm**: by default, the basic linear regression model is selected however you can select the Lasso model (penalized linear regression model). If Lasso algorithm is selected, you have to specify:
   - **Select Gene Sets**: The gene selection is based on curated gene sets such as DNA Damage Repair DDR or Apoptosis. The user can select one or more gene sets.
-  - specify the **Maximum Number of Predictors** (default 4)
+  - **Maximum Number of Predictors** (default 4)
 
 Once all the above information is entered, a regression model is built and the results are shown in different ways such as the technical details of the model, observed vs. predictive responses plots or variables heatmap. Find below an explanation of different output for the regression model module.
 
@@ -110,7 +113,7 @@ This option provides the observed response and predictor variables across all so
 
 ![Screenshot of CellMinerCDB Application](files/Slide05.jpg)
 
-**Figure 5**: an example of heatmap where we selected topotecan as a response variable and SLFLN11 and BPTF gene expression as predictor variables. In this example, we chose to display only 40 cell lines that have the most 20 highest and 20 lowest values for topotecan activity.
+**Figure 5**: An example heatmap where we selected topotecan as a response variable and SLFLN11 and BPTF gene expression as predictor variables. In this example, we chose to display only 40 cell lines that have the most 20 highest and 20 lowest values for topotecan activity.
 
 In case, the Lasso algorithm is selected	more predicted variables are shown based on model result as shown below (STK17B and ABCD3 new genes added)
 

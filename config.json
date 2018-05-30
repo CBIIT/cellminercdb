@@ -1,4 +1,4 @@
-{
+ {
   "nci60":{
     "displayName":"NCI-60",
     "packages":{
@@ -200,7 +200,7 @@
     }
   },
   "almanac":{
-    "displayName":"NCI/DTP ALMANAC",
+    "displayName":"NCI-60/DTP Almanac",
     "packages":{
       "almanacData":{
   
