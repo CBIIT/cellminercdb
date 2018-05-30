@@ -643,7 +643,7 @@ shinyServer(function(input, output, session) {
 		
 		DT::datatable(jsonFrame, rownames=FALSE, colnames=colnames(jsonFrame),
 									filter='top', style='bootstrap', selection = "none",
-									options=list(pageLength = 10))
+									options=list(pageLength = 10),escape=F)
 	})
 	#---------------------------------------------------------------------------------------
 	output$log <- renderText({

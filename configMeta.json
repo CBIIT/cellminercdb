@@ -8,7 +8,7 @@
         "MetaData":[
         	{
         		"dataType":"act",
-        		"description":"drug activity",
+        		"description":"drug activity <br><a href='https://dtp.cancer.gov' target='_blank'>source DTP</a>",
         		"units":"z-score from negative log10[GI50(molar)] data across NCI-60 for single drug and combo-score for paired drug",
         		"platform":"sulforhodamine B total protein cytotoxicity assay, 48hrs post-treatment",
         		"ref_pmid":"26048278-28446463"
