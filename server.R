@@ -188,7 +188,7 @@ shinyServer(function(input, output, session) {
 		tissueToSamplesMap <- srcContent[[input$xDataset]][["tissueToSamplesMap"]]
 		tissueTypes <- names(tissueToSamplesMap)
 		
-		if (tissueSelectionMode == "Include"){
+		if (tissueSelectionMode == "To include"){
 			if (!("all" %in% selectedTissues)){
 				selectedLines <- unique(c(tissueToSamplesMap[selectedTissues], recursive = TRUE))
 				# For which tissue types are ALL lines in selectedLines?
@@ -1050,10 +1050,10 @@ shinyServer(function(input, output, session) {
   	#}
   	
   	## new code
-  	if (input$tissueSelectionMode == "Include"){
+  	if (input$tissueSelectionMode == "To include"){
   	       choices=c("all", tissueTypes); mysel="all"
   	              
-  	} else{ # input$tissueSelectionMode == "Exclude"
+  	} else{ # input$tissueSelectionMode == "To exclude"
   	       choices=c("none", tissueTypes); mysel="none"
   	}
   	opt = "";
