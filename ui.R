@@ -7,6 +7,7 @@ library(rcellminer)
 config <- jsonlite::fromJSON("config.json")
 appConfig <- jsonlite::fromJSON("appConfig.json")
 metaConfig <- jsonlite::fromJSON("configMeta.json")
+
 source("modal.R")
 source("appUtils.R")
 

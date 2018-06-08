@@ -1,4 +1,5 @@
 #-----[NavBar Tab: Regression Models (UI code)]----------------------------------------------------
+
 regressionModelsInput <- function(id, dataSourceChoices) {
 	# Create a namespace function using the provided id
 	ns <- NS(id)
@@ -63,7 +64,7 @@ regressionModelsInput <- function(id, dataSourceChoices) {
 	)
 }
 #-----[NavBar Tab: Regression Models (Server code)]------------------------------------------------
-regressionModels <- function(input, output, session, srcContentReactive, appConfig) {
+regressionModels <- function(input, output, session, srcContentReactive, appConfig, oncolor) {
 	
 	#----[Utility Functions]----------------------------------------------------------------
 	# TO DO: Move to rcellminerUtils (?)
@@ -309,7 +310,7 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 			selectedTissueSamples <- getTissueTypeSamples(tissueTypes = input$selectedTissues, 
 																										dataSource = input$dataset,
 																										srcContent = srcContentReactive())
-			if (input$tissueSelectionMode == "Include") {
+			if (input$tissueSelectionMode == "To include") {
 				matchedLines <- intersect(rownames(dataTab), selectedTissueSamples)
 			} else { # input$tissueSelectionMode == "Exclude"
 				matchedLines <- setdiff(rownames(dataTab), selectedTissueSamples)
@@ -792,9 +793,9 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 		predResponseData$uniqName  <- predResponseData$name
 		predResponseData$dataSource <- responseData$dataSource
 		
-		p1 <- makePlotStatic(xData = predResponseData, yData = responseData, showColor = FALSE, 
+		p1 <- makePlotStatic(xData = predResponseData, yData = responseData, showColor = T, 
 												 showColorTissues = character(0), dataSource = input$dataset, 
-												 srcContent = srcContentReactive())
+												 srcContent = srcContentReactive(),oncolor=oncolor)
 		g1 <- ggplotly(p1, width=plotWidth, height=plotHeight, tooltip=tooltipCol)
 		g1 <- layout(g1, margin=list(t = 75))
 		g2 <- config(p = g1, collaborate=FALSE, cloud=FALSE, displaylogo=FALSE,
@@ -827,9 +828,9 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 		cvPredResponseData$uniqName  <- cvPredResponseData$name
 		cvPredResponseData$dataSource <- responseData$dataSource
 		
-		p1 <- makePlotStatic(xData = cvPredResponseData, yData = responseData, showColor = FALSE, 
+		p1 <- makePlotStatic(xData = cvPredResponseData, yData = responseData, showColor = T, 
 												 showColorTissues = character(0), dataSource = input$dataset, 
-												 srcContent = srcContentReactive())
+												 srcContent = srcContentReactive(),oncolor=oncolor)
 		g1 <- ggplotly(p1, width=plotWidth, height=plotHeight, tooltip=tooltipCol)
 		g1 <- layout(g1, margin=list(t = 75))
 		g2 <- config(p = g1, collaborate=FALSE, cloud=FALSE, displaylogo=FALSE,
@@ -1171,7 +1172,7 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 		#							multiple=TRUE, selected="none")
 		#}
 		## new code
-		if (input$tissueSelectionMode == "Include"){
+		if (input$tissueSelectionMode == "To include"){
 		  choices=c("all", tissueTypes); mysel="all"
 		  
 		} else{ # input$tissueSelectionMode == "Exclude"

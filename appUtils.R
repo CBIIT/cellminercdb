@@ -249,7 +249,7 @@ makePlot <- function(xData, yData, showColor, showColorTissues, dataSource,
 
 
 makePlotStatic <- function(xData, yData, showColor, showColorTissues, dataSource, 
-													 srcContent, xLimVals = NULL, yLimVals = NULL) {
+													 srcContent, xLimVals = NULL, yLimVals = NULL,oncolor) {
 	df <- getPlotData(xData, yData, showColor, showColorTissues, dataSource, srcContent)
 	# contains column color
 	df$tooltip <- paste0(
@@ -272,17 +272,28 @@ makePlotStatic <- function(xData, yData, showColor, showColorTissues, dataSource
 	# ##names(colorPalette) <- df[, "OncoTree1"]
 	# # Merge data
 	# df[, classCol] <- as.factor(df[, classCol])
+#	if (showColor)
+	   colorPalette <- oncolor[toupper(df[,"OncoTree1"]),]
+	   classCol <- "OncoTree1"
+	   leg <- TRUE
+	# else 
+	   if ( (length(showColorTissues) > 0) | (!showColor))
+	         colorPalette <- df[, "color"]
+	   
+	   if (length(showColorTissues) > 0)  {
+	     classCol <- "color"
+	     leg <- FALSE
+	   }
 	
-	classCol <- "OncoTree1"
 	df[, classCol] <- as.factor(df[, classCol])
 	
-	colorPalette <- df[, "color"]
+	#colorPalette <- df[, "color"]
 	names(colorPalette) <- df[, classCol]
 	
 	
 	p1 <- rcellminer::plotCellMiner2D(df, xCol="x", yCol="y", xLabel = xData$plotLabel, yLabel = yData$plotLabel,
 												colorPalette=colorPalette, classCol=classCol, tooltipCol=tooltipCol,
-												xLimVal = xLimVals, yLimVal = yLimVals, showLegend = T)
+												xLimVal = xLimVals, yLimVal = yLimVals, showLegend = leg)
 	
 	return(p1)
 }

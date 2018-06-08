@@ -25,6 +25,10 @@ if (!require(rcellminerUtils)){
 config <- jsonlite::fromJSON("config.json")
 appConfig <- jsonlite::fromJSON("appConfig.json")
 metaConfig <- jsonlite::fromJSON("configMeta.json")
+
+oncolor <- read.delim("oncotree1_colors.txt",row.names = 1,stringsAsFactors = F)
+rownames(oncolor)=toupper(rownames(oncolor))
+
 source("modal.R")
 source("appUtils.R")
 source("dataLoadingFunctions.R")
@@ -311,7 +315,9 @@ shinyServer(function(input, output, session) {
 			xData <- getFeatureData(xPrefix, xId, input$xDataset, srcContent = srcContentReactive())
 			
 			matchedLinesTab <- matchedCellLinesTab()
-			xData$data <- xData$data[matchedLinesTab[, "xDataset"]]
+			# xData$data <- xData$data[matchedLinesTab[, "xDataset"]]
+			xData$data <- xData$data[as.character(matchedLinesTab[, "xDataset"])]
+			
 		}
 		
 		return(xData)
@@ -345,7 +351,8 @@ shinyServer(function(input, output, session) {
 			yData <- getFeatureData(yPrefix, yId, input$yDataset, srcContent = srcContentReactive())
 			
 			matchedLinesTab <- matchedCellLinesTab()
-			yData$data <- yData$data[matchedLinesTab[, "yDataset"]]
+			# yData$data <- yData$data[matchedLinesTab[, "yDataset"]]
+			yData$data <- yData$data[as.character(matchedLinesTab[, "yDataset"])]
 		}
 		
 		return(yData)
@@ -413,7 +420,7 @@ shinyServer(function(input, output, session) {
 		p1 <- makePlotStatic(xData = xData, yData = yData, showColor = input$showColor, 
 												 showColorTissues = input$showColorTissues, dataSource = input$xDataset, 
 												 xLimVals = xLimits, yLimVals = yLimits,
-												 srcContent = srcContentReactive())
+												 srcContent = srcContentReactive(),oncolor=oncolor)
 		g1 <- ggplotly(p1, width=plotWidth, height=plotHeight, tooltip=tooltipCol)
 		g1 <- layout(g1, margin=list(t = 75))
 		g2 <- config(p = g1, collaborate=FALSE, cloud=FALSE, displaylogo=FALSE, displayModeBar=TRUE,
@@ -1108,7 +1115,7 @@ shinyServer(function(input, output, session) {
 	
   #-----[NavBar Tab Server Code]---------------------------------------------------------
   rm <- callModule(regressionModels, "rm", srcContentReactive = srcContentReactive,
-  								 appConfig = appConfig)
+  								 appConfig = appConfig, oncolor=oncolor)
 
 })
 #-----[end of shinyServer()]-----------------------------------------------------------------------
