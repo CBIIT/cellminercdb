@@ -15,6 +15,11 @@
             "displayName":"mRNA Expression (Avg. log2 Int.)"
           },
           {
+            "eSetListName":"xsq",
+            "featurePrefix":"xsq",
+            "displayName":"Rnaseq Expression (log2 FPKM+1.)"
+          },
+          {
             "eSetListName":"met",
             "featurePrefix":"met",
             "displayName":"DNA Methylation"

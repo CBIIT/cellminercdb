@@ -2,7 +2,7 @@
   "nci60":{
     "displayName":"NCI-60",
     "fullName": "CellMiner NCI-60",
-    "url":"https://discover.nci.nih.gov/cellminer/datasetMetadata.do",
+    "url":"https://discover.nci.nih.gov/cellminer/datasets.do",
     "packages":{
       "rcellminerData":{
         "MetaData":[
@@ -26,6 +26,13 @@
         		"units":"multi-platform microarray average log2 intensity",
         		"platform":"Affymetrix HG-U95, HG-U133, HG-U133 Plus 2.0; GeneChip Human Exon 1.0 ST array; Agilent Whole Human Genome Oligo Microarray",
         		"ref_pmid":"26048278"
+        	},
+        	{
+        		"dataType":"xsq",
+        		"description":"mRNA expression",
+        		"units":"RNAseq composite log2 FPKM+1",
+        		"platform":"HiSeq 2000 (Illumina)",
+        		"ref_pmid":"NA"
         	},
         	{
         		"dataType":"met",
