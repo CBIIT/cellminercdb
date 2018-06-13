@@ -881,9 +881,11 @@ shinyServer(function(input, output, session) {
     # the argument 'file'.
     content = function(file) {
       
+      wdata=srcContent[[input$mdataSource]][["molPharmData"]][[input$dataType]]
+      rownames(wdata)=substr(rownames(wdata),4,nchar(rownames(wdata)))
       # Write to a file specified by the 'file' argument
-      write.table(srcContent[[input$mdataSource]][["molPharmData"]][[input$dataType]], file, sep = "\t",
-                   col.names = NA)      
+      #write.table(srcContent[[input$mdataSource]][["molPharmData"]][[input$dataType]], file, sep = "\t",col.names = NA)      
+      write.table(wdata, file, sep = "\t", col.names = NA)  
       
       # myname=paste0(input$mdataSource,"_",input$dataType,".txt")
       # write.table(srcContent[[input$mdataSource]][["molPharmData"]][[input$dataType]], myname, sep = "\t",

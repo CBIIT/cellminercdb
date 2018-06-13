@@ -30,7 +30,7 @@
         	{
         		"dataType":"xsq",
         		"description":"mRNA expression",
-        		"units":"RNAseq composite log2 FPKM+1",
+        		"units":"RNA-seq composite log2 FPKM+1",
         		"platform":"HiSeq 2000 (Illumina)",
         		"ref_pmid":"NA"
         	},

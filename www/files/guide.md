@@ -53,14 +53,13 @@ Any pair of features from different sources across common cell lines can be plot
   - **x-Axis Data Type** selects the data type to query. The options for this vary dependent on the source selected above, and appear in the x-Axis Data Type dropdown. See the Metadata tab for descriptions and abbreviations. 
   - **Identifier** selects the identifier of interest for the above selected data type. For instance, if drug activity for the NCI-60 is selected, the user can enter a single drug name or drug ID (NSC number) or a paired drug ID (NSC1_NSC2). The Search IDs tab explores potential identifiers interactively, or to download datasets of interest. 
   - **x-Axis Range** allows the user to control the x-axis range for better visualization.
-
+<br><br>
 2.	The y-axis data choices are as explained above for the x-axis.
-
-3.  Selected tissues	
-By default, all tissues are selected and included in the scatter plot. To include or exclude cell lines from specific tissues, the user should specify:
+<br><br>
+3.  Selected tissues: by default, all tissues are selected and included in the scatter plot. To include or exclude cell lines from specific tissues, the user should specify:
   - **Select Tissues** to include or exclude specific tissues
   - **Select Tissues of Origin Subset/s** functionality at the bottom of the left-hand panel. On Macs, more than one tissue of origin may be selected using the "command" button. On PC's use the "control" key. All cell lines were mapped to the four-level OncoTree cancer tissue type hierarchy developed at [Memorial Sloan-Kettering Cancer Center](http://www.cbioportal.org/oncotree/). In the CellminerCDB application, a tissue value is coded as an OncoTree node that can include elements from level 1 to level 4 separated by “:” character. For instance, the cell line MCF7 is a “breast” cell line but also more specifically it is a breast carcinoma. So MCF7 belong to different cancer tissue types (or hierarchical nodes) “breast” (level 1) and “breast: breast carcinoma (BRCA)” (level 2). There is no further sub-categorization for MCF7 however we can identify BT-549 cell line as “breast: breast carcinoma (BRCA): Breast Invasive Ductal Carcinoma (IDC)” (level 3).
-
+<br><br>
 4. Color selection
   - **Tissues to Color** to locate cell lines related to desired tissues within the scatter plot. Selecting a tissue makes related cell lines appear in red while remaining cell lines are colored in blue. The **Show Color** checkbox should be active.
 
@@ -87,21 +86,20 @@ This option allows one to compute the correlation between a feature from a data 
 The ‘Regression Models’ option (or module) has multiple tabs including Heatmap, Data, Plot, Cross-Validation, Tehnical Details and Partial Correlation (described below), and allows construction and assessment of multivariate linear response prediction models. For instance, we can assess prediction of a drug activity based on some genes expression. To construct a regression model, you need to specify:
 
 1. **Cell Line Set** selects the data source. The user can choose: NCI60, CCLE, GDSC, CTRP or NCI/DTP SCLC (see Data Sources for more details). 
-
+<br><br>
 2. The response variable by selecting 
   - **Response Data Type** (example: a drug or a molecular dataset). The options for this vary dependent on the source selected above, and appear in the Response Data Type dropdown. See the Metadata tab for data types description.
   - **Response Identifier** (e.g., a specific drug or gene identifier)
-
+<br><br>
 3. The predictor variables from the same data source by selecting
   - **Predictor Data Type/s** (as explained in response data type). Use command button on Macs or control key on PCs to select more than one dataset
   - **Minimal Range Value** for the first listed data type (optional – default zero)
   - **predictor identifiers** (optional for Lasso model –see point5)
-
+<br><br>
 4. Selected tissues: by default, all cell lines are included however you can selected some based-on tissue
   - **Select Tissues** to include or exclude specific tissues
   - **Select Tissues of Origin Subset/s** : by default, all tissues are selected and included. The user may also select specific tissues (to include or exclude). On Macs, more than one tissue of origin may be selected using the “command” key. On PC's use the "control" key.
-
-
+<br><br>
 5. **Algorithm**: by default, the basic linear regression model is selected however you can select the Lasso model (penalized linear regression model). If Lasso algorithm is selected, you have to specify:
   - **Select Gene Sets**: The gene selection is based on curated gene sets such as DNA Damage Repair DDR or Apoptosis. The user can select one or more gene sets.
   - **Maximum Number of Predictors** (default 4)
@@ -109,7 +107,7 @@ The ‘Regression Models’ option (or module) has multiple tabs including Heatm
 Once all the above information is entered, a regression model is built and the results are shown in different ways such as the technical details of the model, observed vs. predictive responses plots or variables heatmap. Find below an explanation of different output for the regression model module.
 
 <h3 id="heatmap">Heatmap</h3>
-This option provides the observed response and predictor variables across all source cell lines in an interactive heatmap. The user can restrict the number of cell lines to those that have the highest or lowest response values by selecting **Number of High/Low Response Lines to Display ** 
+This option provides the observed response and predictor variables across all source cell lines in an interactive heatmap. The user can restrict the number of cell lines to those that have the highest or lowest response values by selecting **Number of High/Low Response Lines to Display** 
 
 ![Screenshot of CellMinerCDB Application](files/Slide05.jpg)
 
@@ -175,9 +173,9 @@ This option enumerates for each cell line set, the available data types that cou
 **Figure 12**: shows all data types for NCI60
 
 <h3 id="search">Search IDs</h3>
-This page lists the identifiers (ID) that are available in the selected data source to use in the univariate analysis or regression models. The user has to:
-  - select **Cell Line Set** (the data source)
-  -  **Select Data Type**
+This page lists the identifiers (ID) available in the selected data source for use in the univariate analysis or regression models. The user chooses:
+  - **Cell Line Set** to select the cell line set of interest
+  - **Select Data Type** to select among the available data types
 
 This enables to search all related ID for each combination. For the molecular data, the **gene names (ID) and specific data type information** are provided. For the drugs and compounds, **the identifiers (ID),  Drug name (when available), and Drug MOA (when available)** are displayed. The user can scroll down the whole  list of IDs, or search specific ID(s) by entering a value in the header of any column.
 

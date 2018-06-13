@@ -17,7 +17,7 @@
           {
             "eSetListName":"xsq",
             "featurePrefix":"xsq",
-            "displayName":"Rnaseq Expression (log2 FPKM+1.)"
+            "displayName":"RNA-seq Expression (log2 FPKM+1.)"
           },
           {
             "eSetListName":"met",
