@@ -602,7 +602,7 @@ shinyServer(function(input, output, session) {
 	    }
 	  } else {
 	    molPharmData <- srcContent[[pcDataset]][["molPharmData"]]
-	    molData <- molPharmData[setdiff(names(molPharmData), c("act","copA","mutA","metA","expA","xaiA","proA","mirA","mdaA","swaA"))]
+	    molData <- molPharmData[setdiff(names(molPharmData), c("act","copA","mutA","metA","expA","xaiA","proA","mirA","mdaA","swaA","xsqA"))]
 	    molData <- lapply(molData, function(X) X[, selectedLines])
 	    results <- patternComparison(dat$data, molData)
 	    results$ids <- rownames(results)
