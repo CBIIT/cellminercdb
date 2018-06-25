@@ -78,6 +78,11 @@
             "displayName":"mRNA Expression (log2)"
           },
           {
+            "eSetListName":"xsq",
+            "featurePrefix":"xsq",
+            "displayName":"RNA-seq Expression (log2 RPKM+1.)"
+          },
+          {
             "eSetListName":"mut",
             "featurePrefix":"mut",
             "displayName":"DNA Mutation"

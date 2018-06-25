@@ -148,6 +148,13 @@
         		"ref_pmid":"22460905"
         	},
         	{
+        		"dataType":"xsq",
+        		"description":"mRNA expression",
+        		"units":"RNA-seq composite log2 RPKM+1",
+        		"platform":"NA",
+        		"ref_pmid":"NA"
+        	},
+        	{
         		"dataType":"mut",
         		"description":"DNA mutation",
         		"units":"probability of homozygous, function-impacting mutation",

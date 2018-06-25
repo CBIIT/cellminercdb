@@ -172,7 +172,7 @@ This option enumerates for each cell line set, the available data types that cou
 
 **Figure 12**: shows all data types for NCI60
 
-<h3 id="search">Search IDs</h3>
+<h2 id="search">Search IDs</h2>
 This page lists the identifiers (ID) available in the selected data source for use in the univariate analysis or regression models. The user chooses:
   - **Cell Line Set** to select the cell line set of interest
   - **Select Data Type** to select among the available data types
