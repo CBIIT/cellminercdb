@@ -69,7 +69,7 @@ Any pair of features from different sources across common cell lines can be plot
 
 
 <h3 id="download">Download Data</h3>
-This option displays the Plot Data data selected (from the previous tab) in tabular form, and provides a Download Data as Tab-Delimited File function. The user can also change the input data in the left panel as described for Plot Data. The displayed table include the cell line, the x-axis feature, the y-axis feature, the tissue of origin and the 4 onco-tree levels. The selected features are prefixed in the headers by the data type abbreviation and post-fixed by the data source.
+This option both displays the data selected from the **Plot Data** tab in tabular form, and provides a **Download selected x and y axis data as Tab-Delimited File** option. The user can change the input data in the left selection panel as described for Plot Data. The displayed table include the cell line, the x-axis value, the y-axis value, the tissue of origin and the 4 onco-tree levels. Within the header the selected features are prefixed by the data type abbreviation and post-fixed by the data source.
 
 ![Screenshot of CellMinerCDB Application](files/Slide03.jpg)
 
@@ -174,8 +174,8 @@ This option enumerates for each cell line set, the available data types that cou
 
 <h2 id="search">Search IDs</h2>
 This page lists the identifiers (ID) available in the selected data source for use in the univariate analysis or regression models. The user chooses:
-  - **Cell Line Set** to select the cell line set of interest
-  - **Select Data Type** to select among the available data types
+  - **Cell Line Set** to select the cell line set of interest. The user can choose: NCI60, CCLE, GDSC, CTRP or NCI/DTP SCLC (see Data Sources for more details).
+  - **Select Data Type** to select among the available data types. The options for this vary dependent on the source selected above, and appear in the x-Axis Data Type dropdown. See the Metadata tab for descriptions and abbreviations.
 
 This enables to search all related ID for each combination. For the molecular data, the **gene names (ID) and specific data type information** are provided. For the drugs and compounds, **the identifiers (ID),  Drug name (when available), and Drug MOA (when available)** are displayed. The user can scroll down the whole  list of IDs, or search specific ID(s) by entering a value in the header of any column.
 

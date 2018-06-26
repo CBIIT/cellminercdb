@@ -7,58 +7,58 @@
           {
             "eSetListName":"exp",
             "featurePrefix":"exp",
-            "displayName":"mRNA Expression (Z-Score)"
+            "displayName":"exp: mRNA Expression (Z-Score)"
           },
           {
             "eSetListName":"xai",
             "featurePrefix":"xai",
-            "displayName":"mRNA Expression (Avg. log2 Int.)"
+            "displayName":"xai: mRNA Expression (Avg. log2 Int.)"
           },
           {
             "eSetListName":"xsq",
             "featurePrefix":"xsq",
-            "displayName":"RNA-seq Expression (log2 FPKM+1.)"
+            "displayName":"xsq: RNA-seq Expression (log2 FPKM+1.)"
           },
           {
             "eSetListName":"met",
             "featurePrefix":"met",
-            "displayName":"DNA Methylation"
+            "displayName":"met: DNA Methylation"
           },
           {
             "eSetListName":"mut",
             "featurePrefix":"mut",
-            "displayName":"DNA Mutation"
+            "displayName":"mut: DNA Mutation"
           },
           {
             "eSetListName":"cop",
             "featurePrefix":"cop",
-            "displayName":"DNA Copy Number"
+            "displayName":"cop: DNA Copy Number"
           },
           {
             "eSetListName":"mir",
             "featurePrefix":"mir",
-            "displayName":"MicroRNA"
+            "displayName":"mir: MicroRNA"
           },
           {
             "eSetListName":"mda",
             "featurePrefix":"mda",
-            "displayName":"Miscellaneous phenotypic data"
+            "displayName":"mda: Miscellaneous phenotypic data"
           },
           {
             "eSetListName":"pro",
             "featurePrefix":"pro",
-            "displayName":"Protein (RPLA)"
+            "displayName":"pro: Protein (RPPA)"
           },
           {
             "eSetListName":"swa",
             "featurePrefix":"swa",
-            "displayName":"Protein (SWATH-MS)"
+            "displayName":"swa: Protein (SWATH-MS)"
           }
         ],
         "DrugData":[
           {
             "featurePrefix":"act",
-            "displayName":"Drug Activity",
+            "displayName":"act: Drug Activity",
             "drugAnnotIdCol":"NSC",
             "drugAnnotNameCol":"NAME",
             "drugAnnotMoaCol":"MOA"
@@ -75,33 +75,33 @@
           {
             "eSetListName":"exp",
             "featurePrefix":"exp",
-            "displayName":"mRNA Expression (log2)"
+            "displayName":"exp: mRNA Expression (log2)"
           },
           {
             "eSetListName":"xsq",
             "featurePrefix":"xsq",
-            "displayName":"RNA-seq Expression (log2 RPKM+1.)"
+            "displayName":"xsq: RNA-seq Expression (log2 RPKM+1.)"
           },
           {
             "eSetListName":"mut",
             "featurePrefix":"mut",
-            "displayName":"DNA Mutation"
+            "displayName":"mut: DNA Mutation"
           },
           {
             "eSetListName":"cop",
             "featurePrefix":"cop",
-            "displayName":"DNA Copy Number"
+            "displayName":"cop: DNA Copy Number"
           },
           {
             "eSetListName":"mda",
             "featurePrefix":"mda",
-            "displayName":"Miscellaneous phenotypic data"
+            "displayName":"mda: Miscellaneous phenotypic data"
           }
         ],
         "DrugData":[
           {
             "featurePrefix":"act",
-            "displayName":"Drug Activity (-log10[IC50M])",
+            "displayName":"act: Drug Activity (-log10[IC50M])",
             "drugAnnotIdCol":"NA",
             "drugAnnotNameCol":"NA",
             "drugAnnotMoaCol":"NA"
@@ -118,28 +118,28 @@
           {
             "eSetListName":"exp",
             "featurePrefix":"exp",
-            "displayName":"mRNA Expression (log2)"
+            "displayName":"exp: mRNA Expression (log2)"
           },
           {
             "eSetListName":"met",
             "featurePrefix":"met",
-            "displayName":"DNA Methylation"
+            "displayName":"met: DNA Methylation"
           },
           {
             "eSetListName":"mut",
             "featurePrefix":"mut",
-            "displayName":"DNA Mutation"
+            "displayName":"mut: DNA Mutation"
           },
           {
             "eSetListName":"mda",
             "featurePrefix":"mda",
-            "displayName":"Miscellaneous phenotypic data"
+            "displayName":"mda: Miscellaneous phenotypic data"
           }
         ],
         "DrugData":[
           {
             "featurePrefix":"act",
-            "displayName":"Drug Activity (-log10[IC50M])",
+            "displayName":"act: Drug Activity (-log10[IC50M])",
             "drugAnnotIdCol":"EXTENDED_NAME",
             "drugAnnotNameCol":"NAME",
             "drugAnnotMoaCol":"MOA"
@@ -156,23 +156,23 @@
           {
             "eSetListName":"exp",
             "featurePrefix":"exp",
-            "displayName":"mRNA Expression (log2)"
+            "displayName":"exp: mRNA Expression (log2)"
           },
           {
             "eSetListName":"mut",
             "featurePrefix":"mut",
-            "displayName":"DNA Mutation"
+            "displayName":"mut: DNA Mutation"
           },
           {
             "eSetListName":"cop",
             "featurePrefix":"cop",
-            "displayName":"DNA Copy Number"
+            "displayName":"cop: DNA Copy Number"
           }
         ],
         "DrugData":[
           {
             "featurePrefix":"act",
-            "displayName":"Drug Activity (AUC)",
+            "displayName":"act: Drug Activity (AUC)",
             "drugAnnotIdCol":"ID",
             "drugAnnotNameCol":"NAME",
             "drugAnnotMoaCol":"MOA"
@@ -189,18 +189,18 @@
           {
             "eSetListName":"exp",
             "featurePrefix":"exp",
-            "displayName":"mRNA Expression (log2)"
+            "displayName":"exp: mRNA Expression (log2)"
           },
            {
             "eSetListName":"met",
             "featurePrefix":"met",
-            "displayName":"DNA Methylation"
+            "displayName":"met: DNA Methylation"
           }
         ],
         "DrugData":[
           {
             "featurePrefix":"act",
-            "displayName":"Drug Activity (-log10[IC50M])",
+            "displayName":"act: Drug Activity (-log10[IC50M])",
             "drugAnnotIdCol":"NSC",
             "drugAnnotNameCol":"NAME",
             "drugAnnotMoaCol":"MOA"
@@ -217,7 +217,7 @@
         "DrugData":[
           {
             "featurePrefix":"act",
-            "displayName":"Drug Activity (comboscores)",
+            "displayName":"act: Drug Activity (comboscores)",
             "drugAnnotIdCol":"NSC",
             "drugAnnotNameCol":"NAME",
             "drugAnnotMoaCol":"MOA"
@@ -234,7 +234,7 @@
           {
             "eSetListName":"pro",
             "featurePrefix":"pro",
-            "displayName":"Protein (RPPA)"
+            "displayName":"pro: Protein (RPPA)"
           }
         ]
       }

@@ -634,10 +634,12 @@ shinyServer(function(input, output, session) {
 	  results[, "Correlation"] <- round(results[, "Correlation"], 3)
 	  results[, "P-Value"] <- signif(results[, "P-Value"], 3)
 		
-	  DT::datatable(results, rownames=FALSE, colnames=colnames(results),
+	  DT::datatable(results, rownames=FALSE, colnames=colnames(results),extensions='Buttons',
 	  							filter='top', style='bootstrap', selection = "none",
-	  							options=list(lengthMenu = c(10, 25, 50, 100), pageLength = 10))
+	  							options=list(pageLength = 10, dom='lipBt', buttons = list('copy', 'print', list(extend = 'collection',buttons = c('csv', 'excel', 'pdf'),text = 'Download'))))
+	  
 	})
+	
 
 	#----[Render Data Table in 'Metadata' Tab]-------------------------------------------
 	output$cellLineTable <- DT::renderDataTable({
@@ -687,7 +689,7 @@ shinyServer(function(input, output, session) {
 		#tabPanel("Plot", verbatimTextOutput("genUrl"), showOutput("rCharts", "highcharts")),
 
 		tab1 <- tabPanel("Download Data",
-                     downloadLink("downloadData", "Download Data as Tab-Delimited File"),
+                     downloadLink("downloadData", "Download selected x and y axis data as Tab-Delimited File"),
                      DT::dataTableOutput("table"))
 		tab2 <- tabPanel("Search IDs",
                      includeMarkdown("www/files/help.md"),
@@ -710,6 +712,7 @@ shinyServer(function(input, output, session) {
 										 	  paste("<label class='control-label' for='patternComparisonSeed'>With Respect to</label>","<select id='patternComparisonSeed'><option value='xPattern' selected>x-Axis Entry</option><option value='yPattern'>y-Axis Entry</option></select>")
 										 	))
 										 ),
+										 # downloadLink("downloadDataComp", "Download data table as a Tab-Delimited File"),
                      DT::dataTableOutput("patternComparison"))
 
 		#if(input$hasRCharts == "TRUE") {
@@ -766,45 +769,53 @@ shinyServer(function(input, output, session) {
 		urlString <- metaConfig[[input$mdataSource]][["url"]]
 		sourceName <- metaConfig[[input$mdataSource]][["displayName"]]
 		visibleText <- paste("Select here to learn more about ", sourceName, sep="")
-	
-		a(visibleText, href=paste(urlString), target = "_blank")
+		if (input$mdataSource=="nci60")
+		tags$div(
+		tags$a(visibleText, href=paste(urlString), target = "_blank"),
+		tags$a("   and DTP",href='https://dtp.cancer.gov', target='_blank'))
+		else tags$a(visibleText, href=paste(urlString), target = "_blank")
+		#  
+		# if (input$mdataSource=="nci60") { 
+		#    a(visibleText, href=paste(urlString), target = "_blank")
+		#    a("DTP",href='https://dtp.cancer.gov', target='_blank')
+		# }
 	})
 	#**********************************************************************************************
+
   output$downloadData <- downloadHandler(
     filename = function() {
-    	query <- parseQueryString(session$clientData$url_search)
-
-    	if("filename" %in% names(query)) {
-    		filename <- query[["filename"]]
-    	} else {
-    		filename <- "dataset"
-    	}
-
-    	if("extension" %in% names(query)) {
-    		extension <- query[["extension"]]
-    	} else {
-    		extension <- "txt"
-    	}
-
-    	paste(filename, extension, sep=".")
+      query <- parseQueryString(session$clientData$url_search)
+      
+      if("filename" %in% names(query)) {
+        filename <- query[["filename"]]
+      } else {
+        filename <- "dataset"
+      }
+      
+      if("extension" %in% names(query)) {
+        extension <- query[["extension"]]
+      } else {
+        extension <- "txt"
+      }
+      
+      paste(filename, extension, sep=".")
     },
     content = function(file) {
-    	df <- getPlotData(xData = xData(), yData = yData(), showColor = input$showColor, 
-    		showColorTissues = input$showColorTissues, dataSource = input$xDataset, 
-    		srcContent = srcContentReactive())
-
-    	# Column selection below is to restrict to cell line, x, y features,
-    	# and tissue type information (source-provided + OncoTree).
-    	dfCols <- c(colnames(df)[1:4], paste0("OncoTree", 1:4))
-    	if ("EMT" %in% colnames(df)) {
-    		dfCols <- c(dfCols, "EMT")
-    	}
-    	df <- df[, dfCols]
-
-    	write.table(df, file, quote=FALSE, row.names=FALSE, sep="\t")
+      df <- getPlotData(xData = xData(), yData = yData(), showColor = input$showColor, 
+                        showColorTissues = input$showColorTissues, dataSource = input$xDataset, 
+                        srcContent = srcContentReactive())
+      
+      # Column selection below is to restrict to cell line, x, y features,
+      # and tissue type information (source-provided + OncoTree).
+      dfCols <- c(colnames(df)[1:4], paste0("OncoTree", 1:4))
+      if ("EMT" %in% colnames(df)) {
+        dfCols <- c(dfCols, "EMT")
+      }
+      df <- df[, dfCols]
+      
+      write.table(df, file, quote=FALSE, row.names=FALSE, sep="\t")
     }
   )
-
   ### data types for search ---------
   output$dataTypeUi <- renderUI({
     srcContent <- srcContentReactive()

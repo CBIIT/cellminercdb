@@ -32,7 +32,7 @@ regressionModelsInput <- function(id, dataSourceChoices) {
 					 				br(),
 					 				uiOutput(ns("predDataTypesUi")),
 					 				sliderInput(ns("minPredValueRange"), 
-					 										"Minimum Range Value (First Listed Data Type):", 
+					 										"Minimum Predictor Range (for first listed data type):", 
 					 										min=0, max=5, value=0, step = 0.25),
 					 				textInput(ns("predIds"), "Predictor Identifiers: (Case-Sensitive, e.g. SLFN11 BPTF)", "SLFN11 BPTF"),
 					 				br(),

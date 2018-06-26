@@ -174,6 +174,7 @@ shinyUI(
 						 		), #end sidebarPanel
 						 		mainPanel(
 						 		  htmlOutput('sourceLink'),
+						 		  #uiOutput('sourceLink'),
 						 			uiOutput('metadataPanel')
 						 			#h4(htmlOutput('sourceLink'))
 						 			# htmlOutput('sourceLink')
