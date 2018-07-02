@@ -1013,6 +1013,13 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 		## print("*")
 		choices1 = srcContentReactive()[[input$dataset]][["featurePrefixes"]]
 		mysel1 = input$predDataTypes # could cause issue if NULL
+		##--------
+	  if (is.null(mysel1))
+		{
+		  mysel1= srcContentReactive()[[input$dataset]][["defaultFeatureX"]]
+		  if (is.na(mysel1)) mysel1= srcContentReactive()[[input$dataset]][["defaultFeatureY"]]
+		}
+		##--------
 		opt1 = ""
 		for(k in 1:length(choices1)){
 		  # style works only for browser Chrome

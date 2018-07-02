@@ -206,8 +206,8 @@ shinyUI(
 		             mainPanel(
 		               #includeMarkdown("www/files/help.md"),
 		             ##  DT::dataTableOutput("ids2")
-		               DT::dataTableOutput("ids_s")
-	#	               uiOutput('searchPanel'),
+		        ###       DT::dataTableOutput("ids_s")
+	               uiOutput('searchPanel')
 		               #h4(htmlOutput('sourceLink'))
 	 #              htmlOutput('sourceLink')
 		             )

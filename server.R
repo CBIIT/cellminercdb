@@ -754,13 +754,22 @@ shinyServer(function(input, output, session) {
 		)
 	})
 	##*********************************************************
+	# output$searchPanel = renderUI({
+	#   #verbatimTextOutput("log") can be used for debugging
+	#   #tabPanel("Plot", verbatimTextOutput("genUrl"), showOutput("rCharts", "highcharts")),
+	#   
+	#   includeMarkdown("www/files/help.md")
+	#   DT::dataTableOutput("ids2")
+	#  
+	# })
+	
 	output$searchPanel = renderUI({
 	  #verbatimTextOutput("log") can be used for debugging
 	  #tabPanel("Plot", verbatimTextOutput("genUrl"), showOutput("rCharts", "highcharts")),
 	  
-	  includeMarkdown("www/files/help.md")
-	  DT::dataTableOutput("ids2")
-	 
+	  #includeMarkdown("www/files/help.md")
+	  DT::dataTableOutput("ids_s")
+	  
 	})
 	##*********************************************************
 	#**************************************************************************************
