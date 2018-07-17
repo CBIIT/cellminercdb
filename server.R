@@ -688,8 +688,8 @@ shinyServer(function(input, output, session) {
 		#verbatimTextOutput("log") can be used for debugging
 		#tabPanel("Plot", verbatimTextOutput("genUrl"), showOutput("rCharts", "highcharts")),
 
-		tab1 <- tabPanel("Download Data",
-                     downloadLink("downloadData", "Download selected x and y axis data as Tab-Delimited File"),
+		tab1 <- tabPanel("View Data",
+                     downloadLink("downloadData", "Download selected x and y axis data as a Tab-Delimited File"),
                      DT::dataTableOutput("table"))
 		tab2 <- tabPanel("Search IDs",
                      includeMarkdown("www/files/help.md"),
@@ -781,7 +781,7 @@ shinyServer(function(input, output, session) {
 		if (input$mdataSource=="nci60")
 		tags$div(
 		tags$a(visibleText, href=paste(urlString), target = "_blank"),
-		tags$a("   and DTP",href='https://dtp.cancer.gov', target='_blank'))
+		tags$a("   and the DTP",href='https://dtp.cancer.gov', target='_blank'))
 		else tags$a(visibleText, href=paste(urlString), target = "_blank")
 		#  
 		# if (input$mdataSource=="nci60") { 

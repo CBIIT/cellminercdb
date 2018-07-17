@@ -227,7 +227,23 @@ shinyUI(
 		         #h1("For testing"),
 		         #textOutput("ipAddress")
 		)
-	)
+	),
+br(),br(),hr(),
  # tags$a(id="skiplink")
+tags$div(style="font-size: 12px",
+  tags$html("CellMinerCDB is a development of the "),
+  tags$a("Genomics and Pharmacology Facility,", href="https://discover.nci.nih.gov/", target = "_blank",style="font-size: 12px;"),
+  tags$a(" Developmental Therapeutics Branch (DTB), ",href='https://ccr.cancer.gov/Developmental-Therapeutics-Branch', target='_blank',style="font-size: 12px;"),
+  tags$a("Center for Cancer Research (CCR), ", href="https://ccr.cancer.gov/", target = "_blank",style="font-size: 12px;"),
+  tags$a("National Cancer Institute (NCI).", href="https://www.cancer.gov/", target = "_blank",style="font-size: 12px;"),
+  br(),br(),
+  tags$html("Please email 'Webadmin@discover.nci.nih.gov' with any problems, questions or feedback on the tool",style="font-size: 10px; float: left"),
+  br(),br(),
+  tags$a("Notice and Disclaimer", href="files/disclaimer.html", target = "_blank",style="font-size: 10px; float: left")
+  
+  #includeMarkdown("www/files/guide.md")
+  ## add email + Notice and Disclaimer + check font size to lower?
+  ## library(mailR)
+  )
   )
 )
