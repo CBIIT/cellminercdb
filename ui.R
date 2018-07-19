@@ -62,15 +62,19 @@ shinyUI(
   tags$html(lang="en"), 
   #tags$head(tags$style(type="text/css", ".body {color: blue;}",".clear {clear:both}")),
   tags$a(href="#skiplink","Skip over navigation",style="font-size: 10px; float: left"),
+  
   HTML("<p style='text-align: center; font-size: 20px; color:blue;' >~ Internal version ~</p>"),
+  
   #tags$h4("~Internal version~",style="color: blue"),
   # br(),
   # tags$html("~Internal version~",style="text-align: center; font-size: 20px"),
+ 
   tags$a(href="https://discover.nci.nih.gov/cellminer/"," CellMiner NCI-60 ",style="font-size: 14px;float: right;background-color: steelblue;color: white;display: inline-block;margin: 5px 5px;padding: 10px 10px;",target="_blank"),
   
   #tags$p("CellMinerCDB",style="font-size: 24px;color: white;background-color: dodgerblue;text-align:center;height:50px;"),
   # tags$img(src = "files/banner.jpg",height="110px",width="1650px"),
   tags$img(src = "files/banner.png",alt= "banner",height="100%",width="100%", border="0"),
+  
   #tags$img(src = "files/banner.png",alt= "banner",height="100%",width="100%", border="0", style="padding: 0px; display: block; line-height: 0; font-size: 0px; border: 0px; clear: both; vertical-align: top; margin: 0px 0px 0px 0px;"),
    #navbarPage(h6(style="vertical-align:top;font-size: 24px;color: dodgerblue;",appTitle), 
    # navbarPage(HTML("<p style='font-size: 24px;color: dodgerblue;'>", appTitle,"</p>"), 
@@ -235,11 +239,13 @@ tags$div(style="font-size: 12px",
   tags$a("Genomics and Pharmacology Facility,", href="https://discover.nci.nih.gov/", target = "_blank",style="font-size: 12px;"),
   tags$a(" Developmental Therapeutics Branch (DTB), ",href='https://ccr.cancer.gov/Developmental-Therapeutics-Branch', target='_blank',style="font-size: 12px;"),
   tags$a("Center for Cancer Research (CCR), ", href="https://ccr.cancer.gov/", target = "_blank",style="font-size: 12px;"),
-  tags$a("National Cancer Institute (NCI).", href="https://www.cancer.gov/", target = "_blank",style="font-size: 12px;"),
+  tags$a("National Cancer Institute (NCI) ", href="https://www.cancer.gov/", target = "_blank",style="font-size: 12px;"),
+  tags$html("prepared in collaboration with the "),
+  tags$a("Cbio Center at the Dana-Farber Cancer Institute.", href="http://www.sanderlab.org/", target = "_blank",style="font-size: 12px;"),
   br(),br(),
-  tags$html("Please email 'Webadmin@discover.nci.nih.gov' with any problems, questions or feedback on the tool",style="font-size: 10px; float: left"),
+  tags$html("Please email 'Webadmin@discover.nci.nih.gov' with any problems, questions or feedback on the tool",style="font-size: 12px; float: left"),
   br(),br(),
-  tags$a("Notice and Disclaimer", href="files/disclaimer.html", target = "_blank",style="font-size: 10px; float: left")
+  tags$a("Notice and Disclaimer", href="files/disclaimer.html", target = "_blank",style="font-size: 12px; float: left")
   
   #includeMarkdown("www/files/guide.md")
   ## add email + Notice and Disclaimer + check font size to lower?

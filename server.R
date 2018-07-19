@@ -688,7 +688,7 @@ shinyServer(function(input, output, session) {
 		#verbatimTextOutput("log") can be used for debugging
 		#tabPanel("Plot", verbatimTextOutput("genUrl"), showOutput("rCharts", "highcharts")),
 
-		tab1 <- tabPanel("View Data",
+		tab1 <- tabPanel("Download Data",
                      downloadLink("downloadData", "Download selected x and y axis data as a Tab-Delimited File"),
                      DT::dataTableOutput("table"))
 		tab2 <- tabPanel("Search IDs",

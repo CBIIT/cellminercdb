@@ -860,9 +860,15 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 			dat <- cbind(CellLine = rownames(dat), dat)	
 		}
 
-		DT::datatable(dat, rownames=FALSE, colnames=colnames(dat), filter='top', selection = "none",
-									style='bootstrap', options=list(pageLength = nrow(dat)))
+		DT::datatable(dat, rownames=FALSE, colnames=colnames(dat), filter='top', selection = "none",extensions='Buttons',
+									style='bootstrap', options=list(pageLength = nrow(dat), dom='lipBt',buttons = list('copy', 'print', list(extend = 'collection',buttons = list(list(extend='csv',filename='regression_data'), list(extend='excel',filename='regression_data'), list(extend='pdf',filename='regression_data')),text = 'Download'))))
 	})
+	
+	# DT::datatable(myframe, rownames=FALSE,extensions='Buttons',
+	#               filter='top', style='bootstrap', selection = "none",
+	#               options=list(pageLength = 10, dom='lipBt',buttons = list('copy', 'print', list(extend = 'collection',buttons = c('csv', 'excel', 'pdf'),text = 'Download')))
+	#               , caption=htmltools::tags$caption(paste0("Identifier search for ",selsource),style="color:dodgerblue; font-size: 18px")
+	              
 	
 	#----[Show Predictors and Response in 'Heatmap' Tab]------------------------------------
 	output$heatmap <- renderD3heatmap({
@@ -1205,7 +1211,7 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 		
 		## 
 	})
-	
+
 	output$selectInputGeneSetsUi <- renderUI({
 		ns <- session$ns
 		## selectInput(ns("inputGeneSets"), "Select Gene Sets",

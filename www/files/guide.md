@@ -3,7 +3,7 @@
 -	[Introduction](#introduction)
 -	[Univariate Analyses](#univariate)
   - [Plot Data](#plot)
-  - [View Data](#download)
+  - [Download Data](#download)
   - [Compare Patterns](#compare)
 -	[Regression Models](#regression)
   - [Heatmap](#heatmap)
@@ -62,13 +62,20 @@ Any pair of features from different sources across common cell lines can be plot
 <br><br>
 4. Color selection
   - **Tissues to Color** to locate cell lines related to desired tissues within the scatter plot. By default, the cell lines are colored by their OncoTree cancer tissue level 1 pre-assigned color. Selecting a tissue makes related cell lines appear in red while remaining cell lines are colored in blue. The **Show Color** checkbox should be active.
+<br><br>
+5. The image icons from the left to the right:
+  - Downloads the plot as a png.
+  - Allows the user to zoom in on an area of interest by clicking and dragging with the pointer.
+  - Autoscales the image.
+  - Allows the user to create horizontal and vertical line from either a cell line 			dot or the regression line, by hovering over them.
 
+  
 ![Screenshot of CellMinerCDB Application](files/Slide02.jpg)
 
 **Figure 2**: An example scatterplot of SLFN11 gene expression (x-axis)  versus Topotecan drug activity (y-axis)/ both from the NCI60. Since Topotecan has 2 different drug ids in the NCI-60, the one with the lowest number of missing data is selected (here 609699). However, the user can type in their specific drug ID of interest. The Pearson correlation value and p value appear at the top of the plot. A linear fitting curve is included. This is an interactive plot and whenever the user changes any input value, the plot will be updated. Any point in the plot can be hovered over to provide additional information about cell line, tissue, Onco tree designation,  and x and y coordinate values.
 
 
-<h3 id="download">View Data</h3>
+<h3 id="download">Download Data</h3>
 This option both displays the data selected from the **Plot Data** tab in tabular form, and provides a **Download selected x and y axis data as Tab-Delimited File** option. The user can change the input data in the left selection panel as described for Plot Data. The displayed table include the cell line, the x-axis value, the y-axis value, the tissue of origin and the 4 onco-tree levels. Within the header the selected features are prefixed by the data type abbreviation and post-fixed by the data source.
 
 ![Screenshot of CellMinerCDB Application](files/Slide03.jpg)
@@ -76,9 +83,9 @@ This option both displays the data selected from the **Plot Data** tab in tabula
 **Figure 3**: shows the selected values for SLFN11 gene expression (x-axis) and Topotecan (id 609699) drug activity (y-axis) from the NCI-60 across all common lines. The features are coded as expSLFN11_nci60 and act609699_nci60 where “exp” and “act” represent respectively prefixes for gene expression based on z-score and drug activity.
 
 <h3 id="compare">Compare Patterns</h3>
-This option allows one to compute the correlation between the selected feature as defined from the specified **Cell Line Set, Data Type, and Identifier** from either the x or y-axis selections, and either all drug or all molecular data from the same source. 
+This option allows one to compute the correlation between the selected feature as defined from the specified **Cell Line Set, Data Type**, and **Identifier** from either the x or y-axis selections, and either all drug or all molecular data from the same source. 
 
-Pearson’s correlations are provided, with reported p-values (not adjusted for multiple comparisons) in tabular form. This displays features organized by level of correlation, and includes target pathway for genes and MOA (mechanism of action) for drugs. 
+Pearson’s correlations are provided, with reported p-values (not adjusted for multiple comparisons) in tabular form. This displays features are organized by level of correlation, and includes target pathway for genes and mechanism of action (MOA) for drugs (if available). 
 
 ![Screenshot of CellMinerCDB Application](files/Slide04.jpg)
 
@@ -153,7 +160,7 @@ This option enables to view the R statistical and other technical details relate
 
 <h3 id="partialcorr">Partial correlations</h3>
 
-Additional predictive variables for a multivariate linear model can be selected using the partials correlations results. Conceptually, the aim is to identify variables that are independently correlated with the response variable, after accounting for the influence of the existing predictor set. Computationally, a linear model is fit, with respect to the existing predictor set, for both the response variable and each candidate predictor variable. The partial correlation is then computed as the Pearson’s correlation between the resulting pairs of model residual vectors (which capture the variation not explained by the existing predictor set). The p-values reported for the correlation and linear modeling analyses assume multivariate normal data. The two-variable plot feature of CellMinerCDB allows informal assessment of this assumption, with clear indication of outlying observations. The reported p-values are less reliable as the data deviate from multivariate normality.
+This function is used to identify additional predictive variables for a multivariate linear model. Conceptually, the aim is to identify additional predictive variables that are independently correlated with the response variable, after accounting for the influence of the existing predictor set. Computationally, a linear model is fit, with respect to the existing predictor set, for both the response variable and each candidate predictor variable. The partial correlation is then computed as the Pearson’s correlation between the resulting pairs of model residual vectors (which capture the variation not explained by the existing predictor set). The p-values reported for the correlation and linear modeling analyses assume multivariate normal data. The two-variable plot feature of CellMinerCDB allows informal assessment of this assumption, with clear indication of outlying observations. The reported p-values are less reliable as the data deviate from multivariate normality.
 
 In order to run a partial correlation analysis, the user should first construct a linear model (providing response and predictor variables as explained earlier - steps 1 to 5 in figure below-) and then:
   -	**Select Gene Sets**: The gene selection is based on curated gene sets. Here the user can select one or more gene sets and even all genes (step 6 in figure below)
