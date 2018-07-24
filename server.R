@@ -365,13 +365,13 @@ shinyServer(function(input, output, session) {
   #------------------------------------------------------------------------------------
 
   #----[Render 2D Plot in 'Plot Data' Tab]---------------------------------------------
-  if(require(rCharts)) {
-		output$rCharts <- renderChart({
-			h1 <- makePlot(xData = xData(), yData = yData(), showColor = input$showColor,
-										 showColorTissues = input$showColorTissues, dataSource = input$xDataset,
-										 srcContent = srcContentReactive(), dom="rCharts")
-		})
-  }
+#   if(require(rCharts)) {
+# 		output$rCharts <- renderChart({
+# 			h1 <- makePlot(xData = xData(), yData = yData(), showColor = input$showColor,
+# 										 showColorTissues = input$showColorTissues, dataSource = input$xDataset,
+# 										 srcContent = srcContentReactive(), dom="rCharts")
+# 		})
+#   }
 
 	# Alternative plotting
 	output$rChartsAlternative <- renderPlotly({

@@ -155,6 +155,13 @@
         		"ref_pmid":"NA"
         	},
         	{
+        		"dataType":"mir",
+        		"description":"microRNA expression",
+        		"units":"log2 normalized counts",
+        		"platform":"Nanostring microRNA",
+        		"ref_pmid":"NA"
+        	},
+        	{
         		"dataType":"mut",
         		"description":"DNA mutation",
         		"units":"probability of homozygous, function-impacting mutation",

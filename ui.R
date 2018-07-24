@@ -243,9 +243,13 @@ tags$div(style="font-size: 12px",
   tags$html("prepared in collaboration with the "),
   tags$a("Cbio Center at the Dana-Farber Cancer Institute.", href="http://www.sanderlab.org/", target = "_blank",style="font-size: 12px;"),
   br(),br(),
-  tags$html("Please email 'Webadmin@discover.nci.nih.gov' with any problems, questions or feedback on the tool",style="font-size: 12px; float: left"),
+  # tags$html("Please email 'Webadmin@discover.nci.nih.gov' with any problems, questions or feedback on the tool",style="font-size: 12px; float: left"),
+  tags$html("Please "), 
+  tags$a("email us", href="mailto:Webadmin@discover.nci.nih.gov&subject=CellMinerCDB",style="font-size: 12px;"),
+  tags$html(" with any problems, questions or feedback on the tool"),
   br(),br(),
-  tags$a("Notice and Disclaimer", href="files/disclaimer.html", target = "_blank",style="font-size: 12px; float: left")
+  tags$a("Notice and Disclaimer", href="files/disclaimer.html")
+  
   
   #includeMarkdown("www/files/guide.md")
   ## add email + Notice and Disclaimer + check font size to lower?
