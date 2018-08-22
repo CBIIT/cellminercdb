@@ -70,6 +70,7 @@ shinyUI(
   # tags$html("~Internal version~",style="text-align: center; font-size: 20px"),
  
   tags$a(href="https://discover.nci.nih.gov/cellminer/"," CellMiner NCI-60 ",style="font-size: 14px;float: right;background-color: steelblue;color: white;display: inline-block;margin: 5px 5px;padding: 10px 10px;",target="_blank"),
+  tags$a(href="https://dtp.cancer.gov"," NCI/DCTD/DTP ",style="font-size: 14px;float: right;background-color: steelblue;color: white;display: inline-block;margin: 5px 5px;padding: 10px 10px;",target="_blank"),
   
   #tags$p("CellMinerCDB",style="font-size: 24px;color: white;background-color: dodgerblue;text-align:center;height:50px;"),
   # tags$img(src = "files/banner.jpg",height="110px",width="1650px"),
@@ -103,7 +104,8 @@ shinyUI(
 						 							     paste0(".navbar-default .navbar-brand { font-size: 24px; color: dodgerblue; }")
 						 							   )
 						 							   )
-						 							 )
+						 							 ),
+						 							 tags$head(tags$meta(name="description",content="CellMiner Cross Database (CellMinerCDB) is the first web application to allow translational researchers to conduct analyses across all major cancer cell line pharmacogenomic data sources from NCI-DTP NCI-60, Sanger GDSC, and Broad CCLE/CTRP"))
 						              ),
 		#background-color: blue; font-color: white;
 		#------[NavBar Tab: Univariate Analyses]---------------------------------------------------------
@@ -122,7 +124,7 @@ shinyUI(
 	        	  ),
 	        	  uiOutput("xPrefixUi"),
 	            textInput("xId", "Identifier: (e.g. topotecan or SLFN11)", "SLFN11"),
-	          	uiOutput("xAxisRangeUi"),
+	        	  uiOutput("xAxisRangeUi"),
 	        	  br(),
 	            #selectInput("yDataset", "y-Axis Dataset", choices=dataSourceChoices, selected = "nci60"),
 	        	  HTML(
@@ -241,7 +243,8 @@ tags$div(style="font-size: 12px",
   tags$a("Center for Cancer Research (CCR), ", href="https://ccr.cancer.gov/", target = "_blank",style="font-size: 12px;"),
   tags$a("National Cancer Institute (NCI) ", href="https://www.cancer.gov/", target = "_blank",style="font-size: 12px;"),
   tags$html("prepared in collaboration with the "),
-  tags$a("Cbio Center at the Dana-Farber Cancer Institute.", href="http://www.sanderlab.org/", target = "_blank",style="font-size: 12px;"),
+  tags$a("cBio Center", href="http://www.sanderlab.org/", target = "_blank",style="font-size: 12px;"),
+  tags$html(" at the Dana-Farber Cancer Institute."),
   br(),br(),
   # tags$html("Please email 'Webadmin@discover.nci.nih.gov' with any problems, questions or feedback on the tool",style="font-size: 12px; float: left"),
   tags$html("Please "), 

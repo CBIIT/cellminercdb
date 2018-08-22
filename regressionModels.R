@@ -663,7 +663,8 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 			
 			DT::datatable(pcResults, rownames=FALSE, colnames=colnames(pcResults), filter='top', 
 			              style='bootstrap', selection = "none",
-			              options=list(lengthMenu = c(10, 25, 50, 100), pageLength = 10))
+			              options=list(lengthMenu = c(10, 25, 50, 100), pageLength = 10,language=list(paginate = list(previous = 'Previous page', `next`= 'Next page'))))
+			
 		}
 		
 		return(pcResults)
@@ -861,7 +862,7 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 		}
 
 		DT::datatable(dat, rownames=FALSE, colnames=colnames(dat), filter='top', selection = "none",extensions='Buttons',
-									style='bootstrap', options=list(pageLength = nrow(dat), dom='lipBt',buttons = list('copy', 'print', list(extend = 'collection',buttons = list(list(extend='csv',filename='regression_data'), list(extend='excel',filename='regression_data'), list(extend='pdf',filename='regression_data')),text = 'Download'))))
+									style='bootstrap', options=list(pageLength = nrow(dat),language=list(paginate = list(previous = 'Previous page', `next`= 'Next page')) ,dom='lipBt',buttons = list('copy', 'print', list(extend = 'collection',buttons = list(list(extend='csv',filename='regression_data'), list(extend='excel',filename='regression_data'), list(extend='pdf',filename='regression_data')),text = 'Download'))))
 	})
 	
 	# DT::datatable(myframe, rownames=FALSE,extensions='Buttons',
@@ -960,10 +961,12 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 		#}
 	#	pcResults$PARCOR <- round(pcResults$PARCOR, 3)
 	#	pcResults$PVAL   <- signif(pcResults$PVAL, 3)
-		
-		# DT::datatable(pcResults, rownames=FALSE, colnames=colnames(pcResults), filter='top', 
-			#						style='bootstrap', selection = "none",
-			#						options=list(lengthMenu = c(10, 25, 50, 100), pageLength = 10))
+		 dtype=substr(pcResults$NAME,1,3)
+		 nname=substr(pcResults$NAME,4,nchar(pcResults$NAME))
+		 pcResults=cbind(DATATYPE=dtype,NAME=nname,pcResults[,-1])
+		 DT::datatable(pcResults, rownames=FALSE, colnames=colnames(pcResults), filter='top', 
+								style='bootstrap', selection = "none",
+									options=list(lengthMenu = c(10, 25, 50, 100), pageLength = 10,language=list(paginate = list(previous = 'Previous page', `next`= 'Next page'))))
 	})
 	
 	#----[Show Differential Expression Results in 'Differential Expression' Tab]-------------------
@@ -982,7 +985,7 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 		
 		DT::datatable(deResults, rownames=FALSE, colnames=colnames(deResults), filter='top', 
 									style='bootstrap', selection = "none",
-									options=list(lengthMenu = c(10, 25, 50, 100), pageLength = 10))
+									options=list(lengthMenu = c(10, 25, 50, 100), pageLength = 10,language=list(paginate = list(previous = 'Previous page', `next`= 'Next page'))))
 	})
 	
 	output$enrichmentResults <- DT::renderDataTable({
@@ -990,7 +993,7 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 		
 		DT::datatable(enResults, rownames=FALSE, colnames=colnames(enResults), 
 									filter='top', style='bootstrap', selection = "none",
-									options=list(lengthMenu = c(10, 25, 50, 100), pageLength = 10))
+									options=list(lengthMenu = c(10, 25, 50, 100), pageLength = 10,language=list(paginate = list(previous = 'Previous page', `next`= 'Next page'))))
 	})
 	
 	#----[Organize Above Tabs for Display]--------------------------------------------------
@@ -1206,7 +1209,7 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 		  }
 		}
 		HTML(
-		  paste("<label class='control-label' for=",ns("selectedTissues"),">Select Tissues of Origin Subset/s</label>","<select id=",ns("selectedTissues")," style='word-wrap:break-word; width: 100%;' multiple>",opt,"</select>")
+		  paste("<label class='control-label' for=",ns("selectedTissues"),">Select Tissue/s of Origin</label>","<select id=",ns("selectedTissues")," style='word-wrap:break-word; width: 100%;' multiple>",opt,"</select>")
 		)
 		
 		## 

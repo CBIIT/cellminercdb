@@ -449,7 +449,7 @@ shinyServer(function(input, output, session) {
 
   	DT::datatable(dlDataTab, rownames=FALSE, colnames=colnames(dlDataTab),
   								filter='top', style='bootstrap', selection="none",
-  								options=list(pageLength = nrow(dlDataTab)))
+  								options=list(pageLength = nrow(dlDataTab), language=list(paginate = list(previous = 'Previous page', `next`= 'Next page'))))
   })
 	#--------------------------------------------------------------------------------------
 
@@ -490,7 +490,7 @@ shinyServer(function(input, output, session) {
 	  selsource=metaConfig[[input$xDataset]][["fullName"]]
 	  DT::datatable(results, rownames=FALSE, colnames=colnames(results),
 	                filter='top', style='bootstrap', selection = "none",
-	                options=list(pageLength = 10), caption=htmltools::tags$caption(paste0("Ids table for ",selsource),style="color:dodgerblue; font-size: 18px"))
+	                options=list(pageLength = 10, language=list(paginate = list(previous = 'Previous page', `next`= 'Next page'))), caption=htmltools::tags$caption(paste0("Ids table for ",selsource),style="color:dodgerblue; font-size: 18px"))
 	})
 		#--------------------------------------------------------------------------------------
 
@@ -527,7 +527,7 @@ shinyServer(function(input, output, session) {
 	  selsource=metaConfig[[input$dataSrc]][["fullName"]]
 	  DT::datatable(myframe, rownames=FALSE,extensions='Buttons',
 	                filter='top', style='bootstrap', selection = "none",
-	                options=list(pageLength = 10, dom='lipBt',buttons = list('copy', 'print', list(extend = 'collection',buttons = c('csv', 'excel', 'pdf'),text = 'Download')))
+	                options=list(pageLength = 10,language=list(paginate = list(previous = 'Previous page', `next`= 'Next page')) ,dom='lipBt',buttons = list('copy', 'print', list(extend = 'collection',buttons = c('csv', 'excel', 'pdf'),text = 'Download')))
 	                , caption=htmltools::tags$caption(paste0("Identifier search for ",selsource),style="color:dodgerblue; font-size: 18px")
 	)})
 
@@ -566,7 +566,7 @@ shinyServer(function(input, output, session) {
 	  selsource=metaConfig[[input$dataSrc]][["fullName"]]
 	  DT::datatable(results, rownames=FALSE, colnames=colnames(results),extensions='Buttons',
 	                filter='top', style='bootstrap', selection = "none",
-	                options=list(pageLength = 10, dom='lipBt',buttons = list('copy', 'print', list(extend = 'collection',buttons = c('csv', 'excel', 'pdf'),text = 'Download')))
+	                options=list(pageLength = 10,language=list(paginate = list(previous = 'Previous page', `next`= 'Next page')) ,dom='lipBt',buttons = list('copy', 'print', list(extend = 'collection',buttons = c('csv', 'excel', 'pdf'),text = 'Download')))
 	                , caption=htmltools::tags$caption(paste0("Identifier search for ",selsource),style="color:dodgerblue; font-size: 18px")
 	  )})
 	
@@ -636,7 +636,7 @@ shinyServer(function(input, output, session) {
 		
 	  DT::datatable(results, rownames=FALSE, colnames=colnames(results),extensions='Buttons',
 	  							filter='top', style='bootstrap', selection = "none",
-	  							options=list(pageLength = 10, dom='lipBt', buttons = list('copy', 'print', list(extend = 'collection',buttons = c('csv', 'excel', 'pdf'),text = 'Download'))))
+	  							options=list(pageLength = 100,language=list(paginate = list(previous = 'Previous page', `next`= 'Next page')) ,dom='lipBt', buttons = list('copy', 'print', list(extend = 'collection',buttons = c('csv', 'excel', 'pdf'),text = 'Download'))))
 	  
 	})
 	
@@ -652,7 +652,7 @@ shinyServer(function(input, output, session) {
 		
 		DT::datatable(jsonFrame, rownames=FALSE, colnames=colnames(jsonFrame),
 									filter='top', style='bootstrap', selection = "none",
-									options=list(pageLength = 10),escape=F)
+									options=list(pageLength = 10,language=list(paginate = list(previous = 'Previous page', `next`= 'Next page'))),escape=F)
 	})
 	#---------------------------------------------------------------------------------------
 	output$log <- renderText({
@@ -1097,7 +1097,7 @@ shinyServer(function(input, output, session) {
   	  }
   	}
   	HTML(
-  	  paste("<label class='control-label' for='selectedTissues'>Select Tissues of Origin Subset/s</label>","<select id='selectedTissues' style='word-wrap:break-word; width: 100%;' multiple>",opt,"</select>")
+  	  paste("<label class='control-label' for='selectedTissues'>Select Tissue/s of Origin</label>","<select id='selectedTissues' style='word-wrap:break-word; width: 100%;' multiple>",opt,"</select>")
   	)
   	
   	## 
