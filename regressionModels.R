@@ -790,10 +790,20 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 																		rownames(updatedInputData))
 		}
 		
+		## new labeling --------------------------------
+		idd=unlist(strsplit(responseData$name,"_"))[1]
+		idd=substr(idd,4,nchar(idd))
+		srd=unlist(strsplit(responseData$name,"_"))[2]
+		pprefix=substr(responseData$name,1,3)
+		labs=metaConfig[[srd]][["displayName"]]
+		responseData$plotLabel <- paste0("Observed ",idd, " (", pprefix, ", ", labs, ")")
+		## ---------------------------------------------
+		
 		predResponseData <- list()
 		predResponseData$name <- paste0("predicted_", responseData$name)
 		predResponseData$data <- rmAlgoResults$predictedResponse
-		predResponseData$plotLabel <- predResponseData$name
+		# predResponseData$plotLabel <- predResponseData$name
+		predResponseData$plotLabel <- paste0("Predicted ",idd, " (", pprefix, ", ", labs, ")")
 		predResponseData$uniqName  <- predResponseData$name
 		predResponseData$dataSource <- responseData$dataSource
 		
@@ -825,10 +835,20 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 																		rownames(updatedInputData))
 		}
 		
+		## new labeling --------------------------------
+		idd=unlist(strsplit(responseData$name,"_"))[1]
+		idd=substr(idd,4,nchar(idd))
+		srd=unlist(strsplit(responseData$name,"_"))[2]
+		pprefix=substr(responseData$name,1,3)
+		labs=metaConfig[[srd]][["displayName"]]
+		responseData$plotLabel <- paste0("Observed ",idd, " (", pprefix, ", ", labs, ")")
+		## ---------------------------------------------
+		
 		cvPredResponseData <- list()
 		cvPredResponseData$name <- paste0("cv_predicted_", responseData$name)
 		cvPredResponseData$data <- rmAlgoResults$cvPredictedResponse
-		cvPredResponseData$plotLabel <- cvPredResponseData$name
+		#cvPredResponseData$plotLabel <- cvPredResponseData$name
+		cvPredResponseData$plotLabel <- paste0("10-Fold Cross-Validation ",idd, " (", pprefix, ", ", labs, ")")
 		cvPredResponseData$uniqName  <- cvPredResponseData$name
 		cvPredResponseData$dataSource <- responseData$dataSource
 		
@@ -861,9 +881,18 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 			dat <- cbind(CellLine = rownames(dat), dat)	
 		}
 
+# 		DT::datatable(dat, callback=JS('$("a.buttons-copy").css("background","lightblue");
+#                     $("a.buttons-print").css("background","lightblue");
+#                     $("a.buttons-excel").css("background","lightblue");
+# 		                               return table;'),
+# 		              rownames=FALSE, colnames=colnames(dat), filter='top', selection = "none",extensions='Buttons',
+# 									style='bootstrap', options=list(pageLength = nrow(dat),language=list(paginate = list(previous = 'Previous page', `next`= 'Next page')) ,dom='lipBt',buttons = list('copy', 'print',list(extend='excel',filename='regression_data',text='Download'))))
+
+
 		DT::datatable(dat, rownames=FALSE, colnames=colnames(dat), filter='top', selection = "none",extensions='Buttons',
-									style='bootstrap', options=list(pageLength = nrow(dat),language=list(paginate = list(previous = 'Previous page', `next`= 'Next page')) ,dom='lipBt',buttons = list('copy', 'print', list(extend = 'collection',buttons = list(list(extend='csv',filename='regression_data'), list(extend='excel',filename='regression_data'), list(extend='pdf',filename='regression_data')),text = 'Download'))))
-	})
+		               style='bootstrap', options=list(pageLength = nrow(dat),language=list(paginate = list(previous = 'Previous page', `next`= 'Next page')) ,dom='lipBt',buttons = list('copy', 'print', list(extend = 'collection',buttons = list(list(extend='csv',filename='regression_data'), list(extend='excel',filename='regression_data'), list(extend='pdf',filename='regression_data')),text = 'download'))))
+		
+			})
 	
 	# DT::datatable(myframe, rownames=FALSE,extensions='Buttons',
 	#               filter='top', style='bootstrap', selection = "none",

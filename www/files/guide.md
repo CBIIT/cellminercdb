@@ -3,7 +3,7 @@
 -	[Introduction](#introduction)
 -	[Univariate Analyses](#univariate)
   - [Plot Data](#plot)
-  - [Download Data](#download)
+  - [View Data](#download)
   - [Compare Patterns](#compare)
 -	[Regression Models](#regression)
   - [Heatmap](#heatmap)
@@ -64,10 +64,10 @@ Any pair of features from different sources across common cell lines can be plot
   - **Tissues to Color** to locate cell lines related to desired tissues within the scatter plot. By default, the cell lines are colored by their OncoTree cancer tissue level 1 pre-assigned color. Selecting a tissue makes related cell lines appear in red while remaining cell lines are colored in blue. The **Show Color** checkbox should be active.
 <br><br>
 5. The image icons from the left to the right:
-  - Downloads the plot as a png.
-  - Allows the user to zoom in on an area of interest by clicking and dragging with the pointer.
-  - Autoscales the image.
-  - Allows the user to create horizontal and vertical line from either a cell line 			dot or the regression line, by hovering over them.
+![icon](files/icon1.png) Downloads the plot as a png.
+![icon](files/icon2.png) Allows the user to zoom in on an area of interest by clicking and dragging with the pointer.
+![icon](files/icon3.png) Autoscales the image.
+![icon](files/icon4.png) Allows the user to create horizontal and vertical line from either a cell line 			dot or the regression line, by hovering over them.
 
   
 ![Screenshot of CellMinerCDB Application](files/Slide02.jpg)
@@ -75,7 +75,7 @@ Any pair of features from different sources across common cell lines can be plot
 **Figure 2**: An example scatterplot of SLFN11 gene expression (x-axis)  versus Topotecan drug activity (y-axis)/ both from the NCI60. Since Topotecan has 2 different drug ids in the NCI-60, the one with the lowest number of missing data is selected (here 609699). However, the user can type in their specific drug ID of interest. The Pearson correlation value and p value appear at the top of the plot. A linear fitting curve is included. This is an interactive plot and whenever the user changes any input value, the plot will be updated. Any point in the plot can be hovered over to provide additional information about cell line, tissue, Onco tree designation,  and x and y coordinate values.
 
 
-<h3 id="download">Download Data</h3>
+<h3 id="download">View Data</h3>
 This option both displays the data selected from the **Plot Data** tab in tabular form, and provides a **Download selected x and y axis data as Tab-Delimited File** option. The user can change the input data in the left selection panel as described for Plot Data. The displayed table include the cell line, the x-axis value, the y-axis value, the tissue of origin and the 4 onco-tree levels. Within the header the selected features are prefixed by the data type abbreviation and post-fixed by the data source.
 
 ![Screenshot of CellMinerCDB Application](files/Slide03.jpg)
@@ -101,8 +101,8 @@ The ‘Regression Models’ option (or module) has multiple tabs including Heatm
   - **Response Identifier** (e.g., a specific drug or gene identifier)
 <br><br>
 3. The predictor variables from the same data source by selecting
-  - **Predictor Data Type/s** (as explained in response data type). Use command button on Macs or control key on PCs to select more than one dataset
-  - **Minimal Range Value** for the first listed data type (optional – default zero)
+  - **Predictor Data Type/s** (as explained in response data type). Use command button on Macs or control key on PCs to select more than one dataset.
+  - **Minimal Range Value** provides a required minimum for the identifier to be included for the first listed data type. The default is 0. One may increase this value to eliminate predictors that are considered to have insufficient range to be biologically meaningful.
   - **predictor identifiers** (optional for Lasso model –see point5)
 <br><br>
 4. Selected tissues: by default, all cell lines are included however you can selected some based-on tissue
@@ -130,7 +130,7 @@ In case, the Lasso algorithm is selected	more predicted variables are shown base
 **Figure 6**: same example as previous figure with the lasso algorithm
 
 <h3 id="data">Data</h3>
-This option shows the detailed data for the model variables for each cell line as well as the predicted and cross-validation (10-fold cross validation) predicted responses. The data is displayed as a table with filtering options for each column. 
+This option shows the detailed data for the model variables for each cell line. Both the 10-fold cross validation (CV) as well as the predicted responses are given. The data is displayed as a table with filtering options for each column. 
 
 
 ![Screenshot of CellMinerCDB Application](files/Slide07.jpg)
@@ -138,21 +138,22 @@ This option shows the detailed data for the model variables for each cell line a
 **Figure 7**: data related to the simple linear regression model presented in the previous section.
 
 <h3 id="plotpred">Plot</h3>
-This option enables one to plot and compare the observed response values versus the predicted response values. 
+This option enables one to plot and compare the observed response values (y-axis) versus the predicted response values (x-axis). The predicted response values are derived from a linear regression model fit to the full data set.
 
 ![Screenshot of CellMinerCDB Application](files/Slide08.jpg)
 
 **Figure 8**: plot comparing Topotecan observed vs. predicted activity with high correlation value of 0.84
 
 <h3 id="cross">Cross-Validation</h3>
-This option enables to plot the observed response values versus the 10-fold cross-validation predicted response values and assess model generalization beyond the training data.
+This option enables to plot the observed response values (y-axis) versus the 10-fold cross-validation predicted response values (x-axis). With this approach, the predicted response values are obtained (over 10 iterations) by successively holding out 10% of the cell lines and predicting their response using a linear regression model fit to the remaining 90% of the data. Cross-validation is widely used in statistics to assess model generalization to independent data – with the caveat that the independent data must still share the same essential structure (i.e., probability distribution) as the training data. It can also indicate possible overfitting of the training data, such as when the observed versus full data set model-predicted correlation (shown in ‘Plot’) is substantially better than the observed versus cross-validation predicted correlation (shown in ‘Cross-Validation’).
+
 
 ![Screenshot of CellMinerCDB Application](files/Slide09.jpg)
 
 **Figure 9**: plot comparing Topotecan observed vs. cross-validation predicted activity with still high correlation value of 0.82
 
 <h3 id="details">Technical Details</h3>
-This option enables to view the R statistical and other technical details related to the constructed response model. 
+This option enables the user to view the R statistical and other technical details related to the predicted response model. To save, these results may be copied and pasted into the document or spreadsheet of your choice. 
 
 ![Screenshot of CellMinerCDB Application](files/Slide10.jpg)
 

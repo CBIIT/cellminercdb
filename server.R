@@ -9,6 +9,7 @@ library(glmnet)
 library(ggplot2)
 library(plotly)
 library(xlsx)
+library(shinycssloaders)
 #library(svglite)
 #library(clusterProfiler)
 
@@ -405,9 +406,9 @@ shinyServer(function(input, output, session) {
 		req(!any(is.null(yValRange)), !any(is.null(yLimits)))
 		req(!any(is.na(xValRange)), !any(is.na(xLimits)))
 		req(!any(is.na(yValRange)), !any(is.na(yLimits)))
-		
-		req((xLimits[1] <= xValRange[1]) && (xValRange[2] <= xLimits[2]))
-		req((yLimits[1] <= yValRange[1]) && (yValRange[2] <= yLimits[2]))
+		# commented below
+		# req((xLimits[1] <= xValRange[1]) && (xValRange[2] <= xLimits[2]))
+		# req((yLimits[1] <= yValRange[1]) && (yValRange[2] <= yLimits[2]))
 		
 		cat("xAxis Limits: ", paste0(xLimits, collapse = " "), sep = "\n")
 		cat("X_VAL_RANGE: ",  paste0(xValRange, collapse = " "), sep = "\n")
@@ -527,7 +528,7 @@ shinyServer(function(input, output, session) {
 	  selsource=metaConfig[[input$dataSrc]][["fullName"]]
 	  DT::datatable(myframe, rownames=FALSE,extensions='Buttons',
 	                filter='top', style='bootstrap', selection = "none",
-	                options=list(pageLength = 10,language=list(paginate = list(previous = 'Previous page', `next`= 'Next page')) ,dom='lipBt',buttons = list('copy', 'print', list(extend = 'collection',buttons = c('csv', 'excel', 'pdf'),text = 'Download')))
+	                options=list(pageLength = 10,language=list(paginate = list(previous = 'Previous page', `next`= 'Next page')) ,dom='lipBt',buttons = list('copy', 'print', list(extend = 'collection',buttons = list(list(extend='csv',filename='search_id'), list(extend='excel',filename='search_id'), list(extend='pdf',filename='search_id')),text = 'Download')))
 	                , caption=htmltools::tags$caption(paste0("Identifier search for ",selsource),style="color:dodgerblue; font-size: 18px")
 	)})
 
@@ -566,7 +567,7 @@ shinyServer(function(input, output, session) {
 	  selsource=metaConfig[[input$dataSrc]][["fullName"]]
 	  DT::datatable(results, rownames=FALSE, colnames=colnames(results),extensions='Buttons',
 	                filter='top', style='bootstrap', selection = "none",
-	                options=list(pageLength = 10,language=list(paginate = list(previous = 'Previous page', `next`= 'Next page')) ,dom='lipBt',buttons = list('copy', 'print', list(extend = 'collection',buttons = c('csv', 'excel', 'pdf'),text = 'Download')))
+	                options=list(pageLength = 10,language=list(paginate = list(previous = 'Previous page', `next`= 'Next page')) ,dom='lipBt',buttons = list('copy', 'print', list(extend = 'collection',buttons = list(list(extend='csv',filename='search_id'), list(extend='excel',filename='search_id'), list(extend='pdf',filename='search_id')),text = 'Download')))
 	                , caption=htmltools::tags$caption(paste0("Identifier search for ",selsource),style="color:dodgerblue; font-size: 18px")
 	  )})
 	
@@ -636,7 +637,7 @@ shinyServer(function(input, output, session) {
 		
 	  DT::datatable(results, rownames=FALSE, colnames=colnames(results),extensions='Buttons',
 	  							filter='top', style='bootstrap', selection = "none",
-	  							options=list(pageLength = 100,language=list(paginate = list(previous = 'Previous page', `next`= 'Next page')) ,dom='lipBt', buttons = list('copy', 'print', list(extend = 'collection',buttons = c('csv', 'excel', 'pdf'),text = 'Download'))))
+	  							options=list(pageLength = 100,language=list(paginate = list(previous = 'Previous page', `next`= 'Next page')) ,dom='lipBt', buttons = list('copy', 'print', list(extend = 'collection',buttons = list(list(extend='csv',filename='pattern_comp'), list(extend='excel',filename='pattern_comp'), list(extend='pdf',filename='pattern_comp')),text = 'Download'))))
 	  
 	})
 	
@@ -688,7 +689,7 @@ shinyServer(function(input, output, session) {
 		#verbatimTextOutput("log") can be used for debugging
 		#tabPanel("Plot", verbatimTextOutput("genUrl"), showOutput("rCharts", "highcharts")),
 
-		tab1 <- tabPanel("Download Data",
+		tab1 <- tabPanel("View Data",
                      downloadLink("downloadData", "Download selected x and y axis data as a Tab-Delimited File"),
                      DT::dataTableOutput("table"))
 		tab2 <- tabPanel("Search IDs",
@@ -713,7 +714,7 @@ shinyServer(function(input, output, session) {
 										 	))
 										 ),
 										 # downloadLink("downloadDataComp", "Download data table as a Tab-Delimited File"),
-                     DT::dataTableOutput("patternComparison"))
+                     withSpinner(DT::dataTableOutput("patternComparison")))
 
 		#if(input$hasRCharts == "TRUE") {
 #		if (FALSE) {
