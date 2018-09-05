@@ -63,13 +63,15 @@ Any pair of features from different sources across common cell lines can be plot
 4. Color selection
   - **Tissues to Color** to locate cell lines related to desired tissues within the scatter plot. By default, the cell lines are colored by their OncoTree cancer tissue level 1 pre-assigned color. Selecting a tissue makes related cell lines appear in red while remaining cell lines are colored in blue. The **Show Color** checkbox should be active.
 <br><br>
-5. The image icons from the left to the right:
-![icon](files/icon1.png) Downloads the plot as a png.
-![icon](files/icon2.png) Allows the user to zoom in on an area of interest by clicking and dragging with the pointer.
-![icon](files/icon3.png) Autoscales the image.
-![icon](files/icon4.png) Allows the user to create horizontal and vertical line from either a cell line 			dot or the regression line, by hovering over them.
+5. The image icons from left to right:
 
-  
+<table>
+<tr> <td><img src="files/icon1.png" alt="icon"></td> <td> Downloads the plot as a png.</td> </tr>
+<tr> <td><img src="files/icon2.png" alt="icon"></td> <td> Allows the user to zoom in on an area of interest by clicking and dragging with the pointer.</td> </tr>
+<tr> <td><img src="files/icon3.png" alt="icon"></td> <td> Autoscales the image.</td></tr>
+<tr> <td><img src="files/icon4.png" alt="icon"></td> <td> Allows the user to create horizontal and vertical line from either a cell line dot or the regression line, by hovering over them.</td></tr>
+</table>
+
 ![Screenshot of CellMinerCDB Application](files/Slide02.jpg)
 
 **Figure 2**: An example scatterplot of SLFN11 gene expression (x-axis)  versus Topotecan drug activity (y-axis)/ both from the NCI60. Since Topotecan has 2 different drug ids in the NCI-60, the one with the lowest number of missing data is selected (here 609699). However, the user can type in their specific drug ID of interest. The Pearson correlation value and p value appear at the top of the plot. A linear fitting curve is included. This is an interactive plot and whenever the user changes any input value, the plot will be updated. Any point in the plot can be hovered over to provide additional information about cell line, tissue, Onco tree designation,  and x and y coordinate values.
