@@ -931,7 +931,43 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 												 xaxis_font_size = xAxisFontSize,
 												 xaxis_height = 200, yaxis_width = 200)
 	})
-	
+	##--- download heatmap data
+	output$downloadHeat <- downloadHandler(
+	  
+	  # This function returns a string which tells the client
+	  # browser what name to use when saving the file.
+	  filename = function() {
+	    paste0("Heatmap_dataset_",input$dataset,"_responseID_",input$responseDataType,"_",input$responseId,".txt")
+	  },
+	 
+	  content = function(file) {
+	    rmAlgoResults <- algoResults()
+	    if (is.null(rmAlgoResults$updatedInputData)){
+	      dataTab <- inputData()
+	    } else{
+	      dataTab <- rmAlgoResults$updatedInputData
+	    }
+	    
+	    dataMatrix <- as.matrix(t(dataTab[, -1, drop = FALSE]))
+	    numHiLoCols <- min(input$numHiLoResponseLines, floor(ncol(dataMatrix)/2))
+	    # Order columns by decreasing response values.
+	    dataMatrix <- dataMatrix[, order(dataMatrix[1, , drop = TRUE], decreasing = TRUE), drop = FALSE]
+	    # Extract highest/lowest responder columns.
+	    colIndexSet <- c(1:numHiLoCols, (ncol(dataMatrix) - numHiLoCols + 1):ncol(dataMatrix))
+	    dataMatrix <- dataMatrix[, colIndexSet, drop = FALSE]
+	    # Remove data source identifier in predictor names.
+	    rownames(dataMatrix) <- vapply(rownames(dataMatrix), function(x) { 
+	      stringr::str_split(x, "_")[[1]][1] }, character(1))
+	    
+	    
+	    
+	    # scaledDataMatrix <- scaleDataForHeatmap(dataMatrix, input$useHeatmapRowColorScale)
+	    # write.table(scaledDataMatrix, file, sep = "\t", col.names = NA,quote=F)  
+	    
+	    write.table(dataMatrix, file, sep = "\t", col.names = NA,quote=F)  
+	    
+	 	  }
+	)
 	#----[Show Technical Details in 'Technical Details' Tab]--------------------------------
 	output$techDetails <- renderPrint({
 		rmAlgoResults <- algoResults()
@@ -1085,7 +1121,9 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 																						value=20, width = "50%"),
 																checkboxInput(ns("useHeatmapRowColorScale"), "Use Row Z-Score Color Scale", FALSE),
 																d3heatmapOutput(ns("heatmap")),
-															    p("Select cell line or feature name to highlight heatmap columns or rows, respectively."))
+															  p("Select cell line or feature name to highlight heatmap columns or rows, respectively."),br(),
+																downloadButton(ns("downloadHeat"), "Download Heatmap Data")
+																)
 		techDetailsTabPanel <- tabPanel("Technical Details", verbatimTextOutput(ns("techDetails")))
 		diffExpTabPanel <- tabPanel("Differential Expression", 
 																 selectInput(ns("deGeneSets"), "Select Gene Sets",
