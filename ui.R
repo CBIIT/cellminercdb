@@ -172,9 +172,13 @@ shinyUI(
 						 				br(),br(),br(),br(),br(),br(),
 						 				uiOutput("dataTypeUi"),
 						 				br(),
-						 				downloadButton('downloadExp', 'Download Data Type'),
+						 				downloadButton('downloadExp', 'Download Data'),
 						 				br(),br(),
-						 				downloadButton('downloadFoot', 'Download Data Footnotes')
+						 				downloadButton('downloadFoot', 'Download Footnotes'),
+						 				br(),br(),br(),br(),br(),br(),
+						 				HTML("<b>Download drug synonyms table with matching IDs for all cell line sets</b>"),
+						 				downloadButton('downloadSyn', 'Download Table'),
+						 				br(),br()
 						 				#uiOutput(""),
 						 			)
 						 		), #end sidebarPanel

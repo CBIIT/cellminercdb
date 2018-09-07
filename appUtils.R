@@ -330,3 +330,27 @@ getLmEquationString <- function(predictorWts, orderByDecrAbsVal = TRUE, numSigDi
 }
 
 #--------------------------------------------------------------------------------------------------
+# searching drug IDs across all data sources using the synonyms list
+# return a dataframe
+## call : findDrugIDs("topo")
+## find all : findDrugIDs("*")
+#----------------------------------------------------------------------____________________________
+findDrugIDs <- function(drugname) {
+  tmp <- rcellminerUtils::drugSynonymTab
+  y = unlist(lapply(tmp$NAME_SET, function(x) length(grep(drugname,x,ignore.case=T))))
+  res=tmp[which(y!=0),]
+  #found=which(y!=0)
+  nb=dim(res)[2]
+  nr=dim(res)[1]
+  matres=matrix("",nr,nb)
+  colnames(matres)=colnames(res)
+  colnames(matres)[1]="Drug_Synonyms"
+  for (i in 1:nb)
+  {
+    matres[,i]= unlist(lapply(res[,i], function(x) paste(x,collapse=";")))
+  }
+  colnames(matres)[2:nb]=paste0(vapply(colnames(matres)[2:nb],function(x) {metaConfig[[x]][["displayName"]]},character(1)),"_IDs")
+  return(matres)
+}
+#---------------------------------------------------------------------------------------------------
+

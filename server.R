@@ -956,6 +956,22 @@ shinyServer(function(input, output, session) {
     }
   )
   
+  ### Download Synonym table
+  output$downloadSyn <- downloadHandler(
+    
+    # This function returns a string which tells the client
+    # browser what name to use when saving the file.
+    filename = function() {
+      paste0("Table_","Drugs_Synonyms_cdb",".txt")
+    },
+    
+     content = function(file) {
+      
+      write.table(findDrugIDs("*"), file, sep = "\t", row.names = F,quote=F)  
+      
+     }
+  )
+  ##
   
   
   ###
