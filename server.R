@@ -601,6 +601,8 @@ shinyServer(function(input, output, session) {
 	    	results <- results[, c("ids", "NAME", "COR", "PVAL")]
 	    	colnames(results) <- c("ID", "Name", "Correlation", "P-Value")
 	    }
+	    results$FDR=p.adjust(results[,"P-Value"],method="BH",nrow(results))
+	    
 	  } else {
 	    molPharmData <- srcContent[[pcDataset]][["molPharmData"]]
 	    molData <- molPharmData[setdiff(names(molPharmData), c("act","copA","mutA","metA","expA","xaiA","proA","mirA","mdaA","swaA","xsqA"))]
@@ -623,6 +625,7 @@ shinyServer(function(input, output, session) {
 	    	results$Location <- chromLocs
 	    	results <- results[, c("ID", "Data Type", "Gene", "Location", "Correlation", "P-Value")]
 	    }
+	    results$FDR=p.adjust(results[,"P-Value"],method="BH",nrow(results))
 	    
 	    if (require(geneSetPathwayAnalysis)){
 	    	results$Annotation <- geneSetPathwayAnalysis::geneAnnotTab[results$Gene, "SHORT_ANNOT"]
@@ -634,6 +637,7 @@ shinyServer(function(input, output, session) {
 	  
 	  results[, "Correlation"] <- round(results[, "Correlation"], 3)
 	  results[, "P-Value"] <- signif(results[, "P-Value"], 3)
+	  results[, "FDR"] <- signif(results[, "FDR"], 3)
 		
 	  DT::datatable(results, rownames=FALSE, colnames=colnames(results),extensions='Buttons',
 	  							filter='top', style='bootstrap', selection = "none",

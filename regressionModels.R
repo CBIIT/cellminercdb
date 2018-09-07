@@ -636,6 +636,10 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 			stopCluster(cl)
 			
 			pcResults <- pcResults[order(pcResults$PARCOR, decreasing = TRUE), ]
+			pcResults$PARCOR <- round(pcResults$PARCOR, 3)
+			pcResults$PVAL   <- signif(pcResults$PVAL, 3)
+			# pcResults$FDR <- p.adjust(pcResults[,"PVAL"],method="BH",nrow(pcResults))
+			# pcResults$FDR   <- signif(pcResults$FDR, 3)
 		} else{
 			# ----[enable progress bar]--------------------------------------------------
 			progress <- shiny::Progress$new()
@@ -650,6 +654,7 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 																											 Y = comparisonData,
 																											 Z = currentPredictorData,
 																											 updateProgress = updateProgress)
+#			pcResults$FDR <- p.adjust(pcResults[,"PVAL"],method="BH",nrow(pcResults))
 			pcResults$ANNOT <- ""
 			
 			for (i in seq_len(nrow(pcResults))){
@@ -660,10 +665,11 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 			}
 			pcResults$PARCOR <- round(pcResults$PARCOR, 3)
 			pcResults$PVAL   <- signif(pcResults$PVAL, 3)
+#			pcResults$FDR   <- signif(pcResults$FDR, 3)
 			
-			DT::datatable(pcResults, rownames=FALSE, colnames=colnames(pcResults), filter='top', 
-			              style='bootstrap', selection = "none",
-			              options=list(lengthMenu = c(10, 25, 50, 100), pageLength = 10,language=list(paginate = list(previous = 'Previous page', `next`= 'Next page'))))
+			# DT::datatable(pcResults, rownames=FALSE, colnames=colnames(pcResults), filter='top', 
+			#               style='bootstrap', selection = "none",
+			#               options=list(lengthMenu = c(10, 25, 50, 100), pageLength = 10,language=list(paginate = list(previous = 'Previous page', `next`= 'Next page'))))
 			
 		}
 		
@@ -1029,10 +1035,18 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 		 dtype=substr(pcResults$NAME,1,3)
 		 nname=substr(pcResults$NAME,4,nchar(pcResults$NAME))
 		 pcResults=cbind(DATATYPE=dtype,NAME=nname,pcResults[,-1])
-		 DT::datatable(pcResults, rownames=FALSE, colnames=colnames(pcResults), filter='top', 
-								style='bootstrap', selection = "none",
-									options=list(lengthMenu = c(10, 25, 50, 100), pageLength = 10,language=list(paginate = list(previous = 'Previous page', `next`= 'Next page'))))
-	})
+		#  DT::datatable(pcResults, rownames=FALSE, colnames=colnames(pcResults), filter='top', 
+		# 						style='bootstrap', selection = "none",
+		# 							options=list(lengthMenu = c(10, 25, 50, 100), pageLength = 10,language=list(paginate = list(previous = 'Previous page', `next`= 'Next page'))))
+		 
+		 # pcResults$FDR=p.adjust(pcResults[,"PVAL"],method="BH",nrow(results))
+		 DT::datatable(pcResults, rownames=FALSE, colnames=colnames(pcResults),extensions='Buttons',
+		               filter='top', style='bootstrap', selection = "none",
+		               options=list(lengthMenu = c(10, 50, 100, nrow(pcResults)),pageLength = 100,language=list(paginate = list(previous = 'Previous page', `next`= 'Next page')) ,dom='lipBt', buttons = list('copy', 'print', list(extend = 'collection',buttons = list(list(extend='csv',filename='partial_corr'), list(extend='excel',filename='partial_corr'), list(extend='pdf',filename='partial_corr')),text = 'Download'))))
+		 
+		 
+		 
+		 })
 	
 	#----[Show Differential Expression Results in 'Differential Expression' Tab]-------------------
 	output$diffExpResults <- DT::renderDataTable({
@@ -1158,20 +1172,22 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 																		##						selected = input$predDataTypes,
 																		##						multiple=TRUE),
 																		##
-																		
+																		br(),
 																		HTML(
 																		  paste("<label class='control-label' for=",ns("pcGeneSets"),">Select Gene Sets</label>","<select id=",ns("pcGeneSets")," style='word-wrap:break-word;' multiple>",opt0,"</select>")
 																		),
 																		#
-																		HTML("<br>"),
+																		br(),br(),
 																		HTML(
 																		  paste("<label class='control-label' for=",ns("pcDataTypes"),">Select Data Types</label>","<select id=",ns("pcDataTypes")," style='word-wrap:break-word;' multiple>",opt1,"</select>")
 																		),
-																		HTML("<br>"),
+																		br(),br(),
 																		##
 																		sliderInput(ns("minParCorDataValueRange"), 
 																								"Minimum Range (First Listed Data Type):", 
 																								min=0, max=5, value=0, step = 0.25),
+																		br(),
+																		HTML("<b>Please click on button Run to determine additional predictors, after the influence of the Input Predictors are removed       </b>"),
 																		actionButton(ns("computeParCors"), "Run"),
 																		tags$hr(),
 																		DT::dataTableOutput(ns("patternCompResults")))
