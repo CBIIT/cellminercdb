@@ -638,7 +638,8 @@ shinyServer(function(input, output, session) {
 	  results[, "Correlation"] <- round(results[, "Correlation"], 3)
 	  results[, "P-Value"] <- signif(results[, "P-Value"], 3)
 	  results[, "FDR"] <- signif(results[, "FDR"], 3)
-		
+		## sort by p-value
+	  results <- results[order(results[, "P-Value"]),]
 	  DT::datatable(results, rownames=FALSE, colnames=colnames(results),extensions='Buttons',
 	  							filter='top', style='bootstrap', selection = "none",
 	  							options=list(pageLength = 100,language=list(paginate = list(previous = 'Previous page', `next`= 'Next page')) ,dom='lipBt', buttons = list('copy', 'print', list(extend = 'collection',buttons = list(list(extend='csv',filename='pattern_comp'), list(extend='excel',filename='pattern_comp'), list(extend='pdf',filename='pattern_comp')),text = 'Download'))))
@@ -701,6 +702,9 @@ shinyServer(function(input, output, session) {
                      DT::dataTableOutput("ids"))
 		tab3 <- tabPanel("Compare Patterns",
 										 includeMarkdown("www/files/help.md"),
+										 #br(),
+										 HTML("<b>Pattern comparison results are computed with respect to x-axis [y-axis] entry, using data for cell lines shared by the x and y-axis sets (if different).</b>"),
+										 br(),br(),
 										 fluidRow(
                      	#column(3, selectInput("patternComparisonType", "Pattern Comparison",
                       #           						choices=c("Molecular Data"="molData", "Drug Data"="drug"), 
