@@ -20,6 +20,7 @@
   - [Multiple selection](#multiple)
   - [X-axis or Y-axis range](#range)
   - [Show color](#color)
+- [Exploratory worflow](#workflow)
 -	[Video tutorial](#video)
 -	[Methods](#methods)
   - [Linear regression](#linear)
@@ -45,8 +46,7 @@ CellMinerCDB is an interactive web application that simplifies access and explor
 <h2 id="univariate">Univariate Analyses</h2>
 Molecular and/or drug response patterns across sets of cell lines can be compared to look for possible association.  The univariate analysis panel includes 3 options: Plot data, Download Data and Compare Patterns. Almost all options have the same input data in the left side panel.
 
-<h3 id="plot">Plot Data</h3>
-Any pair of features from different sources across common cell lines can be plotted (as a scatterplot) including the resultant Pearson correlation and p value. To generate a scatterplot, enter on the side bar panel:
+<h4 id="inputs">Input data</h4>
 
 1.	The x-axis data choices includes 4 fields to be filled by the user:
   - **x-Axis Cell Line Set** selects the data source. The user can choose: NCI60, CCLE, GDSC, CTRP or NCI/DTP SCLC (see Data Sources for more details). 
@@ -63,8 +63,10 @@ Any pair of features from different sources across common cell lines can be plot
 4. Color selection
   - **Tissues to Color** to locate cell lines related to desired tissues within the scatter plot. By default, the cell lines are colored by their OncoTree cancer tissue level 1 pre-assigned color. Selecting a tissue makes related cell lines appear in red while remaining cell lines are colored in blue. The **Show Color** checkbox should be active.
 <br><br>
-5. The image icons from left to right:
 
+<h3 id="plot">Plot Data</h3>
+Any pair of features from different sources across common cell lines can be plotted (as a scatterplot) including the resultant Pearson correlation and p value. Some options are available to play with the plot image using icons on the top from left to right:
+<br>
 <table>
 <tr> <td><img src="files/icon1.png" alt="icon"></td> <td> Downloads the plot as a png.</td> </tr>
 <tr> <td><img src="files/icon2.png" alt="icon"></td> <td> Allows the user to zoom in on an area of interest by clicking and dragging with the pointer.</td> </tr>
@@ -94,7 +96,9 @@ Pearson’s correlations are provided, with reported p-values (not adjusted for 
 **Figure 4**: shows correlation results for SLFN11 gene with all other molecular features for all NCI60 datasets sorted by correlation value with gene location and target pathways (annotation field).
 
 <h2 id="regression">Regression Models</h2>
-The ‘Regression Models’ option (or module) has multiple tabs including Heatmap, Data, Plot, Cross-Validation, Tehnical Details and Partial Correlation (described below), and allows construction and assessment of multivariate linear response prediction models. For instance, we can assess prediction of a drug activity based on some genes expression. To construct a regression model, you need to specify:
+The ‘Regression Models’ option (or module) has multiple tabs including Heatmap, Data, Plot, Cross-Validation, Tehnical Details and Partial Correlation (described below), and allows construction and assessment of multivariate linear response prediction models. For instance, we can assess prediction of a drug activity based on some genes expression. To construct a regression model, you need to specify the input data in the left side panel.
+
+<h4 id="inputs2">Input data</h4>
 
 1. **Cell Line Set** selects the data source. The user can choose: NCI60, CCLE, GDSC, CTRP or NCI/DTP SCLC (see Data Sources for more details). 
 <br><br>
@@ -216,15 +220,26 @@ You can change the x-axis or y-axis lower or higher value to have different view
 <h3 id="color">Show color</h3>
 It is a checkbox that enable and disable colors in the scatter plots
 
+<h2 id="workflow">Exploratory worflow</h2>
+Mutilple data analysis workflows may be used dependent of the question being asked. A typical workflow:
+
+1.  Check the relationship between two variables [2D plot]. Example: SLFN11 transcript expression and topotecan drug activity.
+<br>
+2.  As what else might be associated with either the x-axis or y-axis variable [Pattern Comparison]. Example: considering potential biological affects, TGFBR3 (an apoptosis factor) and BPTF (a chromatin factor) transcript expression might be considered candidates for affecting topotecan activity.
+<br>
+3.  Upon finding two or more associations with single 'response' variable through [Pattern Comparison/2D Plot], check if they complement one another in a multivariate model [Regression Models]. Example: Starting with the dominant SLFN11, adding TGFBR3 does not add to the regression model, but BPTF does.
+<br>
+4.  Iterate on the above ... 
+
 <h2 id="video">Video tutorial</h2>
 **For an introduction please refer to our <a href="https://www.youtube.com/watch?v=2HicAgcyJHI" target="_blank">video tutorial</a>**
 
 <h2 id="methods">Methods</h2>
-<h3 id="linear">Linear regression</h3>
-Basic linear regression models are implemented using the R stats package lm() function
+  - <h3 id="linear">Linear regression</h3>
+  Basic linear regression models are implemented using the R stats package lm() function
 
-<h3 id="lasso">Lasso Model</h3>
-Lasso (penalized linear regression models) are implemented using the glmnet R package. The lasso performs both variable selection and linear model coefficient fitting. The lasso lambda parameter controls the tradeoff between model fit and variable set size. Lambda is set to the value giving the minimum error with 10-fold cross-validation. For either standard linear regression or LASSO models, 10-fold cross validation is applied to fit model coefficients and predict response, while withholding portions of the data to better estimate robustness. 
+  - <h3 id="lasso">Lasso Model</h3>
+  Lasso (penalized linear regression models) are implemented using the glmnet R package. The lasso performs both variable selection and linear model coefficient fitting. The lasso lambda parameter controls the tradeoff between model fit and variable set size. Lambda is set to the value giving the minimum error with 10-fold cross-validation. For either standard linear regression or LASSO models, 10-fold cross validation is applied to fit model coefficients and predict response, while withholding portions of the data to better estimate robustness. 
 
 <h2 id="contactfeedback">Contact/Feedback</h2>
 Please send comments and feedback to 

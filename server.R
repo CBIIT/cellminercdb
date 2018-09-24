@@ -703,7 +703,7 @@ shinyServer(function(input, output, session) {
 		tab3 <- tabPanel("Compare Patterns",
 										 includeMarkdown("www/files/help.md"),
 										 #br(),
-										 HTML("<b>Pattern comparison results are computed with respect to x-axis [y-axis] entry, using data for cell lines shared by the x and y-axis sets (if different).</b>"),
+										 HTML("<b>Pattern comparison results are computed with respect to that data defined and shared by both the x and y-axis inputs.</b>"),
 										 br(),br(),
 										 fluidRow(
                      	#column(3, selectInput("patternComparisonType", "Pattern Comparison",

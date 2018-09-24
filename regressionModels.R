@@ -1187,7 +1187,8 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 																								"Minimum Range (First Listed Data Type):", 
 																								min=0, max=5, value=0, step = 0.25),
 																		br(),
-																		HTML("<b>Please click on button Run to determine additional predictors, after the influence of the Input Predictors are removed       </b>"),
+																		HTML("<b>Click Run to determine additional predictors, after the influence of the input predictors are removed.</b>"),
+																		br(),
 																		actionButton(ns("computeParCors"), "Run"),
 																		tags$hr(),
 																		DT::dataTableOutput(ns("patternCompResults")))
