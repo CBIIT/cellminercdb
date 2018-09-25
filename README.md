@@ -9,8 +9,8 @@ CellMinerCDB is a Shiny/R app that simplifies access and  exploration of cancer 
 * geneSetPathwayAnalysis: https://github.com/CBIIT/DTB-devel 
 
 ## Data packages 
-nciSclcData: https://github.com/CBIIT/nciSclcData
-ccleData: NA
-gdsc: NA 
-ctrpData: NA
-nciAlmanac: NA 
+* nciSclcData: https://github.com/CBIIT/nciSclcData
+* ccleData: NA
+* gdsc: NA 
+* ctrpData: NA
+* nciAlmanac: NA 
