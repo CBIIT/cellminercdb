@@ -896,7 +896,7 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 
 
 		DT::datatable(dat, rownames=FALSE, colnames=colnames(dat), filter='top', selection = "none",extensions='Buttons',
-		               style='bootstrap', options=list(pageLength = nrow(dat),language=list(paginate = list(previous = 'Previous page', `next`= 'Next page')) ,dom='lipBt',buttons = list('copy', 'print', list(extend = 'collection',buttons = list(list(extend='csv',filename='regression_data'), list(extend='excel',filename='regression_data'), list(extend='pdf',filename='regression_data')),text = 'download'))))
+		               style='bootstrap', options=list(pageLength = nrow(dat),language=list(paginate = list(previous = 'Previous page', `next`= 'Next page')) ,dom='lipBt',buttons = list('copy', 'print', list(extend = 'collection',buttons = list(list(extend='csv',filename='regression_data',title='Exported data from CellMinerCDB'), list(extend='excel',filename='regression_data',title='Exported data from CellMinerCDB'), list(extend='pdf',filename='regression_data',title='Exported data from CellMinerCDB')),text = 'download'))))
 		
 			})
 	
@@ -1042,7 +1042,7 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 		 # pcResults$FDR=p.adjust(pcResults[,"PVAL"],method="BH",nrow(results))
 		 DT::datatable(pcResults, rownames=FALSE, colnames=colnames(pcResults),extensions='Buttons',
 		               filter='top', style='bootstrap', selection = "none",
-		               options=list(lengthMenu = c(10, 50, 100, nrow(pcResults)),pageLength = 100,language=list(paginate = list(previous = 'Previous page', `next`= 'Next page')) ,dom='lipBt', buttons = list('copy', 'print', list(extend = 'collection',buttons = list(list(extend='csv',filename='partial_corr'), list(extend='excel',filename='partial_corr'), list(extend='pdf',filename='partial_corr')),text = 'Download'))))
+		               options=list(lengthMenu = c(10, 50, 100, nrow(pcResults)),pageLength = 100,language=list(paginate = list(previous = 'Previous page', `next`= 'Next page')) ,dom='lipBt', buttons = list('copy', 'print', list(extend = 'collection',buttons = list(list(extend='csv',filename='partial_corr',title='Exported data from CellMinerCDB'), list(extend='excel',filename='partial_corr',title='Exported data from CellMinerCDB'), list(extend='pdf',filename='partial_corr',title='Exported data from CellMinerCDB')),text = 'Download'))))
 		 
 		 
 		 
