@@ -930,12 +930,20 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 
 		scaledDataMatrix <- scaleDataForHeatmap(dataMatrix, input$useHeatmapRowColorScale)
 		#save(scaledDataMatrix, file = "~/Downloads/scaledDataMatrix.RData")
+		
+		# d3heatmap::d3heatmap(x = scaledDataMatrix,  # Used for color scaling.
+		# 										 cellnote = dataMatrix, # Used for tooltip values.
+		# 										 dendrogram = "none", 
+		# 										 colors = colorRamp(colors = c("green", "black", "red")),
+		# 										 xaxis_font_size = xAxisFontSize,
+		# 										 xaxis_height = 200, yaxis_width = 200)
 		d3heatmap::d3heatmap(x = scaledDataMatrix,  # Used for color scaling.
-												 cellnote = dataMatrix, # Used for tooltip values.
-												 dendrogram = "none", 
-												 colors = colorRamp(colors = c("green", "black", "red")),
-												 xaxis_font_size = xAxisFontSize,
-												 xaxis_height = 200, yaxis_width = 200)
+		                     cellnote = dataMatrix, # Used for tooltip values.
+		                     dendrogram = "none", 
+		                     colors = colorRamp(colors = c("blue", "white", "red")),
+		                     xaxis_font_size = xAxisFontSize,
+		                     xaxis_height = 200, yaxis_width = 200)
+		
 	})
 	##--- download heatmap data
 	output$downloadHeat <- downloadHandler(
@@ -1133,7 +1141,7 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 																						"Number of High/Low Response Lines to Display:", 
 																						min=1, max=maxNumHiLoResponseLines, 
 																						value=20, width = "50%"),
-																checkboxInput(ns("useHeatmapRowColorScale"), "Use Row Z-Score Color Scale", FALSE),
+																checkboxInput(ns("useHeatmapRowColorScale"), "Use Row Color Scale", FALSE),
 																d3heatmapOutput(ns("heatmap")),
 															  p("Select cell line or feature name to highlight heatmap columns or rows, respectively."),br(),
 																downloadButton(ns("downloadHeat"), "Download Heatmap Data")

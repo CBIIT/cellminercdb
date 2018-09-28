@@ -20,7 +20,7 @@
   - [Multiple selection](#multiple)
   - [X-axis or Y-axis range](#range)
   - [Show color](#color)
-- [Exploratory worflow](#workflow)
+- [Exploratory workflow](#workflow)
 -	[Video tutorial](#video)
 -	[Methods](#methods)
   - [Linear regression](#linear)
@@ -220,16 +220,16 @@ You can change the x-axis or y-axis lower or higher value to have different view
 <h3 id="color">Show color</h3>
 It is a checkbox that enable and disable colors in the scatter plots
 
-<h2 id="workflow">Exploratory worflow</h2>
+<h2 id="workflow">Exploratory workflow</h2>
 Mutilple data analysis workflows may be used dependent of the question being asked. A typical workflow:
 
 1.  Check the relationship between two variables [2D plot]. Example: SLFN11 transcript expression and topotecan drug activity.
 <br>
-2.  As what else might be associated with either the x-axis or y-axis variable [Pattern Comparison]. Example: considering potential biological affects, TGFBR3 (an apoptosis factor) and BPTF (a chromatin factor) transcript expression might be considered candidates for affecting topotecan activity.
+2.  Examine what else might be associated with either the x-axis or y-axis variable [Pattern Comparison]. Example: considering potential biological affects, TGFBR3 (an apoptosis factor) and BPTF (a chromatin factor) transcript expression might be considered candidates for affecting topotecan activity.
 <br>
 3.  Upon finding two or more associations with single 'response' variable through [Pattern Comparison/2D Plot], check if they complement one another in a multivariate model [Regression Models]. Example: Starting with the dominant SLFN11, adding TGFBR3 does not add to the regression model, but BPTF does.
 <br>
-4.  Iterate on the above ... 
+4.  Repeat the above steps as needed.
 
 <h2 id="video">Video tutorial</h2>
 **For an introduction please refer to our <a href="https://www.youtube.com/watch?v=2HicAgcyJHI" target="_blank">video tutorial</a>**
