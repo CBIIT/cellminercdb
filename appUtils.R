@@ -19,8 +19,8 @@ getMatchedIds <- function(prefix, id, dataSource, srcContent){
 		matchedIds <- unname(idSet[i])
 	} else{
 		# For drugs: try to match synonyms to source-specific identifiers.
-		if (require(rcellminerUtils) && isDrugActivityDataType(prefix)){
-			matchedIds <- rcellminerUtils::getDbDrugIds(drugName = id, dbName = dataSource)
+		if (require(rcellminerUtilsCDB) && isDrugActivityDataType(prefix)){
+			matchedIds <- rcellminerUtilsCDB::getDbDrugIds(drugName = id, dbName = dataSource)
 			matchedIds <- intersect(matchedIds, idSet)
 			## new final search with drug name
 			if (length(matchedIds)==0 & nchar(id)>=3) {
@@ -336,7 +336,7 @@ getLmEquationString <- function(predictorWts, orderByDecrAbsVal = TRUE, numSigDi
 ## find all : findDrugIDs("*")
 #----------------------------------------------------------------------____________________________
 findDrugIDs <- function(drugname) {
-  tmp <- rcellminerUtils::drugSynonymTab
+  tmp <- rcellminerUtilsCDB::drugSynonymTab
   y = unlist(lapply(tmp$NAME_SET, function(x) length(grep(drugname,x,ignore.case=T))))
   res=tmp[which(y!=0),]
   #found=which(y!=0)

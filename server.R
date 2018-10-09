@@ -15,8 +15,8 @@ library(shinycssloaders)
 
 #library(tooltipsterR)
 
-if (!require(rcellminerUtils)){
-	warning("rcellminerUtils package must be installed for full cross-database functionality.")
+if (!require(rcellminerUtilsCDB)){
+	warning("rcellminerUtilsCDB package must be installed for full cross-database functionality.")
 }
 
 
@@ -246,7 +246,7 @@ shinyServer(function(input, output, session) {
 			)
 			matchedCellLinesTab$yDataset <- matchedCellLinesTab$xDataset
 		} else{
-			shiny::validate(need(require(rcellminerUtils),
+			shiny::validate(need(require(rcellminerUtilsCDB),
 													 "ERROR: x and y axis data sets must be the same."))
 			matchedCellLinesTab <- getMatchedCellLines(c(input$xDataset, input$yDataset))
 			shiny::validate(need(nrow(matchedCellLinesTab) > 0, 
@@ -617,7 +617,7 @@ shinyServer(function(input, output, session) {
 	    results <- results[, c("ids", "molDataType", "gene", "COR", "PVAL")]
 	    colnames(results) <- c("ID", "Data Type", "Gene", "Correlation", "P-Value")
 
-	    if (require(rcellminerUtils)){
+	    if (require(rcellminerUtilsCDB)){
 	    	chromLocs <- character(nrow(results))
 	    	haveLoc <- results$Gene %in% names(geneToChromBand)
 	    	chromLocs[haveLoc] <- geneToChromBand[results$Gene[haveLoc]]
