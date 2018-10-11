@@ -232,7 +232,7 @@ Mutilple data analysis workflows may be used dependent of the question being ask
 4.  Repeat the above steps as needed.
 
 <h2 id="video">Video tutorial</h2>
-**For an introduction please refer to our <a href="https://www.youtube.com/watch?v=2HicAgcyJHI" target="_blank">video tutorial</a>**
+**For an introduction please refer to our <a href="https://youtu.be/XljXazRGkQ8" target="_blank">video tutorial</a>**
 
 <h2 id="methods">Methods</h2>
   - <h3 id="linear">Linear regression</h3>
