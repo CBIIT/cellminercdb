@@ -1,5 +1,6 @@
 <!-- TOC -->
 # Table of Contents
+- <a href="https://youtu.be/XljXazRGkQ8" target="_blank">Video tutorial</a>
 -	[Introduction](#introduction)
 -	[Univariate Analyses](#univariate)
   - [Plot Data](#plot)
@@ -21,7 +22,6 @@
   - [X-axis or Y-axis range](#range)
   - [Show color](#color)
 - [Exploratory workflow](#workflow)
--	[Video tutorial](#video)
 -	[Methods](#methods)
   - [Linear regression](#linear)
   - [Lasso model](#lasso)
@@ -65,7 +65,9 @@ Molecular and/or drug response patterns across sets of cell lines can be compare
 <br><br>
 
 <h3 id="plot">Plot Data</h3>
-Any pair of features from different sources across common cell lines can be plotted (as a scatterplot) including the resultant Pearson correlation and p value. Some options are available to play with the plot image using icons on the top from left to right:
+Any pair of features from different sources across common cell lines can be plotted (as a scatterplot) including the resultant Pearson correlation and p-value. The p-value estimates assume multivariate normal data, and are less reliable as the data deviate from this. Please use the scatter plot to check the data distribution (e.g., for outlying points outside of a more elliptically concentrated set).
+<br><br>
+Some options are available to play with the plot image using icons on the top from left to right:
 <br>
 <table>
 <tr> <td><img src="files/icon1.png" alt="icon"></td> <td> Downloads the plot as a png.</td> </tr>
@@ -230,9 +232,6 @@ Mutilple data analysis workflows may be used dependent of the question being ask
 3.  Upon finding two or more associations with single 'response' variable through [Pattern Comparison/2D Plot], check if they complement one another in a multivariate model [Regression Models]. Example: Starting with the dominant SLFN11, adding TGFBR3 does not add to the regression model, but BPTF does.
 <br>
 4.  Repeat the above steps as needed.
-
-<h2 id="video">Video tutorial</h2>
-**For an introduction please refer to our <a href="https://youtu.be/XljXazRGkQ8" target="_blank">video tutorial</a>**
 
 <h2 id="methods">Methods</h2>
   - <h3 id="linear">Linear regression</h3>
