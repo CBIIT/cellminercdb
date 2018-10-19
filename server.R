@@ -8,8 +8,9 @@ library(stringr)
 library(glmnet)
 library(ggplot2)
 library(plotly)
-library(xlsx)
+##library(xlsx)
 library(shinycssloaders)
+#library(dplyr)
 #library(svglite)
 #library(clusterProfiler)
 
@@ -83,11 +84,9 @@ colorSet <- loadNciColorSet(returnDf=TRUE)
 
 ###--------
 
-
+options("DT.TOJSON_ARGS" = list(na = "string")) ## try dev version of DT
 
 #--------------------------------------------------------------------------------------------------
-
-
 
 
 shinyServer(function(input, output, session) {
@@ -453,7 +452,17 @@ shinyServer(function(input, output, session) {
   								options=list(pageLength = nrow(dlDataTab), language=list(paginate = list(previous = 'Previous page', `next`= 'Next page'))))
   })
 	#--------------------------------------------------------------------------------------
-
+	output$cortable <- DT::renderDataTable({
+	  # Column selection below is to restrict to cell line, x, y features,
+	  # and tissue type information (source-provided + OncoTree).
+	  rescor= CorrelationTable(xData(),yData(),srcContentReactive())
+	  
+	  DT::datatable(rescor, rownames=FALSE, colnames=colnames(rescor),extensions='Buttons',
+	                filter='top', style='bootstrap', selection="none",
+	                options=list(pageLength = nrow(rescor), language=list(paginate = list(previous = 'Previous page', `next`= 'Next page')) ,dom='lipBt', buttons = list('copy', 'print', list(extend = 'collection',buttons = list(list(extend='csv',filename='tissue_correlation',title='Exported data from CellMinerCDB'), list(extend='excel',filename='tissue_correlation',title='Exported data from CellMinerCDB'), list(extend='pdf',filename='tissue_correlation',title='Exported data from CellMinerCDB')),text = 'Download'))))
+	 
+	  })
+  #--------------------------------------------------------------------------------------
   #----[Render Data Table in 'Search IDs' Tab]-------------------------------------------
   # Generate an HTML table view of the data
   # Note: Searchable data is derived from the x-axis data source.
@@ -640,6 +649,7 @@ shinyServer(function(input, output, session) {
 	  results[, "FDR"] <- signif(results[, "FDR"], 3)
 		## sort by p-value
 	  results <- results[order(results[, "P-Value"]),]
+	 
 	  DT::datatable(results, rownames=FALSE, colnames=colnames(results),extensions='Buttons',
 	  							filter='top', style='bootstrap', selection = "none",
 	  							options=list(lengthMenu = c(10, 50, 100, nrow(results)),pageLength = 100,language=list(paginate = list(previous = 'Previous page', `next`= 'Next page')) ,dom='lipBt', buttons = list('copy', 'print', list(extend = 'collection',buttons = list(list(extend='csv',filename='pattern_comp',title='Exported data from CellMinerCDB'), list(extend='excel',filename='pattern_comp',title='Exported data from CellMinerCDB'), list(extend='pdf',filename='pattern_comp',title='Exported data from CellMinerCDB')),text = 'Download'))))
@@ -693,7 +703,9 @@ shinyServer(function(input, output, session) {
 	output$tabsetPanel = renderUI({
 		#verbatimTextOutput("log") can be used for debugging
 		#tabPanel("Plot", verbatimTextOutput("genUrl"), showOutput("rCharts", "highcharts")),
-
+	  tab4 <- tabPanel("Tissue Correlation",
+	                   #downloadLink("downloadData", "Download selected x and y axis data as a Tab-Delimited File"),
+	                   DT::dataTableOutput("cortable"))
 		tab1 <- tabPanel("View Data",
                      downloadLink("downloadData", "Download selected x and y axis data as a Tab-Delimited File"),
                      DT::dataTableOutput("table"))
@@ -721,7 +733,8 @@ shinyServer(function(input, output, session) {
 										 	  paste("<label class='control-label' for='patternComparisonSeed'>With Respect to</label>","<select id='patternComparisonSeed'><option value='xPattern' selected>x-Axis Entry</option><option value='yPattern'>y-Axis Entry</option></select>")
 										 	))
 										 ),
-										 # downloadLink("downloadDataComp", "Download data table as a Tab-Delimited File"),
+										 br(),br(),
+										 #downloadLink("downloadDataComp", "Download All as a Tab-Delimited File"),
                      withSpinner(DT::dataTableOutput("patternComparison")))
 
 		#if(input$hasRCharts == "TRUE") {
@@ -735,7 +748,7 @@ shinyServer(function(input, output, session) {
 			plotPanel <- tabPanel("Plot Data", plotlyOutput("rChartsAlternative", width = plotWidth, height = plotHeight),
 														br(), br(), p("Plot point tooltips provide additional information."))
 			#tsPanel <- tabsetPanel(plotPanel, tab1, tab2, tab3)
-			tsPanel <- tabsetPanel(plotPanel, tab1, tab3)
+			tsPanel <- tabsetPanel(plotPanel, tab1, tab3,tab4)
 #		}
 
 		return(tsPanel)

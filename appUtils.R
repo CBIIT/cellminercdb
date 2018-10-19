@@ -298,6 +298,66 @@ makePlotStatic <- function(xData, yData, showColor, showColorTissues, dataSource
 	return(p1)
 }
 
+##-------------
+## make correlation table by oncotype1 (or tissue of origin)
+# library(dplyr)
+# CorrelationTable <- function(xData, yData, showColor, showColorTissues=NULL, dataSource, 
+#                            srcContent, xLimVals = NULL, yLimVals = NULL,oncolor) {
+  
+CorrelationTable_old <- function(xData, yData, srcContent) {
+  
+  df <- getPlotData(xData, yData, showColor=FALSE, showColorTissues=NULL, dataSource=NULL, srcContent)
+  
+  # for each oncotype 1 compute correlation
+  # cor=df %>% group_by(OncoTree1) %>% summarize(cor.test(x,y,use="pairwise.complete.obs")$estimate) %>% as.data.frame
+  # pval=df %>% group_by(OncoTree1) %>% summarize(cor.test(x,y,use="pairwise.complete.obs")$p.value) %>% as.data.frame
+  # res=cbind(cor,pval[,2])
+  # colnames(res)=c("Tissue_of_origin","Correlation","P-value")
+  # 
+  res=df %>% group_by(OncoTree1) %>% summarize(cor(x,y,use="pairwise.complete.obs")) %>% as.data.frame
+  
+  colnames(res)=c("Tissue_of_origin","Correlation")
+  ## add counts 
+  ## filter by number of rows / na should be more than 2 to do t.test
+  return(res)
+}
+
+CorrelationTable <- function(xData, yData, srcContent) {
+  
+  df <- getPlotData(xData, yData, showColor=FALSE, showColorTissues=NULL, dataSource=NULL, srcContent)
+  onco=unique(df$OncoTree1); onco=c("ALL",onco)
+  nb=length(onco)
+  res=matrix(NA,nb,3)
+  rownames(res)=onco
+  colnames(res)=c("Cell lines with complete observations","Correlation","P.value")
+  for (k in 1:nb) {
+    if (k==1) temp=df else temp=df[which(df$OncoTree1==onco[k]),]
+    n=length(which(!is.na(temp$x) & !is.na(temp$x)))
+    res[k,1]=n
+    if (n>2)
+    {
+      tt=cor.test(temp$x,temp$y,use="pairwise.complete.obs")
+      res[k,2]=tt$estimate
+      res[k,3]=tt$p.value
+    }
+  }
+  
+  res=data.frame(res)
+  res=cbind(rownames(res),res)
+  res[, "P.value"] <- signif(res[, "P.value"], 2)
+  res[, "Correlation"] <- signif(res[, "Correlation"], 2)
+  res=res[order(res[,"P.value"]),]
+  colnames(res)=c("Tissue of origin","Cell lines with complete observations","Pearson correlation","P-value")
+  
+  return(res)
+}
+
+
+
+##---------------
+
+
+
 getLmEquationString <- function(predictorWts, orderByDecrAbsVal = TRUE, numSigDigits = 3){
 	if (length(predictorWts) == 0){
 		return("")
