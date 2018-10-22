@@ -672,7 +672,12 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 			#               options=list(lengthMenu = c(10, 25, 50, 100), pageLength = 10,language=list(paginate = list(previous = 'Previous page', `next`= 'Next page'))))
 			
 		}
+		## new 
+		dtype=substr(pcResults$NAME,1,3)
+		nname=substr(pcResults$NAME,4,nchar(pcResults$NAME))
+		pcResults=cbind(DATATYPE=dtype,NAME=nname,pcResults[,-1])
 		
+		##
 		return(pcResults)
 	})
 	
@@ -1040,18 +1045,24 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 		#}
 	#	pcResults$PARCOR <- round(pcResults$PARCOR, 3)
 	#	pcResults$PVAL   <- signif(pcResults$PVAL, 3)
-		 dtype=substr(pcResults$NAME,1,3)
-		 nname=substr(pcResults$NAME,4,nchar(pcResults$NAME))
-		 pcResults=cbind(DATATYPE=dtype,NAME=nname,pcResults[,-1])
+	## new removed
+		 # dtype=substr(pcResults$NAME,1,3)
+		 # nname=substr(pcResults$NAME,4,nchar(pcResults$NAME))
+		 # pcResults=cbind(DATATYPE=dtype,NAME=nname,pcResults[,-1])
+  ## end new 
 		#  DT::datatable(pcResults, rownames=FALSE, colnames=colnames(pcResults), filter='top', 
 		# 						style='bootstrap', selection = "none",
 		# 							options=list(lengthMenu = c(10, 25, 50, 100), pageLength = 10,language=list(paginate = list(previous = 'Previous page', `next`= 'Next page'))))
 		 
 		 # pcResults$FDR=p.adjust(pcResults[,"PVAL"],method="BH",nrow(results))
-		 DT::datatable(pcResults, rownames=FALSE, colnames=colnames(pcResults),extensions='Buttons',
+		
+		 # DT::datatable(pcResults, rownames=FALSE, colnames=colnames(pcResults),extensions='Buttons',
+		 #               filter='top', style='bootstrap', selection = "none",
+		 #               options=list(lengthMenu = c(10, 50, 100, nrow(pcResults)),pageLength = 100,language=list(paginate = list(previous = 'Previous page', `next`= 'Next page')) ,dom='lipBt', buttons = list('copy', 'print', list(extend = 'collection',buttons = list(list(extend='csv',filename='partial_corr',title='Exported data from CellMinerCDB'), list(extend='excel',filename='partial_corr',title='Exported data from CellMinerCDB'), list(extend='pdf',filename='partial_corr',title='Exported data from CellMinerCDB')),text = 'Download'))))
+		 DT::datatable(pcResults, rownames=FALSE, colnames=colnames(pcResults),
 		               filter='top', style='bootstrap', selection = "none",
-		               options=list(lengthMenu = c(10, 50, 100, nrow(pcResults)),pageLength = 100,language=list(paginate = list(previous = 'Previous page', `next`= 'Next page')) ,dom='lipBt', buttons = list('copy', 'print', list(extend = 'collection',buttons = list(list(extend='csv',filename='partial_corr',title='Exported data from CellMinerCDB'), list(extend='excel',filename='partial_corr',title='Exported data from CellMinerCDB'), list(extend='pdf',filename='partial_corr',title='Exported data from CellMinerCDB')),text = 'Download'))))
-		 
+		               options=list(lengthMenu = c(10, 50, 100, 500),pageLength = 100,language=list(paginate = list(previous = 'Previous page', `next`= 'Next page')) ,dom='lipt'))
+		  
 		 
 		 
 		 })
@@ -1199,6 +1210,10 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 																		br(),
 																		actionButton(ns("computeParCors"), "Run"),
 																		tags$hr(),
+																		renderUI({
+																		  req(parCorPatternCompResults())
+																		  downloadLink(ns("downloadPartialCorr"), "Download All as a Tab-Delimited File")
+																		}),
 																		DT::dataTableOutput(ns("patternCompResults")))
 		
 		
@@ -1307,6 +1322,22 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 		## 
 	})
 
+	output$downloadPartialCorr <- downloadHandler(
+	  
+	  # This function returns a string which tells the client
+	  # browser what name to use when saving the file.
+	  filename = function() {
+	    
+	    paste0("Partial_Correlation_all_cdb_",input$dataset,"_",input$responseDataType,"_",input$responseId,".txt")
+	  },
+	  
+	  content = function(file) {
+	    
+	    write.table(parCorPatternCompResults(), file, sep = "\t", row.names = F,quote=F)  
+	    
+	  }
+	)
+	
 	output$selectInputGeneSetsUi <- renderUI({
 		ns <- session$ns
 		## selectInput(ns("inputGeneSets"), "Select Gene Sets",

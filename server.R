@@ -266,6 +266,77 @@ shinyServer(function(input, output, session) {
 		return(matchedCellLinesTab)
 	})
 	
+	##------------
+	PatternCompTable <- reactive({
+	  srcContent <- srcContentReactive()
+	  
+	  if (input$patternComparisonSeed == "xPattern"){
+	    dat <- xData()
+	    pcDataset <- input$xDataset
+	  } else{
+	    dat <- yData()
+	    pcDataset <- input$yDataset
+	  }
+	  selectedLines <- names(dat$data)
+	  
+	  if(input$patternComparisonType == "drug") {
+	    results <- patternComparison(dat$data,
+	                                 srcContent[[pcDataset]][["molPharmData"]][["act"]][, selectedLines])
+	    results$ids <- rownames(results)
+	    results$NAME <- srcContent[[pcDataset]][["drugInfo"]][rownames(results), "NAME"]
+	    
+	    if ("MOA" %in% colnames(srcContent[[pcDataset]][["drugInfo"]])){
+	      results$MOA <- srcContent[[pcDataset]][["drugInfo"]][rownames(results), "MOA"]
+	      results <- results[, c("ids", "NAME", "MOA", "COR", "PVAL")]
+	      colnames(results) <- c("ID", "Name", "MOA", "Correlation", "P-Value")
+	    } else{
+	      results <- results[, c("ids", "NAME", "COR", "PVAL")]
+	      colnames(results) <- c("ID", "Name", "Correlation", "P-Value")
+	    }
+	    results$FDR=p.adjust(results[,"P-Value"],method="BH",nrow(results))
+	    
+	  } else {
+	    molPharmData <- srcContent[[pcDataset]][["molPharmData"]]
+	    molData <- molPharmData[setdiff(names(molPharmData), c("act","copA","mutA","metA","expA","xaiA","proA","mirA","mdaA","swaA","xsqA"))]
+	    molData <- lapply(molData, function(X) X[, selectedLines])
+	    results <- patternComparison(dat$data, molData)
+	    results$ids <- rownames(results)
+	    
+	    results$molDataType <- getMolDataType(results$ids)
+	    results$gene <- removeMolDataType(results$ids)
+	    
+	    # Reorder columns
+	    results <- results[, c("ids", "molDataType", "gene", "COR", "PVAL")]
+	    colnames(results) <- c("ID", "Data Type", "Gene", "Correlation", "P-Value")
+	    
+	    if (require(rcellminerUtilsCDB)){
+	      chromLocs <- character(nrow(results))
+	      haveLoc <- results$Gene %in% names(geneToChromBand)
+	      chromLocs[haveLoc] <- geneToChromBand[results$Gene[haveLoc]]
+	      
+	      results$Location <- chromLocs
+	      results <- results[, c("ID", "Data Type", "Gene", "Location", "Correlation", "P-Value")]
+	    }
+	    results$FDR=p.adjust(results[,"P-Value"],method="BH",nrow(results))
+	    
+	    if (require(geneSetPathwayAnalysis)){
+	      results$Annotation <- geneSetPathwayAnalysis::geneAnnotTab[results$Gene, "SHORT_ANNOT"]
+	      results$Annotation[is.na(results$Annotation)] <- ""
+	    }
+	    
+	    results$ID <- NULL
+	  }
+	  
+	  results[, "Correlation"] <- round(results[, "Correlation"], 3)
+	  results[, "P-Value"] <- signif(results[, "P-Value"], 3)
+	  results[, "FDR"] <- signif(results[, "FDR"], 3)
+	  ## sort by p-value
+	  results <- results[order(results[, "P-Value"]),]
+	  
+	  return(results)
+	})
+	##--------------
+	
 	# Explanation of xData, yData reactive variables -------------------------------------------------
 	# The xData and yData reactive variables provide list objects (accessed via xData() and yData()) 
 	# that store the essential information about a data source feature that the application code
@@ -585,74 +656,77 @@ shinyServer(function(input, output, session) {
 	
 	#----[Render Data Table in 'Compare Patterns' Tab]-------------------------------------
 	output$patternComparison <- DT::renderDataTable({
-		srcContent <- srcContentReactive()
-		
-		if (input$patternComparisonSeed == "xPattern"){
-			dat <- xData()
-			pcDataset <- input$xDataset
-		} else{
-			dat <- yData()
-			pcDataset <- input$yDataset
-		}
-		selectedLines <- names(dat$data)
-
-	  if(input$patternComparisonType == "drug") {
-	    results <- patternComparison(dat$data,
-	    														 srcContent[[pcDataset]][["molPharmData"]][["act"]][, selectedLines])
-	    results$ids <- rownames(results)
-	    results$NAME <- srcContent[[pcDataset]][["drugInfo"]][rownames(results), "NAME"]
-
-	    if ("MOA" %in% colnames(srcContent[[pcDataset]][["drugInfo"]])){
-	    	results$MOA <- srcContent[[pcDataset]][["drugInfo"]][rownames(results), "MOA"]
-	    	results <- results[, c("ids", "NAME", "MOA", "COR", "PVAL")]
-	    	colnames(results) <- c("ID", "Name", "MOA", "Correlation", "P-Value")
-	    } else{
-	    	results <- results[, c("ids", "NAME", "COR", "PVAL")]
-	    	colnames(results) <- c("ID", "Name", "Correlation", "P-Value")
-	    }
-	    results$FDR=p.adjust(results[,"P-Value"],method="BH",nrow(results))
-	    
-	  } else {
-	    molPharmData <- srcContent[[pcDataset]][["molPharmData"]]
-	    molData <- molPharmData[setdiff(names(molPharmData), c("act","copA","mutA","metA","expA","xaiA","proA","mirA","mdaA","swaA","xsqA"))]
-	    molData <- lapply(molData, function(X) X[, selectedLines])
-	    results <- patternComparison(dat$data, molData)
-	    results$ids <- rownames(results)
-
-	    results$molDataType <- getMolDataType(results$ids)
-	    results$gene <- removeMolDataType(results$ids)
-
-	    # Reorder columns
-	    results <- results[, c("ids", "molDataType", "gene", "COR", "PVAL")]
-	    colnames(results) <- c("ID", "Data Type", "Gene", "Correlation", "P-Value")
-
-	    if (require(rcellminerUtilsCDB)){
-	    	chromLocs <- character(nrow(results))
-	    	haveLoc <- results$Gene %in% names(geneToChromBand)
-	    	chromLocs[haveLoc] <- geneToChromBand[results$Gene[haveLoc]]
-
-	    	results$Location <- chromLocs
-	    	results <- results[, c("ID", "Data Type", "Gene", "Location", "Correlation", "P-Value")]
-	    }
-	    results$FDR=p.adjust(results[,"P-Value"],method="BH",nrow(results))
-	    
-	    if (require(geneSetPathwayAnalysis)){
-	    	results$Annotation <- geneSetPathwayAnalysis::geneAnnotTab[results$Gene, "SHORT_ANNOT"]
-				results$Annotation[is.na(results$Annotation)] <- ""
-	    }
-	    
-	    results$ID <- NULL
-	  }
-	  
-	  results[, "Correlation"] <- round(results[, "Correlation"], 3)
-	  results[, "P-Value"] <- signif(results[, "P-Value"], 3)
-	  results[, "FDR"] <- signif(results[, "FDR"], 3)
-		## sort by p-value
-	  results <- results[order(results[, "P-Value"]),]
-	 
-	  DT::datatable(results, rownames=FALSE, colnames=colnames(results),extensions='Buttons',
-	  							filter='top', style='bootstrap', selection = "none",
-	  							options=list(lengthMenu = c(10, 50, 100, nrow(results)),pageLength = 100,language=list(paginate = list(previous = 'Previous page', `next`= 'Next page')) ,dom='lipBt', buttons = list('copy', 'print', list(extend = 'collection',buttons = list(list(extend='csv',filename='pattern_comp',title='Exported data from CellMinerCDB'), list(extend='excel',filename='pattern_comp',title='Exported data from CellMinerCDB'), list(extend='pdf',filename='pattern_comp',title='Exported data from CellMinerCDB')),text = 'Download'))))
+	# 	srcContent <- srcContentReactive()
+	# 	
+	# 	if (input$patternComparisonSeed == "xPattern"){
+	# 		dat <- xData()
+	# 		pcDataset <- input$xDataset
+	# 	} else{
+	# 		dat <- yData()
+	# 		pcDataset <- input$yDataset
+	# 	}
+	# 	selectedLines <- names(dat$data)
+	# 
+	#   if(input$patternComparisonType == "drug") {
+	#     results <- patternComparison(dat$data,
+	#     														 srcContent[[pcDataset]][["molPharmData"]][["act"]][, selectedLines])
+	#     results$ids <- rownames(results)
+	#     results$NAME <- srcContent[[pcDataset]][["drugInfo"]][rownames(results), "NAME"]
+	# 
+	#     if ("MOA" %in% colnames(srcContent[[pcDataset]][["drugInfo"]])){
+	#     	results$MOA <- srcContent[[pcDataset]][["drugInfo"]][rownames(results), "MOA"]
+	#     	results <- results[, c("ids", "NAME", "MOA", "COR", "PVAL")]
+	#     	colnames(results) <- c("ID", "Name", "MOA", "Correlation", "P-Value")
+	#     } else{
+	#     	results <- results[, c("ids", "NAME", "COR", "PVAL")]
+	#     	colnames(results) <- c("ID", "Name", "Correlation", "P-Value")
+	#     }
+	#     results$FDR=p.adjust(results[,"P-Value"],method="BH",nrow(results))
+	#     
+	#   } else {
+	#     molPharmData <- srcContent[[pcDataset]][["molPharmData"]]
+	#     molData <- molPharmData[setdiff(names(molPharmData), c("act","copA","mutA","metA","expA","xaiA","proA","mirA","mdaA","swaA","xsqA"))]
+	#     molData <- lapply(molData, function(X) X[, selectedLines])
+	#     results <- patternComparison(dat$data, molData)
+	#     results$ids <- rownames(results)
+	# 
+	#     results$molDataType <- getMolDataType(results$ids)
+	#     results$gene <- removeMolDataType(results$ids)
+	# 
+	#     # Reorder columns
+	#     results <- results[, c("ids", "molDataType", "gene", "COR", "PVAL")]
+	#     colnames(results) <- c("ID", "Data Type", "Gene", "Correlation", "P-Value")
+	# 
+	#     if (require(rcellminerUtilsCDB)){
+	#     	chromLocs <- character(nrow(results))
+	#     	haveLoc <- results$Gene %in% names(geneToChromBand)
+	#     	chromLocs[haveLoc] <- geneToChromBand[results$Gene[haveLoc]]
+	# 
+	#     	results$Location <- chromLocs
+	#     	results <- results[, c("ID", "Data Type", "Gene", "Location", "Correlation", "P-Value")]
+	#     }
+	#     results$FDR=p.adjust(results[,"P-Value"],method="BH",nrow(results))
+	#     
+	#     if (require(geneSetPathwayAnalysis)){
+	#     	results$Annotation <- geneSetPathwayAnalysis::geneAnnotTab[results$Gene, "SHORT_ANNOT"]
+	# 			results$Annotation[is.na(results$Annotation)] <- ""
+	#     }
+	#     
+	#     results$ID <- NULL
+	#   }
+	#   
+	#   results[, "Correlation"] <- round(results[, "Correlation"], 3)
+	#   results[, "P-Value"] <- signif(results[, "P-Value"], 3)
+	#   results[, "FDR"] <- signif(results[, "FDR"], 3)
+	# 	## sort by p-value
+	#   results <- results[order(results[, "P-Value"]),]
+    results= PatternCompTable()	 
+	  # DT::datatable(results, rownames=FALSE, colnames=colnames(results),extensions='Buttons',
+	  # 							filter='top', style='bootstrap', selection = "none",
+	  # 							options=list(lengthMenu = c(10, 50, 100,500), pageLength = 100,language=list(paginate = list(previous = 'Previous page', `next`= 'Next page')) ,dom='lipBt', buttons = list('copy', 'print', list(extend = 'collection',buttons = list(list(extend='csv',filename='pattern_comp',title='Exported data from CellMinerCDB'), list(extend='excel',filename='pattern_comp',title='Exported data from CellMinerCDB'), list(extend='pdf',filename='pattern_comp',title='Exported data from CellMinerCDB')),text = 'Download'))))
+	  DT::datatable(results, rownames=FALSE, colnames=colnames(results),
+	                filter='top', style='bootstrap', selection = "none",
+	                options=list(lengthMenu = c(10, 50, 100,500), pageLength = 100,language=list(paginate = list(previous = 'Previous page', `next`= 'Next page')) ,dom='lipt'))
 	  
 	})
 	
@@ -734,10 +808,17 @@ shinyServer(function(input, output, session) {
 										 	))
 										 ),
 										 br(),br(),
-										 #downloadLink("downloadDataComp", "Download All as a Tab-Delimited File"),
+										 renderUI({
+										   req(PatternCompTable())
+										   downloadLink("downloadDataComp", "Download All as a Tab-Delimited File")
+										 }),
+										 ##downloadLink("downloadDataComp", "Download All as a Tab-Delimited File"),
                      withSpinner(DT::dataTableOutput("patternComparison")))
+		
+		                 # withSpinner(DT::dataTableOutput("patternComparison")),
+		                 # downloadLink("downloadDataComp", "Download All as a Tab-Delimited File"))	
 
-		#if(input$hasRCharts == "TRUE") {
+#if(input$hasRCharts == "TRUE") {
 #		if (FALSE) {
 #			tsPanel <- tabsetPanel(type="tabs",
 #									#tabPanel("Plot Data", htmlOutput("genUrl"), showOutput("rCharts", "highcharts")),
@@ -993,6 +1074,34 @@ shinyServer(function(input, output, session) {
      }
   )
   ##
+  output$downloadDataComp <- downloadHandler(
+    
+    # This function returns a string which tells the client
+    # browser what name to use when saving the file.
+    filename = function() {
+      if (input$patternComparisonSeed == "xPattern"){
+        
+        pcDataset <- input$xDataset
+        pcType <- input$xPrefix
+        pcId <- input$xId
+      } 
+      else{
+        
+        pcDataset <- input$yDataset
+        pcType <- input$yPrefix
+        pcId <- input$yId
+      
+      }
+        
+      paste0("Pattern_Comp_all_cdb_",input$patternComparisonSeed,"_",pcDataset,"_",pcType,"_",pcId,"_",input$patternComparisonType,".txt")
+    },
+    
+    content = function(file) {
+      
+      write.table(PatternCompTable(), file, sep = "\t", row.names = F,quote=F)  
+      
+    }
+  )
   
   
   ###
