@@ -280,6 +280,7 @@ shinyServer(function(input, output, session) {
 	  selectedLines <- names(dat$data)
 	  
 	  if(input$patternComparisonType == "drug") {
+	    if (is.null(srcContent[[pcDataset]][["molPharmData"]][["act"]])) stop("No drug available for this cell line set")
 	    results <- patternComparison(dat$data,
 	                                 srcContent[[pcDataset]][["molPharmData"]][["act"]][, selectedLines])
 	    results$ids <- rownames(results)
@@ -298,6 +299,7 @@ shinyServer(function(input, output, session) {
 	  } else {
 	    molPharmData <- srcContent[[pcDataset]][["molPharmData"]]
 	    molData <- molPharmData[setdiff(names(molPharmData), c("act","copA","mutA","metA","expA","xaiA","proA","mirA","mdaA","swaA","xsqA"))]
+	    if (length(molData)==0) stop("No molecular data available for this cell line set")
 	    molData <- lapply(molData, function(X) X[, selectedLines])
 	    results <- patternComparison(dat$data, molData)
 	    results$ids <- rownames(results)
