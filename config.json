@@ -244,5 +244,19 @@
         ]
       }
     }
+  },
+  "utsw":{
+    "displayName":"UT Southwestern",
+    "packages":{
+      "utswData":{
+        "MolData":[
+          {
+            "eSetListName":"xsq",
+            "featurePrefix":"xsq",
+            "displayName":"xsq: RNA-seq Expression (log2 FPKM+1.)"
+          }
+        ]
+      }
+    }
   }
 }

@@ -292,5 +292,23 @@
        	]
       }
     }
+  },
+  "utsw":{
+    "displayName":"UT Southwestern",
+    "fullName": "University of Texas Southwestern",
+    "url": "https://www.utsouthwestern.edu/",
+    "packages":{
+      "utswData":{
+        "MetaData":[
+          {
+        		"dataType":"xsq",
+        		"description":"mRNA Expression",
+        		"units":"RNA-seq Expression (log2 FPKM+1.)",
+        		"platform":"NA",
+        		"ref_pmid":"NA"
+        	}
+       	]
+      }
+    }
   }
 }
