@@ -1,4 +1,5 @@
 #-----[NavBar Tab: Regression Models (UI code)]----------------------------------------------------
+
 regressionModelsInput <- function(id, dataSourceChoices) {
 	# Create a namespace function using the provided id
 	ns <- NS(id)
@@ -23,16 +24,19 @@ regressionModelsInput <- function(id, dataSourceChoices) {
 					 				tags$a(id="skiplink"),
 					 				#selectInput(ns("dataset"), "Dataset", choices=dataSourceChoices, selected = "nci60"),
 					 				HTML(
-					 				  paste("<label class='control-label' for=",ns("dataset"),">Dataset</label>","<select id=",ns("dataset"),">",voptions,"</select>")
+					 				  paste("<label class='control-label' for=",ns("dataset"),">Cell Line Set</label>","<select id=",ns("dataset"),">",voptions,"</select>")
 					 				),
+					 				br(),br(),
 					 				uiOutput(ns("responseDataTypeUi")),
-					 				textInput(ns("responseId"), "Response ID:", "topotecan"),
+					 				textInput(ns("responseId"), "Response Identifier:", "topotecan"),
+					 				br(),
 					 				uiOutput(ns("predDataTypesUi")),
 					 				sliderInput(ns("minPredValueRange"), 
-					 										"Minimum Value Range (First Listed Data Type):", 
+					 										"Minimum Predictor Range (for first listed data type):", 
 					 										min=0, max=5, value=0, step = 0.25),
-					 				textInput(ns("predIds"), "Predictor IDS: (Case-Sensitive, e.g. SLFN11 BPTF)", "SLFN11 BPTF"),
-					 				radioButtons(ns("tissueSelectionMode"), "Select Tissues", c("Include", "Exclude")),
+					 				textInput(ns("predIds"), "Predictor Identifiers: (Case-Sensitive, e.g. SLFN11 BPTF)", "SLFN11 BPTF"),
+					 				br(),
+					 				radioButtons(ns("tissueSelectionMode"), "Select Tissues", c("To include", "To exclude")),
 					 				uiOutput(ns("selectTissuesUi")),
 					 				#selectInput(ns("algorithm"), "Algorithm", 
 					 				#						choices=c("Linear Regression", "Lasso"), 
@@ -60,7 +64,7 @@ regressionModelsInput <- function(id, dataSourceChoices) {
 	)
 }
 #-----[NavBar Tab: Regression Models (Server code)]------------------------------------------------
-regressionModels <- function(input, output, session, srcContentReactive, appConfig) {
+regressionModels <- function(input, output, session, srcContentReactive, appConfig, oncolor) {
 	
 	#----[Utility Functions]----------------------------------------------------------------
 	# TO DO: Move to rcellminerUtils (?)
@@ -74,7 +78,7 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 																	 responseVec = NULL, geneSetNames = NULL, 
 																	 minValueRange = 0, valueRangeLowQtl = 0.05,
 																	 valueRangeHighQtl = 0.95) {
-		# Get gene set-associated genes, if necessary.
+# Get gene set-associated genes, if necessary.
 		genes <- character(0)
 		if ((!is.null(geneSetNames)) && (!("All Genes" %in% geneSetNames))) {
 			geneSetNames <- intersect(geneSetNames, names((geneSetPathwayAnalysis::geneSets)))
@@ -306,7 +310,7 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 			selectedTissueSamples <- getTissueTypeSamples(tissueTypes = input$selectedTissues, 
 																										dataSource = input$dataset,
 																										srcContent = srcContentReactive())
-			if (input$tissueSelectionMode == "Include") {
+			if (input$tissueSelectionMode == "To include") {
 				matchedLines <- intersect(rownames(dataTab), selectedTissueSamples)
 			} else { # input$tissueSelectionMode == "Exclude"
 				matchedLines <- setdiff(rownames(dataTab), selectedTissueSamples)
@@ -477,7 +481,7 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 			# ---------------------------------------------------------------------------
 			
 			shiny::validate(need((!is.null(lassoPredData)) && (ncol(lassoPredData) > 2),
-			                      "Insufficient admissible predictor data to run lasso algorithm."))
+			                     "Insufficient admissible predictor data to run lasso algorithm."))
 			
 			# Check and update: lines with missing predictor data may have been removed.
 			shiny::validate(need(nrow(lassoPredData) > 10, 
@@ -632,6 +636,10 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 			stopCluster(cl)
 			
 			pcResults <- pcResults[order(pcResults$PARCOR, decreasing = TRUE), ]
+			pcResults$PARCOR <- round(pcResults$PARCOR, 3)
+			pcResults$PVAL   <- signif(pcResults$PVAL, 3)
+			# pcResults$FDR <- p.adjust(pcResults[,"PVAL"],method="BH",nrow(pcResults))
+			# pcResults$FDR   <- signif(pcResults$FDR, 3)
 		} else{
 			# ----[enable progress bar]--------------------------------------------------
 			progress <- shiny::Progress$new()
@@ -646,6 +654,7 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 																											 Y = comparisonData,
 																											 Z = currentPredictorData,
 																											 updateProgress = updateProgress)
+#			pcResults$FDR <- p.adjust(pcResults[,"PVAL"],method="BH",nrow(pcResults))
 			pcResults$ANNOT <- ""
 			
 			for (i in seq_len(nrow(pcResults))){
@@ -656,12 +665,19 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 			}
 			pcResults$PARCOR <- round(pcResults$PARCOR, 3)
 			pcResults$PVAL   <- signif(pcResults$PVAL, 3)
+#			pcResults$FDR   <- signif(pcResults$FDR, 3)
 			
-			DT::datatable(pcResults, rownames=FALSE, colnames=colnames(pcResults), filter='top', 
-			              style='bootstrap', selection = "none",
-			              options=list(lengthMenu = c(10, 25, 50, 100), pageLength = 10))
+			# DT::datatable(pcResults, rownames=FALSE, colnames=colnames(pcResults), filter='top', 
+			#               style='bootstrap', selection = "none",
+			#               options=list(lengthMenu = c(10, 25, 50, 100), pageLength = 10,language=list(paginate = list(previous = 'Previous page', `next`= 'Next page'))))
+			
 		}
+		## new 
+		dtype=substr(pcResults$NAME,1,3)
+		nname=substr(pcResults$NAME,4,nchar(pcResults$NAME))
+		pcResults=cbind(DATATYPE=dtype,NAME=nname,pcResults[,-1])
 		
+		##
 		return(pcResults)
 	})
 	
@@ -785,19 +801,29 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 																		rownames(updatedInputData))
 		}
 		
+		## new labeling --------------------------------
+		idd=unlist(strsplit(responseData$name,"_"))[1]
+		idd=substr(idd,4,nchar(idd))
+		srd=unlist(strsplit(responseData$name,"_"))[2]
+		pprefix=substr(responseData$name,1,3)
+		labs=metaConfig[[srd]][["displayName"]]
+		responseData$plotLabel <- paste0("Observed ",idd, " (", pprefix, ", ", labs, ")")
+		## ---------------------------------------------
+		
 		predResponseData <- list()
 		predResponseData$name <- paste0("predicted_", responseData$name)
 		predResponseData$data <- rmAlgoResults$predictedResponse
-		predResponseData$plotLabel <- predResponseData$name
+		# predResponseData$plotLabel <- predResponseData$name
+		predResponseData$plotLabel <- paste0("Predicted ",idd, " (", pprefix, ", ", labs, ")")
 		predResponseData$uniqName  <- predResponseData$name
 		predResponseData$dataSource <- responseData$dataSource
 		
-		p1 <- makePlotStatic(xData = predResponseData, yData = responseData, showColor = FALSE, 
+		p1 <- makePlotStatic(xData = predResponseData, yData = responseData, showColor = T, 
 												 showColorTissues = character(0), dataSource = input$dataset, 
-												 srcContent = srcContentReactive())
+												 srcContent = srcContentReactive(),oncolor=oncolor)
 		g1 <- ggplotly(p1, width=plotWidth, height=plotHeight, tooltip=tooltipCol)
 		g1 <- layout(g1, margin=list(t = 75))
-		g2 <- config(p = g1, collaborate=FALSE, cloud=FALSE, displaylogo=FALSE,
+		g2 <- config(p = g1, collaborate=FALSE, cloud=FALSE, displaylogo=FALSE,displayModeBar=TRUE,
 								 modeBarButtonsToRemove=c("select2d", "sendDataToCloud", "pan2d", "resetScale2d",
 								 												 "hoverClosestCartesian", "hoverCompareCartesian",
 								 												 "lasso2d", "zoomIn2d", "zoomOut2d"))
@@ -820,19 +846,29 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 																		rownames(updatedInputData))
 		}
 		
+		## new labeling --------------------------------
+		idd=unlist(strsplit(responseData$name,"_"))[1]
+		idd=substr(idd,4,nchar(idd))
+		srd=unlist(strsplit(responseData$name,"_"))[2]
+		pprefix=substr(responseData$name,1,3)
+		labs=metaConfig[[srd]][["displayName"]]
+		responseData$plotLabel <- paste0("Observed ",idd, " (", pprefix, ", ", labs, ")")
+		## ---------------------------------------------
+		
 		cvPredResponseData <- list()
 		cvPredResponseData$name <- paste0("cv_predicted_", responseData$name)
 		cvPredResponseData$data <- rmAlgoResults$cvPredictedResponse
-		cvPredResponseData$plotLabel <- cvPredResponseData$name
+		#cvPredResponseData$plotLabel <- cvPredResponseData$name
+		cvPredResponseData$plotLabel <- paste0("10-Fold Cross-Validation ",idd, " (", pprefix, ", ", labs, ")")
 		cvPredResponseData$uniqName  <- cvPredResponseData$name
 		cvPredResponseData$dataSource <- responseData$dataSource
 		
-		p1 <- makePlotStatic(xData = cvPredResponseData, yData = responseData, showColor = FALSE, 
+		p1 <- makePlotStatic(xData = cvPredResponseData, yData = responseData, showColor = T, 
 												 showColorTissues = character(0), dataSource = input$dataset, 
-												 srcContent = srcContentReactive())
+												 srcContent = srcContentReactive(),oncolor=oncolor)
 		g1 <- ggplotly(p1, width=plotWidth, height=plotHeight, tooltip=tooltipCol)
 		g1 <- layout(g1, margin=list(t = 75))
-		g2 <- config(p = g1, collaborate=FALSE, cloud=FALSE, displaylogo=FALSE,
+		g2 <- config(p = g1, collaborate=FALSE, cloud=FALSE, displaylogo=FALSE,displayModeBar=TRUE,
 								 modeBarButtonsToRemove=c("select2d", "sendDataToCloud", "pan2d", "resetScale2d",
 								 												 "hoverClosestCartesian", "hoverCompareCartesian",
 								 												 "lasso2d", "zoomIn2d", "zoomOut2d"))
@@ -856,9 +892,24 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 			dat <- cbind(CellLine = rownames(dat), dat)	
 		}
 
-		DT::datatable(dat, rownames=FALSE, colnames=colnames(dat), filter='top', selection = "none",
-									style='bootstrap', options=list(pageLength = nrow(dat)))
-	})
+# 		DT::datatable(dat, callback=JS('$("a.buttons-copy").css("background","lightblue");
+#                     $("a.buttons-print").css("background","lightblue");
+#                     $("a.buttons-excel").css("background","lightblue");
+# 		                               return table;'),
+# 		              rownames=FALSE, colnames=colnames(dat), filter='top', selection = "none",extensions='Buttons',
+# 									style='bootstrap', options=list(pageLength = nrow(dat),language=list(paginate = list(previous = 'Previous page', `next`= 'Next page')) ,dom='lipBt',buttons = list('copy', 'print',list(extend='excel',filename='regression_data',text='Download'))))
+
+
+		DT::datatable(dat, rownames=FALSE, colnames=colnames(dat), filter='top', selection = "none",extensions='Buttons',
+		               style='bootstrap', options=list(pageLength = nrow(dat),language=list(paginate = list(previous = 'Previous page', `next`= 'Next page')) ,dom='lipBt',buttons = list('copy', 'print', list(extend = 'collection',buttons = list(list(extend='csv',filename='regression_data',title='Exported data from CellMinerCDB'), list(extend='excel',filename='regression_data',title='Exported data from CellMinerCDB'), list(extend='pdf',filename='regression_data',title='Exported data from CellMinerCDB')),text = 'download'))))
+		
+			})
+	
+	# DT::datatable(myframe, rownames=FALSE,extensions='Buttons',
+	#               filter='top', style='bootstrap', selection = "none",
+	#               options=list(pageLength = 10, dom='lipBt',buttons = list('copy', 'print', list(extend = 'collection',buttons = c('csv', 'excel', 'pdf'),text = 'Download')))
+	#               , caption=htmltools::tags$caption(paste0("Identifier search for ",selsource),style="color:dodgerblue; font-size: 18px")
+	              
 	
 	#----[Show Predictors and Response in 'Heatmap' Tab]------------------------------------
 	output$heatmap <- renderD3heatmap({
@@ -884,14 +935,58 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 
 		scaledDataMatrix <- scaleDataForHeatmap(dataMatrix, input$useHeatmapRowColorScale)
 		#save(scaledDataMatrix, file = "~/Downloads/scaledDataMatrix.RData")
+		
+		# d3heatmap::d3heatmap(x = scaledDataMatrix,  # Used for color scaling.
+		# 										 cellnote = dataMatrix, # Used for tooltip values.
+		# 										 dendrogram = "none", 
+		# 										 colors = colorRamp(colors = c("green", "black", "red")),
+		# 										 xaxis_font_size = xAxisFontSize,
+		# 										 xaxis_height = 200, yaxis_width = 200)
 		d3heatmap::d3heatmap(x = scaledDataMatrix,  # Used for color scaling.
-												 cellnote = dataMatrix, # Used for tooltip values.
-												 dendrogram = "none", 
-												 colors = colorRamp(colors = c("green", "black", "red")),
-												 xaxis_font_size = xAxisFontSize,
-												 xaxis_height = 200, yaxis_width = 200)
+		                     cellnote = dataMatrix, # Used for tooltip values.
+		                     dendrogram = "none", 
+		                     colors = colorRamp(colors = c("blue", "white", "red")),
+		                     xaxis_font_size = xAxisFontSize,
+		                     xaxis_height = 200, yaxis_width = 200)
+		
 	})
-	
+	##--- download heatmap data
+	output$downloadHeat <- downloadHandler(
+	  
+	  # This function returns a string which tells the client
+	  # browser what name to use when saving the file.
+	  filename = function() {
+	    paste0("Heatmap_dataset_",input$dataset,"_responseID_",input$responseDataType,"_",input$responseId,".txt")
+	  },
+	 
+	  content = function(file) {
+	    rmAlgoResults <- algoResults()
+	    if (is.null(rmAlgoResults$updatedInputData)){
+	      dataTab <- inputData()
+	    } else{
+	      dataTab <- rmAlgoResults$updatedInputData
+	    }
+	    
+	    dataMatrix <- as.matrix(t(dataTab[, -1, drop = FALSE]))
+	    numHiLoCols <- min(input$numHiLoResponseLines, floor(ncol(dataMatrix)/2))
+	    # Order columns by decreasing response values.
+	    dataMatrix <- dataMatrix[, order(dataMatrix[1, , drop = TRUE], decreasing = TRUE), drop = FALSE]
+	    # Extract highest/lowest responder columns.
+	    colIndexSet <- c(1:numHiLoCols, (ncol(dataMatrix) - numHiLoCols + 1):ncol(dataMatrix))
+	    dataMatrix <- dataMatrix[, colIndexSet, drop = FALSE]
+	    # Remove data source identifier in predictor names.
+	    rownames(dataMatrix) <- vapply(rownames(dataMatrix), function(x) { 
+	      stringr::str_split(x, "_")[[1]][1] }, character(1))
+	    
+	    
+	    
+	    # scaledDataMatrix <- scaleDataForHeatmap(dataMatrix, input$useHeatmapRowColorScale)
+	    # write.table(scaledDataMatrix, file, sep = "\t", col.names = NA,quote=F)  
+	    
+	    write.table(dataMatrix, file, sep = "\t", col.names = NA,quote=F)  
+	    
+	 	  }
+	)
 	#----[Show Technical Details in 'Technical Details' Tab]--------------------------------
 	output$techDetails <- renderPrint({
 		rmAlgoResults <- algoResults()
@@ -950,11 +1045,27 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 		#}
 	#	pcResults$PARCOR <- round(pcResults$PARCOR, 3)
 	#	pcResults$PVAL   <- signif(pcResults$PVAL, 3)
+	## new removed
+		 # dtype=substr(pcResults$NAME,1,3)
+		 # nname=substr(pcResults$NAME,4,nchar(pcResults$NAME))
+		 # pcResults=cbind(DATATYPE=dtype,NAME=nname,pcResults[,-1])
+  ## end new 
+		#  DT::datatable(pcResults, rownames=FALSE, colnames=colnames(pcResults), filter='top', 
+		# 						style='bootstrap', selection = "none",
+		# 							options=list(lengthMenu = c(10, 25, 50, 100), pageLength = 10,language=list(paginate = list(previous = 'Previous page', `next`= 'Next page'))))
+		 
+		 # pcResults$FDR=p.adjust(pcResults[,"PVAL"],method="BH",nrow(results))
 		
-		# DT::datatable(pcResults, rownames=FALSE, colnames=colnames(pcResults), filter='top', 
-			#						style='bootstrap', selection = "none",
-			#						options=list(lengthMenu = c(10, 25, 50, 100), pageLength = 10))
-	})
+		 # DT::datatable(pcResults, rownames=FALSE, colnames=colnames(pcResults),extensions='Buttons',
+		 #               filter='top', style='bootstrap', selection = "none",
+		 #               options=list(lengthMenu = c(10, 50, 100, nrow(pcResults)),pageLength = 100,language=list(paginate = list(previous = 'Previous page', `next`= 'Next page')) ,dom='lipBt', buttons = list('copy', 'print', list(extend = 'collection',buttons = list(list(extend='csv',filename='partial_corr',title='Exported data from CellMinerCDB'), list(extend='excel',filename='partial_corr',title='Exported data from CellMinerCDB'), list(extend='pdf',filename='partial_corr',title='Exported data from CellMinerCDB')),text = 'Download'))))
+		 DT::datatable(pcResults, rownames=FALSE, colnames=colnames(pcResults),
+		               filter='top', style='bootstrap', selection = "none",
+		               options=list(lengthMenu = c(10, 50, 100, 500),pageLength = 100,language=list(paginate = list(previous = 'Previous page', `next`= 'Next page')) ,dom='lipt'))
+		  
+		 
+		 
+		 })
 	
 	#----[Show Differential Expression Results in 'Differential Expression' Tab]-------------------
 	output$diffExpResults <- DT::renderDataTable({
@@ -972,7 +1083,7 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 		
 		DT::datatable(deResults, rownames=FALSE, colnames=colnames(deResults), filter='top', 
 									style='bootstrap', selection = "none",
-									options=list(lengthMenu = c(10, 25, 50, 100), pageLength = 10))
+									options=list(lengthMenu = c(10, 25, 50, 100), pageLength = 10,language=list(paginate = list(previous = 'Previous page', `next`= 'Next page'))))
 	})
 	
 	output$enrichmentResults <- DT::renderDataTable({
@@ -980,7 +1091,7 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 		
 		DT::datatable(enResults, rownames=FALSE, colnames=colnames(enResults), 
 									filter='top', style='bootstrap', selection = "none",
-									options=list(lengthMenu = c(10, 25, 50, 100), pageLength = 10))
+									options=list(lengthMenu = c(10, 25, 50, 100), pageLength = 10,language=list(paginate = list(previous = 'Previous page', `next`= 'Next page'))))
 	})
 	
 	#----[Organize Above Tabs for Display]--------------------------------------------------
@@ -1009,6 +1120,13 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 		## print("*")
 		choices1 = srcContentReactive()[[input$dataset]][["featurePrefixes"]]
 		mysel1 = input$predDataTypes # could cause issue if NULL
+		##--------
+	  if (is.null(mysel1))
+		{
+		  mysel1= srcContentReactive()[[input$dataset]][["defaultFeatureX"]]
+		  if (is.na(mysel1)) mysel1= srcContentReactive()[[input$dataset]][["defaultFeatureY"]]
+		}
+		##--------
 		opt1 = ""
 		for(k in 1:length(choices1)){
 		  # style works only for browser Chrome
@@ -1034,9 +1152,11 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 																						"Number of High/Low Response Lines to Display:", 
 																						min=1, max=maxNumHiLoResponseLines, 
 																						value=20, width = "50%"),
-																checkboxInput(ns("useHeatmapRowColorScale"), "Use Row Z-Score Color Scale", FALSE),
+																checkboxInput(ns("useHeatmapRowColorScale"), "Use Row Color Scale", FALSE),
 																d3heatmapOutput(ns("heatmap")),
-															    p("Select cell line or feature name to highlight heatmap columns or rows, respectively."))
+															  p("Select cell line or feature name to highlight heatmap columns or rows, respectively."),br(),
+																downloadButton(ns("downloadHeat"), "Download Heatmap Data")
+																)
 		techDetailsTabPanel <- tabPanel("Technical Details", verbatimTextOutput(ns("techDetails")))
 		diffExpTabPanel <- tabPanel("Differential Expression", 
 																 selectInput(ns("deGeneSets"), "Select Gene Sets",
@@ -1071,22 +1191,29 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 																		##						selected = input$predDataTypes,
 																		##						multiple=TRUE),
 																		##
-																		
+																		br(),
 																		HTML(
 																		  paste("<label class='control-label' for=",ns("pcGeneSets"),">Select Gene Sets</label>","<select id=",ns("pcGeneSets")," style='word-wrap:break-word;' multiple>",opt0,"</select>")
 																		),
 																		#
-																		HTML("<br>"),
+																		br(),br(),
 																		HTML(
 																		  paste("<label class='control-label' for=",ns("pcDataTypes"),">Select Data Types</label>","<select id=",ns("pcDataTypes")," style='word-wrap:break-word;' multiple>",opt1,"</select>")
 																		),
-																		HTML("<br>"),
+																		br(),br(),
 																		##
 																		sliderInput(ns("minParCorDataValueRange"), 
 																								"Minimum Range (First Listed Data Type):", 
 																								min=0, max=5, value=0, step = 0.25),
+																		br(),
+																		HTML("<b>Click Run to determine additional predictors, after the influence of the input predictors are removed.</b>"),
+																		br(),
 																		actionButton(ns("computeParCors"), "Run"),
 																		tags$hr(),
+																		renderUI({
+																		  req(parCorPatternCompResults())
+																		  downloadLink(ns("downloadPartialCorr"), "Download All as a Tab-Delimited File")
+																		}),
 																		DT::dataTableOutput(ns("patternCompResults")))
 		
 		
@@ -1142,6 +1269,7 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 		vopt = ""
 		choices  = srcContent[[input$dataset]][["featurePrefixes"]]
 		mych= srcContent[[input$dataset]][["defaultFeatureX"]]
+		if (is.na(mych)) mych= srcContent[[input$dataset]][["defaultFeatureY"]]
 		for(y in 1:length(choices)){
 		  if (choices[y]==mych)
 		  {
@@ -1153,7 +1281,7 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 		  }
 		}
 		HTML(
-		  paste("<label class='control-label' for=",ns("predDataTypes"),">Predictor Data Type</label>","<select id=",ns("predDataTypes"),"style='word-wrap:break-word; width: 100%;' multiple>",vopt,"</select>")
+		  paste("<label class='control-label' for=",ns("predDataTypes"),">Predictor Data Type/s</label>","<select id=",ns("predDataTypes"),"style='word-wrap:break-word; width: 100%;' multiple>",vopt,"</select>")
 		)
 	})
 	
@@ -1170,7 +1298,7 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 		#							multiple=TRUE, selected="none")
 		#}
 		## new code
-		if (input$tissueSelectionMode == "Include"){
+		if (input$tissueSelectionMode == "To include"){
 		  choices=c("all", tissueTypes); mysel="all"
 		  
 		} else{ # input$tissueSelectionMode == "Exclude"
@@ -1188,11 +1316,27 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 		  }
 		}
 		HTML(
-		  paste("<label class='control-label' for=",ns("selectedTissues"),">Which ones?</label>","<select id=",ns("selectedTissues")," style='word-wrap:break-word; width: 100%;' multiple>",opt,"</select>")
+		  paste("<label class='control-label' for=",ns("selectedTissues"),">Select Tissue/s of Origin</label>","<select id=",ns("selectedTissues")," style='word-wrap:break-word; width: 100%;' multiple>",opt,"</select>")
 		)
 		
 		## 
 	})
+
+	output$downloadPartialCorr <- downloadHandler(
+	  
+	  # This function returns a string which tells the client
+	  # browser what name to use when saving the file.
+	  filename = function() {
+	    
+	    paste0("Partial_Correlation_all_cdb_",input$dataset,"_",input$responseDataType,"_",input$responseId,".txt")
+	  },
+	  
+	  content = function(file) {
+	    
+	    write.table(parCorPatternCompResults(), file, sep = "\t", row.names = F,quote=F)  
+	    
+	  }
+	)
 	
 	output$selectInputGeneSetsUi <- renderUI({
 		ns <- session$ns

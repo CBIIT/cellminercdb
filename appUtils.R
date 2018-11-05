@@ -1,4 +1,5 @@
 source("regressionModels.R")
+metaConfig <- jsonlite::fromJSON("configMeta.json")
 #--------------------------------------------------------------------------------------------------
 # Helper functions.
 #--------------------------------------------------------------------------------------------------
@@ -18,9 +19,14 @@ getMatchedIds <- function(prefix, id, dataSource, srcContent){
 		matchedIds <- unname(idSet[i])
 	} else{
 		# For drugs: try to match synonyms to source-specific identifiers.
-		if (require(rcellminerUtils) && isDrugActivityDataType(prefix)){
-			matchedIds <- rcellminerUtils::getDbDrugIds(drugName = id, dbName = dataSource)
+		if (require(rcellminerUtilsCDB) && isDrugActivityDataType(prefix)){
+			matchedIds <- rcellminerUtilsCDB::getDbDrugIds(drugName = id, dbName = dataSource)
 			matchedIds <- intersect(matchedIds, idSet)
+			## new final search with drug name
+			if (length(matchedIds)==0 & nchar(id)>=3) {
+			  vnames <- srcContent[[dataSource]][["drugInfo"]]
+			  matchedIds <- vnames[grep(toupper(id),toupper(vnames[,2])),1]
+			}
 		}
 	}
 	
@@ -47,7 +53,8 @@ getFeatureData <- function(prefix, id, dataSource, srcContent) {
 	results <- list(name=name, data=data)
 	
 	# e.g., expTOP1 with dataSource=nci60 becomes TOP1 (exp, nci60)
-	results$plotLabel <- paste0(id, " (", prefix, ", ", dataSource, ")")
+	labs=metaConfig[[dataSource]][["displayName"]]
+	results$plotLabel <- paste0(id, " (", prefix, ", ", labs, ")")
 	
 	# e.g., expTOP1 with dataSource=nci60 becomes expTOP1_nci60; needed for 
 	# getPlotData() results (data.frame) with data for same feature from different sources.
@@ -242,8 +249,9 @@ makePlot <- function(xData, yData, showColor, showColorTissues, dataSource,
 
 
 makePlotStatic <- function(xData, yData, showColor, showColorTissues, dataSource, 
-													 srcContent, xLimVals = NULL, yLimVals = NULL) {
+													 srcContent, xLimVals = NULL, yLimVals = NULL,oncolor) {
 	df <- getPlotData(xData, yData, showColor, showColorTissues, dataSource, srcContent)
+	# contains column color
 	df$tooltip <- paste0(
 		"Cell: ", df$name, "\n",
 		"Tissue: ", df$PlotTissueType, "\n",
@@ -258,19 +266,97 @@ makePlotStatic <- function(xData, yData, showColor, showColorTissues, dataSource
 	tooltipCol <- "tooltip"
 	
 	# Plot parameters 
-	classCol <- "color"
-	colorPalette <- df[, "color"]
+	# classCol <- "color"
+	# colorPalette <- df[, "color"]
+	# names(colorPalette) <- df[, classCol]
+	# ##names(colorPalette) <- df[, "OncoTree1"]
+	# # Merge data
+	# df[, classCol] <- as.factor(df[, classCol])
+#	if (showColor)
+	   colorPalette <- oncolor[toupper(df[,"OncoTree1"]),]
+	   classCol <- "OncoTree1"
+	   leg <- TRUE
+	# else 
+	   if ( (length(showColorTissues) > 0) | (!showColor))
+	         colorPalette <- df[, "color"]
+	   
+	   if (length(showColorTissues) > 0)  {
+	     classCol <- "color"
+	     leg <- FALSE
+	   }
+	
+	df[, classCol] <- as.factor(df[, classCol])
+	
+	#colorPalette <- df[, "color"]
 	names(colorPalette) <- df[, classCol]
 	
-	# Merge data
-	df[, classCol] <- as.factor(df[, classCol])
 	
 	p1 <- rcellminer::plotCellMiner2D(df, xCol="x", yCol="y", xLabel = xData$plotLabel, yLabel = yData$plotLabel,
 												colorPalette=colorPalette, classCol=classCol, tooltipCol=tooltipCol,
-												xLimVal = xLimVals, yLimVal = yLimVals)
+												xLimVal = xLimVals, yLimVal = yLimVals, showLegend = leg)
 	
 	return(p1)
 }
+
+##-------------
+## make correlation table by oncotype1 (or tissue of origin)
+# library(dplyr)
+# CorrelationTable <- function(xData, yData, showColor, showColorTissues=NULL, dataSource, 
+#                            srcContent, xLimVals = NULL, yLimVals = NULL,oncolor) {
+  
+CorrelationTable_old <- function(xData, yData, srcContent) {
+  
+  df <- getPlotData(xData, yData, showColor=FALSE, showColorTissues=NULL, dataSource=NULL, srcContent)
+  
+  # for each oncotype 1 compute correlation
+  # cor=df %>% group_by(OncoTree1) %>% summarize(cor.test(x,y,use="pairwise.complete.obs")$estimate) %>% as.data.frame
+  # pval=df %>% group_by(OncoTree1) %>% summarize(cor.test(x,y,use="pairwise.complete.obs")$p.value) %>% as.data.frame
+  # res=cbind(cor,pval[,2])
+  # colnames(res)=c("Tissue_of_origin","Correlation","P-value")
+  # 
+  res=df %>% group_by(OncoTree1) %>% summarize(cor(x,y,use="pairwise.complete.obs")) %>% as.data.frame
+  
+  colnames(res)=c("Tissue_of_origin","Correlation")
+  ## add counts 
+  ## filter by number of rows / na should be more than 2 to do t.test
+  return(res)
+}
+
+CorrelationTable <- function(xData, yData, srcContent) {
+  
+  df <- getPlotData(xData, yData, showColor=FALSE, showColorTissues=NULL, dataSource=NULL, srcContent)
+  onco=unique(df$OncoTree1); onco=c("ALL",onco)
+  nb=length(onco)
+  res=matrix(NA,nb,3)
+  rownames(res)=onco
+  colnames(res)=c("Cell lines with complete observations","Correlation","P.value")
+  for (k in 1:nb) {
+    if (k==1) temp=df else temp=df[which(df$OncoTree1==onco[k]),]
+    n=length(which(!is.na(temp$x) & !is.na(temp$x)))
+    res[k,1]=n
+    if (n>2)
+    {
+      tt=cor.test(temp$x,temp$y,use="pairwise.complete.obs")
+      res[k,2]=tt$estimate
+      res[k,3]=tt$p.value
+    }
+  }
+  
+  res=data.frame(res)
+  res=cbind(rownames(res),res)
+  res[, "P.value"] <- signif(res[, "P.value"], 2)
+  res[, "Correlation"] <- signif(res[, "Correlation"], 2)
+  res=res[order(res[,"P.value"]),]
+  colnames(res)=c("Tissue of origin","Cell lines with complete observations","Pearson correlation","P-value")
+  
+  return(res)
+}
+
+
+
+##---------------
+
+
 
 getLmEquationString <- function(predictorWts, orderByDecrAbsVal = TRUE, numSigDigits = 3){
 	if (length(predictorWts) == 0){
@@ -304,3 +390,27 @@ getLmEquationString <- function(predictorWts, orderByDecrAbsVal = TRUE, numSigDi
 }
 
 #--------------------------------------------------------------------------------------------------
+# searching drug IDs across all data sources using the synonyms list
+# return a dataframe
+## call : findDrugIDs("topo")
+## find all : findDrugIDs("*")
+#----------------------------------------------------------------------____________________________
+findDrugIDs <- function(drugname) {
+  tmp <- rcellminerUtilsCDB::drugSynonymTab
+  y = unlist(lapply(tmp$NAME_SET, function(x) length(grep(drugname,x,ignore.case=T))))
+  res=tmp[which(y!=0),]
+  #found=which(y!=0)
+  nb=dim(res)[2]
+  nr=dim(res)[1]
+  matres=matrix("",nr,nb)
+  colnames(matres)=colnames(res)
+  colnames(matres)[1]="Drug_Synonyms"
+  for (i in 1:nb)
+  {
+    matres[,i]= unlist(lapply(res[,i], function(x) paste(x,collapse=";")))
+  }
+  colnames(matres)[2:nb]=paste0(vapply(colnames(matres)[2:nb],function(x) {metaConfig[[x]][["displayName"]]},character(1)),"_IDs")
+  return(matres)
+}
+#---------------------------------------------------------------------------------------------------
+

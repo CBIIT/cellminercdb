@@ -2,7 +2,6 @@
 
 - [Contact/Feedback](#contactfeedback)
 - [Data Sources](#data-sources)
-- [Usage](#usage)
 - [About the Data](#about-the-data)
 - [About CellMinerCDB](#about-cellminercdb)
 	- [NCI-DTB Genomics and Bioinformatics Group](#nci-dtb-genomics-and-bioinformatics-group)
@@ -26,35 +25,7 @@ CellMinerCDB integrates data from the following sources, which provide additiona
 * [Broad Cancer Therapeutics Response Portal (CTRP)](https://portals.broadinstitute.org/ctrp/)
 * [NCI/DTP Small Cell Lung Cancer Project (SCLC)](https://sclccelllines.cancer.gov/sclc/)
 
-# Usage<a name="usage"></a>
-**For detailed instructions, please refer to our [video tutorial](https://www.youtube.com/watch?v=2HicAgcyJHI).**
 
-CellMinerCDB simplifies exploration of cancer cell line pharmacogenomic data from the above sources. Users can plot and more
-broadly interrelate molecular and drug activity profiling data, both within and across data sources.
-
-The example shown below is a scatterplot of PAXX (C9orf142) gene expression and Bleomycin (NSC294979) activity within the NCI60.
-For the NCI-60 cell lines, tissues of origin are indicated using an established color scheme. Two different data sources can be 
-specified for the x and y axis variables. In this case, where data are available, plots and other analyses will be restricted to
-overlapping cell lines between the two data sources.
-
-From the **'Univariate Analyses'** navbar tab at the top left of the application (shown below), users can
-* plot observations for any pair of cell line data variables ('Plot Ids' tab)
-* view, filter, and download the plot data in tabular, Excel-readable form ('Download Data' tab)
-* search for identifiers (genes, drugs, etc.) available within the x-axis variable-associated data source ('Search Ids' tab)
-* identify and rank additional variables correlated with either the x-axis or y-axis variables ('Compare Patterns' tab)
-
-From the **'Regression Models'** navbar tab at the top left, users can incrementally develop multivariate response 
-prediction models and
-* view data for the most (least) responsive cell lines in an interactive heatmap ('Heatmap' tab)
-* view, filter, and downloaded the modeling data in tabular, Excel-readable form ('Download Data' tab)
-* view plots of the observed response values versus the predicted response values ('Plot' tab)
-* view plots of the observed response values versus the 10-fold cross-validation predicted response values ('Cross-Validation' tab)
-* view statistical and other technical details relating to the constructed response model ('Technical Details' tab)
-* identify additional variables that could improve the existing response prediction model ('Partial Correlation' tab)
-
-
-
-![Screenshot of CellMinerCDB Application](files/rcellminer_screenshot_anno.png)
 
 # About the Data<a name="about-the-data"></a>
 For specific information about the data made available for particular sources, please refer to the 'Metadata' navbar tab.

@@ -2,16 +2,16 @@
   "nci60":{
     "displayName":"NCI-60",
     "fullName": "CellMiner NCI-60",
-    "url":"https://discover.nci.nih.gov/cellminer/datasetMetadata.do",
+    "url":"https://discover.nci.nih.gov/cellminer/datasets.do",
     "packages":{
       "rcellminerData":{
         "MetaData":[
         	{
         		"dataType":"act",
-        		"description":"drug activity",
-        		"units":"z-score from negative log10[GI50(molar)] data across NCI-60",
+        		"description":"drug activity <br><a href='https://dtp.cancer.gov' target='_blank'>source DTP</a>",
+        		"units":"z-score from negative log10[GI50(molar)] data across NCI-60 for single drug and combo-score for paired drug",
         		"platform":"sulforhodamine B total protein cytotoxicity assay, 48hrs post-treatment",
-        		"ref_pmid":"26048278"
+        		"ref_pmid":"26048278-28446463"
         	},
         	{
         		"dataType":"exp",
@@ -26,6 +26,13 @@
         		"units":"multi-platform microarray average log2 intensity",
         		"platform":"Affymetrix HG-U95, HG-U133, HG-U133 Plus 2.0; GeneChip Human Exon 1.0 ST array; Agilent Whole Human Genome Oligo Microarray",
         		"ref_pmid":"26048278"
+        	},
+        	{
+        		"dataType":"xsq",
+        		"description":"mRNA expression",
+        		"units":"RNA-seq composite log2 FPKM+1",
+        		"platform":"HiSeq 2000 (Illumina)",
+        		"ref_pmid":"NA"
         	},
         	{
         		"dataType":"met",
@@ -68,6 +75,13 @@
         		"units":"protein intensities",
         		"platform":"reverse-phase protein array",
         		"ref_pmid":"17339364"
+        	},
+        	{
+        		"dataType":"swa",
+        		"description":"protein expression (SWATH-MS)",
+        		"units":"protein intensities",
+        		"platform":"MS protein array",
+        		"ref_pmid":"NA"
         	}
         ]
       }
@@ -100,6 +114,13 @@
         		"units":"average of beta values for gene-associated probes; 0 (no methylation), 1 (complete methylation)",
         		"platform":"Illumina Infinium Human Methylation 450",
         		"ref_pmid":"27397505"
+        	},
+        	{
+        		"dataType":"mda",
+        		"description":"cell line metadata (phenotypic measures)",
+        		"units":"measure-specific",
+        		"platform":"measure-specific",
+        		"ref_pmid":"na"
         	}
 	  	 ]
 	  	}
@@ -127,6 +148,20 @@
         		"ref_pmid":"22460905"
         	},
         	{
+        		"dataType":"xsq",
+        		"description":"mRNA expression",
+        		"units":"RNA-seq composite log2 RPKM+1",
+        		"platform":"NA",
+        		"ref_pmid":"NA"
+        	},
+        	{
+        		"dataType":"mir",
+        		"description":"microRNA expression",
+        		"units":"log2 normalized counts",
+        		"platform":"Nanostring microRNA",
+        		"ref_pmid":"NA"
+        	},
+        	{
         		"dataType":"mut",
         		"description":"DNA mutation",
         		"units":"probability of homozygous, function-impacting mutation",
@@ -139,6 +174,13 @@
         		"units":"gene-level copy number estimate",
         		"platform":"Affymetrix SNP6.0 Arrays",
         		"ref_pmid":"22460905"
+        	},
+        	{
+        		"dataType":"mda",
+        		"description":"cell line metadata (phenotypic measures)",
+        		"units":"measure-specific",
+        		"platform":"measure-specific",
+        		"ref_pmid":"na"
         	}
         ]
       }
@@ -197,12 +239,73 @@
         		"platform":"Affymetrix GeneChip Human Exon 1.0 ST array",
         		"ref_pmid":"27247353"
         	},
+        	{
+        		"dataType":"met",
+        		"description":"DNA methylation",
+        		"units":"average of beta values for gene-associated probes; 0 (no methylation), 1 (complete methylation)",
+        		"platform":"Illumina ...",
+        		"ref_pmid":"na"
+        	},
           {
         		"dataType":"act",
         		"description":"drug activity",
         		"units":"negative log10[GI50(molar)]",
         		"platform":"sulforhodamine B total protein cytotoxicity assay, 48hrs post-treatment",
         		"ref_pmid":"27247353"
+        	}
+       	]
+      }
+    }
+  },
+  "almanac":{
+    "displayName":"NCI-60/DTP Almanac",
+    "fullName": "NCI/DTP FDA 105 paired Drug Project",
+    "url": "https://dtp.cancer.gov/ncialmanac/initializePage.do",
+    "packages":{
+      "almanacData":{
+        "MetaData":[
+          {
+        		"dataType":"act",
+        		"description":"drug activity",
+        		"units":"Combo scores",
+        		"platform":"sulforhodamine B total protein cytotoxicity assay, 48hrs post-treatment",
+        		"ref_pmid":"28446463"
+        	}
+       	]
+      }
+    }
+  },
+  "mdaMills":{
+    "displayName":"MD.Anderson MCLP",
+    "fullName": "MD Anderson Cell Lines Project",
+    "url": "http://tcpaportal.org/mclp/#/",
+    "packages":{
+      "mdaMillsData":{
+        "MetaData":[
+          {
+        		"dataType":"pro",
+        		"description":"protein expression (RPPA)",
+        		"units":"protein intensities",
+        		"platform":"reverse-phase protein array",
+        		"ref_pmid":"28196595"
+        	}
+       	]
+      }
+    }
+  },
+  "utsw":{
+    "displayName":"UT Southwestern",
+    "fullName": "University of Texas Southwestern",
+    "url": "https://www.utsouthwestern.edu/",
+    "packages":{
+      "utswData":{
+        "MetaData":[
+          {
+        		"dataType":"xsq",
+        		"description":"mRNA Expression",
+        		"units":"RNA-seq Expression (log2 FPKM+1.)",
+        		"platform":"NA",
+        		"ref_pmid":"NA"
         	}
        	]
       }

@@ -8,13 +8,16 @@ library(stringr)
 library(glmnet)
 library(ggplot2)
 library(plotly)
+##library(xlsx)
+library(shinycssloaders)
+#library(dplyr)
 #library(svglite)
 #library(clusterProfiler)
 
 #library(tooltipsterR)
 
-if (!require(rcellminerUtils)){
-	warning("rcellminerUtils package must be installed for full cross-database functionality.")
+if (!require(rcellminerUtilsCDB)){
+	warning("rcellminerUtilsCDB package must be installed for full cross-database functionality.")
 }
 
 
@@ -24,6 +27,10 @@ if (!require(rcellminerUtils)){
 config <- jsonlite::fromJSON("config.json")
 appConfig <- jsonlite::fromJSON("appConfig.json")
 metaConfig <- jsonlite::fromJSON("configMeta.json")
+
+oncolor <- read.delim("oncotree1_colors.txt",row.names = 1,stringsAsFactors = F)
+rownames(oncolor)=toupper(rownames(oncolor))
+
 source("modal.R")
 source("appUtils.R")
 source("dataLoadingFunctions.R")
@@ -77,11 +84,9 @@ colorSet <- loadNciColorSet(returnDf=TRUE)
 
 ###--------
 
-
+options("DT.TOJSON_ARGS" = list(na = "string")) ## try dev version of DT
 
 #--------------------------------------------------------------------------------------------------
-
-
 
 
 shinyServer(function(input, output, session) {
@@ -187,7 +192,7 @@ shinyServer(function(input, output, session) {
 		tissueToSamplesMap <- srcContent[[input$xDataset]][["tissueToSamplesMap"]]
 		tissueTypes <- names(tissueToSamplesMap)
 		
-		if (tissueSelectionMode == "Include"){
+		if (tissueSelectionMode == "To include"){
 			if (!("all" %in% selectedTissues)){
 				selectedLines <- unique(c(tissueToSamplesMap[selectedTissues], recursive = TRUE))
 				# For which tissue types are ALL lines in selectedLines?
@@ -240,7 +245,7 @@ shinyServer(function(input, output, session) {
 			)
 			matchedCellLinesTab$yDataset <- matchedCellLinesTab$xDataset
 		} else{
-			shiny::validate(need(require(rcellminerUtils),
+			shiny::validate(need(require(rcellminerUtilsCDB),
 													 "ERROR: x and y axis data sets must be the same."))
 			matchedCellLinesTab <- getMatchedCellLines(c(input$xDataset, input$yDataset))
 			shiny::validate(need(nrow(matchedCellLinesTab) > 0, 
@@ -260,6 +265,81 @@ shinyServer(function(input, output, session) {
 		
 		return(matchedCellLinesTab)
 	})
+	
+	##------------
+	PatternCompTable <- reactive({
+	  srcContent <- srcContentReactive()
+	  
+	  if (input$patternComparisonSeed == "xPattern"){
+	    dat <- xData()
+	    pcDataset <- input$xDataset
+	  } else{
+	    dat <- yData()
+	    pcDataset <- input$yDataset
+	  }
+	  selectedLines <- names(dat$data)
+	  
+	  if(input$patternComparisonType == "drug") {
+	    shiny::validate(need(srcContent[[pcDataset]][["molPharmData"]][["act"]], "No drug available for this cell line set"))
+	    #if (is.null(srcContent[[pcDataset]][["molPharmData"]][["act"]])) stop("No drug available for this cell line set")
+	    results <- patternComparison(dat$data,
+	                                 srcContent[[pcDataset]][["molPharmData"]][["act"]][, selectedLines])
+	    results$ids <- rownames(results)
+	    results$NAME <- srcContent[[pcDataset]][["drugInfo"]][rownames(results), "NAME"]
+	    
+	    if ("MOA" %in% colnames(srcContent[[pcDataset]][["drugInfo"]])){
+	      results$MOA <- srcContent[[pcDataset]][["drugInfo"]][rownames(results), "MOA"]
+	      results <- results[, c("ids", "NAME", "MOA", "COR", "PVAL")]
+	      colnames(results) <- c("ID", "Name", "MOA", "Correlation", "P-Value")
+	    } else{
+	      results <- results[, c("ids", "NAME", "COR", "PVAL")]
+	      colnames(results) <- c("ID", "Name", "Correlation", "P-Value")
+	    }
+	    results$FDR=p.adjust(results[,"P-Value"],method="BH",nrow(results))
+	    
+	  } else {
+	    molPharmData <- srcContent[[pcDataset]][["molPharmData"]]
+	    molData <- molPharmData[setdiff(names(molPharmData), c("act","copA","mutA","metA","expA","xaiA","proA","mirA","mdaA","swaA","xsqA"))]
+	    shiny::validate(need(length(molData)>0, "No molecular data available for this cell line set"))
+	    ##if (length(molData)==0) stop("No molecular data available for this cell line set")
+	    molData <- lapply(molData, function(X) X[, selectedLines])
+	    results <- patternComparison(dat$data, molData)
+	    results$ids <- rownames(results)
+	    
+	    results$molDataType <- getMolDataType(results$ids)
+	    results$gene <- removeMolDataType(results$ids)
+	    
+	    # Reorder columns
+	    results <- results[, c("ids", "molDataType", "gene", "COR", "PVAL")]
+	    colnames(results) <- c("ID", "Data Type", "Gene", "Correlation", "P-Value")
+	    
+	    if (require(rcellminerUtilsCDB)){
+	      chromLocs <- character(nrow(results))
+	      haveLoc <- results$Gene %in% names(geneToChromBand)
+	      chromLocs[haveLoc] <- geneToChromBand[results$Gene[haveLoc]]
+	      
+	      results$Location <- chromLocs
+	      results <- results[, c("ID", "Data Type", "Gene", "Location", "Correlation", "P-Value")]
+	    }
+	    results$FDR=p.adjust(results[,"P-Value"],method="BH",nrow(results))
+	    
+	    if (require(geneSetPathwayAnalysis)){
+	      results$Annotation <- geneSetPathwayAnalysis::geneAnnotTab[results$Gene, "SHORT_ANNOT"]
+	      results$Annotation[is.na(results$Annotation)] <- ""
+	    }
+	    
+	    results$ID <- NULL
+	  }
+	  
+	  results[, "Correlation"] <- round(results[, "Correlation"], 3)
+	  results[, "P-Value"] <- signif(results[, "P-Value"], 3)
+	  results[, "FDR"] <- signif(results[, "FDR"], 3)
+	  ## sort by p-value
+	  results <- results[order(results[, "P-Value"]),]
+	  
+	  return(results)
+	})
+	##--------------
 	
 	# Explanation of xData, yData reactive variables -------------------------------------------------
 	# The xData and yData reactive variables provide list objects (accessed via xData() and yData()) 
@@ -310,7 +390,9 @@ shinyServer(function(input, output, session) {
 			xData <- getFeatureData(xPrefix, xId, input$xDataset, srcContent = srcContentReactive())
 			
 			matchedLinesTab <- matchedCellLinesTab()
-			xData$data <- xData$data[matchedLinesTab[, "xDataset"]]
+			# xData$data <- xData$data[matchedLinesTab[, "xDataset"]]
+			xData$data <- xData$data[as.character(matchedLinesTab[, "xDataset"])]
+			
 		}
 		
 		return(xData)
@@ -344,7 +426,8 @@ shinyServer(function(input, output, session) {
 			yData <- getFeatureData(yPrefix, yId, input$yDataset, srcContent = srcContentReactive())
 			
 			matchedLinesTab <- matchedCellLinesTab()
-			yData$data <- yData$data[matchedLinesTab[, "yDataset"]]
+			# yData$data <- yData$data[matchedLinesTab[, "yDataset"]]
+			yData$data <- yData$data[as.character(matchedLinesTab[, "yDataset"])]
 		}
 		
 		return(yData)
@@ -357,13 +440,13 @@ shinyServer(function(input, output, session) {
   #------------------------------------------------------------------------------------
 
   #----[Render 2D Plot in 'Plot Data' Tab]---------------------------------------------
-  if(require(rCharts)) {
-		output$rCharts <- renderChart({
-			h1 <- makePlot(xData = xData(), yData = yData(), showColor = input$showColor,
-										 showColorTissues = input$showColorTissues, dataSource = input$xDataset,
-										 srcContent = srcContentReactive(), dom="rCharts")
-		})
-  }
+#   if(require(rCharts)) {
+# 		output$rCharts <- renderChart({
+# 			h1 <- makePlot(xData = xData(), yData = yData(), showColor = input$showColor,
+# 										 showColorTissues = input$showColorTissues, dataSource = input$xDataset,
+# 										 srcContent = srcContentReactive(), dom="rCharts")
+# 		})
+#   }
 
 	# Alternative plotting
 	output$rChartsAlternative <- renderPlotly({
@@ -397,9 +480,9 @@ shinyServer(function(input, output, session) {
 		req(!any(is.null(yValRange)), !any(is.null(yLimits)))
 		req(!any(is.na(xValRange)), !any(is.na(xLimits)))
 		req(!any(is.na(yValRange)), !any(is.na(yLimits)))
-		
-		req((xLimits[1] <= xValRange[1]) && (xValRange[2] <= xLimits[2]))
-		req((yLimits[1] <= yValRange[1]) && (yValRange[2] <= yLimits[2]))
+		# commented below
+		# req((xLimits[1] <= xValRange[1]) && (xValRange[2] <= xLimits[2]))
+		# req((yLimits[1] <= yValRange[1]) && (yValRange[2] <= yLimits[2]))
 		
 		cat("xAxis Limits: ", paste0(xLimits, collapse = " "), sep = "\n")
 		cat("X_VAL_RANGE: ",  paste0(xValRange, collapse = " "), sep = "\n")
@@ -412,10 +495,10 @@ shinyServer(function(input, output, session) {
 		p1 <- makePlotStatic(xData = xData, yData = yData, showColor = input$showColor, 
 												 showColorTissues = input$showColorTissues, dataSource = input$xDataset, 
 												 xLimVals = xLimits, yLimVals = yLimits,
-												 srcContent = srcContentReactive())
+												 srcContent = srcContentReactive(),oncolor=oncolor)
 		g1 <- ggplotly(p1, width=plotWidth, height=plotHeight, tooltip=tooltipCol)
 		g1 <- layout(g1, margin=list(t = 75))
-		g2 <- config(p = g1, collaborate=FALSE, cloud=FALSE, displaylogo=FALSE,
+		g2 <- config(p = g1, collaborate=FALSE, cloud=FALSE, displaylogo=FALSE, displayModeBar=TRUE,
 								 modeBarButtonsToRemove=c("select2d", "sendDataToCloud", "pan2d", "resetScale2d",
 								 												 "hoverClosestCartesian", "hoverCompareCartesian",
 								 												 "lasso2d", "zoomIn2d", "zoomOut2d"))
@@ -441,110 +524,216 @@ shinyServer(function(input, output, session) {
 
   	DT::datatable(dlDataTab, rownames=FALSE, colnames=colnames(dlDataTab),
   								filter='top', style='bootstrap', selection="none",
-  								options=list(pageLength = nrow(dlDataTab)))
+  								options=list(pageLength = nrow(dlDataTab), language=list(paginate = list(previous = 'Previous page', `next`= 'Next page'))))
   })
 	#--------------------------------------------------------------------------------------
-
+	output$cortable <- DT::renderDataTable({
+	  # Column selection below is to restrict to cell line, x, y features,
+	  # and tissue type information (source-provided + OncoTree).
+	  rescor= CorrelationTable(xData(),yData(),srcContentReactive())
+	  
+	  DT::datatable(rescor, rownames=FALSE, colnames=colnames(rescor),extensions='Buttons',
+	                filter='top', style='bootstrap', selection="none",
+	                options=list(pageLength = nrow(rescor), language=list(paginate = list(previous = 'Previous page', `next`= 'Next page')) ,dom='lipBt', buttons = list('copy', 'print', list(extend = 'collection',buttons = list(list(extend='csv',filename='tissue_correlation',title='Exported data from CellMinerCDB'), list(extend='excel',filename='tissue_correlation',title='Exported data from CellMinerCDB'), list(extend='pdf',filename='tissue_correlation',title='Exported data from CellMinerCDB')),text = 'Download'))))
+	 
+	  })
+  #--------------------------------------------------------------------------------------
   #----[Render Data Table in 'Search IDs' Tab]-------------------------------------------
   # Generate an HTML table view of the data
   # Note: Searchable data is derived from the x-axis data source.
 	output$ids <- DT::renderDataTable({
-		srcContent <- srcContentReactive()
-    drugIds   <- srcContent[[input$xDataset]][["drugInfo"]][, "ID"]
-    drugNames <- srcContent[[input$xDataset]][["drugInfo"]][, "NAME"]
-    moaNames  <- srcContent[[input$xDataset]][["drugInfo"]][, "MOA"]
+	  srcContent <- srcContentReactive()
+	  drugIds   <- srcContent[[input$xDataset]][["drugInfo"]][, "ID"]
+	  drugNames <- srcContent[[input$xDataset]][["drugInfo"]][, "NAME"]
+	  moaNames  <- srcContent[[input$xDataset]][["drugInfo"]][, "MOA"]
+	  exptype <- rep("act", length(drugIds))
+	  
+	  results <- data.frame(availableTypes=exptype, availableIds = drugIds, idNames=drugNames, properties=moaNames,
+	                        stringsAsFactors=FALSE)
+	  
+	  # Make molecular data data.frame
+	  molPharmData <- srcContent[[input$xDataset]][["molPharmData"]]
+	  molData <- molPharmData[setdiff(names(molPharmData), "act")]
+	  molDataIds <- as.vector(unlist(lapply(molData, function(x) { rownames(x) })))
+	  
+	  exptype2 <- substr(molDataIds,1,3)
+	  molDataIds <- substr(molDataIds,4,nchar(molDataIds))
+	  
+	  molDataNames <- rep("", length(molDataIds))
+	  moaNames <- rep("", length(molDataIds))
+	  
+	  tmp <- data.frame(availableTypes=exptype2,availableIds=molDataIds, idNames=molDataNames, properties=moaNames,
+	                    stringsAsFactors=FALSE)
+	  
+	  # Join data.frames
+	  results <- rbind(results, tmp)
+	  
+	  # Reverse Order/ no need for reverse for me
+	  #results <- results[rev(rownames(results)),]
+	  
+	  colnames(results) <- c("Data type","ID ", "Drug Name", "Drug MOA")
+	  selsource=metaConfig[[input$xDataset]][["fullName"]]
+	  DT::datatable(results, rownames=FALSE, colnames=colnames(results),
+	                filter='top', style='bootstrap', selection = "none",
+	                options=list(pageLength = 10, language=list(paginate = list(previous = 'Previous page', `next`= 'Next page'))), caption=htmltools::tags$caption(paste0("Ids table for ",selsource),style="color:dodgerblue; font-size: 18px"))
+	})
+		#--------------------------------------------------------------------------------------
 
-    results <- data.frame(availableIds = drugIds, idNames=drugNames, properties=moaNames,
-                          stringsAsFactors=FALSE)
-
-    # Make molecular data data.frame
-    molPharmData <- srcContent[[input$xDataset]][["molPharmData"]]
-    molData <- molPharmData[setdiff(names(molPharmData), "act")]
-    molDataIds <- as.vector(unlist(lapply(molData, function(x) { rownames(x) })))
-    molDataNames <- rep("", length(molDataIds))
-    moaNames <- rep("", length(molDataIds))
-
-    tmp <- data.frame(availableIds=molDataIds, idNames=molDataNames, properties=moaNames,
-                      stringsAsFactors=FALSE)
-
-    # Join data.frames
-    results <- rbind(results, tmp)
-
-    # Reverse Order
-    results <- results[rev(rownames(results)),]
-    colnames(results) <- c("ID", "Name", "Drug MOA")
-
-    DT::datatable(results, rownames=FALSE, colnames=colnames(results),
-    							filter='top', style='bootstrap', selection = "none",
-    							options=list(pageLength = 10))
-  })
-	#--------------------------------------------------------------------------------------
-
-	#----[Render Data Table in 'Compare Patterns' Tab]-------------------------------------
-	output$patternComparison <- DT::renderDataTable({
-		srcContent <- srcContentReactive()
-		
-		if (input$patternComparisonSeed == "xPattern"){
-			dat <- xData()
-			pcDataset <- input$xDataset
-		} else{
-			dat <- yData()
-			pcDataset <- input$yDataset
-		}
-		selectedLines <- names(dat$data)
-
-	  if(input$patternComparisonType == "drug") {
-	    results <- patternComparison(dat$data,
-	    														 srcContent[[pcDataset]][["molPharmData"]][["act"]][, selectedLines])
-	    results$ids <- rownames(results)
-	    results$NAME <- srcContent[[pcDataset]][["drugInfo"]][rownames(results), "NAME"]
-
-	    if ("MOA" %in% colnames(srcContent[[pcDataset]][["drugInfo"]])){
-	    	results$MOA <- srcContent[[pcDataset]][["drugInfo"]][rownames(results), "MOA"]
-	    	results <- results[, c("ids", "NAME", "MOA", "COR", "PVAL")]
-	    	colnames(results) <- c("ID", "Name", "MOA", "Correlation", "P-Value")
-	    } else{
-	    	results <- results[, c("ids", "NAME", "COR", "PVAL")]
-	    	colnames(results) <- c("ID", "Name", "Correlation", "P-Value")
-	    }
-	  } else {
-	    molPharmData <- srcContent[[pcDataset]][["molPharmData"]]
-	    molData <- molPharmData[setdiff(names(molPharmData), "act")]
-	    molData <- lapply(molData, function(X) X[, selectedLines])
-	    results <- patternComparison(dat$data, molData)
-	    results$ids <- rownames(results)
-
-	    results$molDataType <- getMolDataType(results$ids)
-	    results$gene <- removeMolDataType(results$ids)
-
-	    # Reorder columns
-	    results <- results[, c("ids", "molDataType", "gene", "COR", "PVAL")]
-	    colnames(results) <- c("ID", "Data Type", "Gene", "Correlation", "P-Value")
-
-	    if (require(rcellminerUtils)){
-	    	chromLocs <- character(nrow(results))
-	    	haveLoc <- results$Gene %in% names(geneToChromBand)
-	    	chromLocs[haveLoc] <- geneToChromBand[results$Gene[haveLoc]]
-
-	    	results$Location <- chromLocs
-	    	results <- results[, c("ID", "Data Type", "Gene", "Location", "Correlation", "P-Value")]
-	    }
+	#----[Render Data Table in 'SearchIDs' Tab]-------------------------------------------
+	# Generate an HTML table view of the data
+	# Note: Searchable data is derived from the x-axis data source.
+	output$ids_s <- DT::renderDataTable({
+	  srcContent <- srcContentReactive()
+	  if (input$dataTyp=="act") {
+	    myframe=srcContent[[input$dataSrc]][["drugInfo"]]
 	    
-	    if (require(geneSetPathwayAnalysis)){
-	    	results$Annotation <- geneSetPathwayAnalysis::geneAnnotTab[results$Gene, "SHORT_ANNOT"]
-				results$Annotation[is.na(results$Annotation)] <- ""
+	  }
+	  else
+	  {
+	    mytype=paste0(input$dataTyp,"A")
+	    if (is.null(srcContent[[input$dataSrc]][["molPharmData"]][[mytype]]) | ncol(srcContent[[input$dataSrc]][["molPharmData"]][[mytype]])==0) {
+	      ID=unlist(lapply(rownames(srcContent[[input$dataSrc]][["molPharmData"]][[input$dataTyp]]),function(x) {return(substr(x,4,nchar(x)))}))
+	      myframe=data.frame(ID,stringsAsFactors = F)
 	    }
-	    
-	    results$ID <- NULL
+	    else
+	    { myframe=srcContent[[input$dataSrc]][["molPharmData"]][[mytype]]
+	      if (input$dataTyp=="swa") {
+	        myframe=myframe[,c(2,1)]
+	      } else 
+	        if (input$dataTyp=="exp" & input$dataSrc=="nciSclc")
+	        { myframe=myframe[,c(4,3,5:13,1:2)] 
+	        }
+	      
+	      colnames(myframe)[1]="ID" 
+	    }
 	  }
 	  
-	  results[, "Correlation"] <- round(results[, "Correlation"], 3)
-	  results[, "P-Value"] <- signif(results[, "P-Value"], 3)
-		
+	  
+	  selsource=metaConfig[[input$dataSrc]][["fullName"]]
+	  DT::datatable(myframe, rownames=FALSE,extensions='Buttons',
+	                filter='top', style='bootstrap', selection = "none",
+	                options=list(pageLength = 10,language=list(paginate = list(previous = 'Previous page', `next`= 'Next page')) ,dom='lipBt',buttons = list('copy', 'print', list(extend = 'collection',buttons = list(list(extend='csv',filename='search_id',title='Exported data from CellMinerCDB'), list(extend='excel',filename='search_id',title='Exported data from CellMinerCDB'), list(extend='pdf',filename='search_id',title='Exported data from CellMinerCDB')),text = 'Download')))
+	                , caption=htmltools::tags$caption(paste0("Identifier search for ",selsource),style="color:dodgerblue; font-size: 18px")
+	)})
+
+	## new version
+	output$ids2 <- DT::renderDataTable({
+	  srcContent <- srcContentReactive()
+	  drugIds   <- srcContent[[input$dataSrc]][["drugInfo"]][, "ID"]
+	  drugNames <- srcContent[[input$dataSrc]][["drugInfo"]][, "NAME"]
+	  moaNames  <- srcContent[[input$dataSrc]][["drugInfo"]][, "MOA"]
+	  exptype <- rep("act", length(drugIds))
+	  
+	  results <- data.frame(availableTypes=exptype, availableIds = drugIds, idNames=drugNames, properties=moaNames,
+	                        stringsAsFactors=FALSE)
+	  
+	  # Make molecular data data.frame
+	  molPharmData <- srcContent[[input$dataSrc]][["molPharmData"]]
+	  molData <- molPharmData[setdiff(names(molPharmData), "act")]
+	  molDataIds <- as.vector(unlist(lapply(molData, function(x) { rownames(x) })))
+	  
+	  exptype2 <- substr(molDataIds,1,3)
+	  molDataIds <- substr(molDataIds,4,nchar(molDataIds))
+	  
+	  molDataNames <- rep("", length(molDataIds))
+	  moaNames <- rep("", length(molDataIds))
+	  
+	  tmp <- data.frame(availableTypes=exptype2,availableIds=molDataIds, idNames=molDataNames, properties=moaNames,
+	                    stringsAsFactors=FALSE)
+	  
+	  # Join data.frames
+	  results <- rbind(results, tmp)
+	  
+	  # Reverse Order/ no need for reverse for me
+	  #results <- results[rev(rownames(results)),]
+	  
+	  colnames(results) <- c("Data type","ID ", "Drug Name", "Drug MOA")
+	  selsource=metaConfig[[input$dataSrc]][["fullName"]]
+	  DT::datatable(results, rownames=FALSE, colnames=colnames(results),extensions='Buttons',
+	                filter='top', style='bootstrap', selection = "none",
+	                options=list(pageLength = 10,language=list(paginate = list(previous = 'Previous page', `next`= 'Next page')) ,dom='lipBt',buttons = list('copy', 'print', list(extend = 'collection',buttons = list(list(extend='csv',filename='search_id'), list(extend='excel',filename='search_id'), list(extend='pdf',filename='search_id')),text = 'Download')))
+	                , caption=htmltools::tags$caption(paste0("Identifier search for ",selsource),style="color:dodgerblue; font-size: 18px")
+	  )})
+	
+		#--------------------------------------------------------------------------------------
+	
+	
+	#----[Render Data Table in 'Compare Patterns' Tab]-------------------------------------
+	output$patternComparison <- DT::renderDataTable({
+	# 	srcContent <- srcContentReactive()
+	# 	
+	# 	if (input$patternComparisonSeed == "xPattern"){
+	# 		dat <- xData()
+	# 		pcDataset <- input$xDataset
+	# 	} else{
+	# 		dat <- yData()
+	# 		pcDataset <- input$yDataset
+	# 	}
+	# 	selectedLines <- names(dat$data)
+	# 
+	#   if(input$patternComparisonType == "drug") {
+	#     results <- patternComparison(dat$data,
+	#     														 srcContent[[pcDataset]][["molPharmData"]][["act"]][, selectedLines])
+	#     results$ids <- rownames(results)
+	#     results$NAME <- srcContent[[pcDataset]][["drugInfo"]][rownames(results), "NAME"]
+	# 
+	#     if ("MOA" %in% colnames(srcContent[[pcDataset]][["drugInfo"]])){
+	#     	results$MOA <- srcContent[[pcDataset]][["drugInfo"]][rownames(results), "MOA"]
+	#     	results <- results[, c("ids", "NAME", "MOA", "COR", "PVAL")]
+	#     	colnames(results) <- c("ID", "Name", "MOA", "Correlation", "P-Value")
+	#     } else{
+	#     	results <- results[, c("ids", "NAME", "COR", "PVAL")]
+	#     	colnames(results) <- c("ID", "Name", "Correlation", "P-Value")
+	#     }
+	#     results$FDR=p.adjust(results[,"P-Value"],method="BH",nrow(results))
+	#     
+	#   } else {
+	#     molPharmData <- srcContent[[pcDataset]][["molPharmData"]]
+	#     molData <- molPharmData[setdiff(names(molPharmData), c("act","copA","mutA","metA","expA","xaiA","proA","mirA","mdaA","swaA","xsqA"))]
+	#     molData <- lapply(molData, function(X) X[, selectedLines])
+	#     results <- patternComparison(dat$data, molData)
+	#     results$ids <- rownames(results)
+	# 
+	#     results$molDataType <- getMolDataType(results$ids)
+	#     results$gene <- removeMolDataType(results$ids)
+	# 
+	#     # Reorder columns
+	#     results <- results[, c("ids", "molDataType", "gene", "COR", "PVAL")]
+	#     colnames(results) <- c("ID", "Data Type", "Gene", "Correlation", "P-Value")
+	# 
+	#     if (require(rcellminerUtilsCDB)){
+	#     	chromLocs <- character(nrow(results))
+	#     	haveLoc <- results$Gene %in% names(geneToChromBand)
+	#     	chromLocs[haveLoc] <- geneToChromBand[results$Gene[haveLoc]]
+	# 
+	#     	results$Location <- chromLocs
+	#     	results <- results[, c("ID", "Data Type", "Gene", "Location", "Correlation", "P-Value")]
+	#     }
+	#     results$FDR=p.adjust(results[,"P-Value"],method="BH",nrow(results))
+	#     
+	#     if (require(geneSetPathwayAnalysis)){
+	#     	results$Annotation <- geneSetPathwayAnalysis::geneAnnotTab[results$Gene, "SHORT_ANNOT"]
+	# 			results$Annotation[is.na(results$Annotation)] <- ""
+	#     }
+	#     
+	#     results$ID <- NULL
+	#   }
+	#   
+	#   results[, "Correlation"] <- round(results[, "Correlation"], 3)
+	#   results[, "P-Value"] <- signif(results[, "P-Value"], 3)
+	#   results[, "FDR"] <- signif(results[, "FDR"], 3)
+	# 	## sort by p-value
+	#   results <- results[order(results[, "P-Value"]),]
+    results= PatternCompTable()	 
+	  # DT::datatable(results, rownames=FALSE, colnames=colnames(results),extensions='Buttons',
+	  # 							filter='top', style='bootstrap', selection = "none",
+	  # 							options=list(lengthMenu = c(10, 50, 100,500), pageLength = 100,language=list(paginate = list(previous = 'Previous page', `next`= 'Next page')) ,dom='lipBt', buttons = list('copy', 'print', list(extend = 'collection',buttons = list(list(extend='csv',filename='pattern_comp',title='Exported data from CellMinerCDB'), list(extend='excel',filename='pattern_comp',title='Exported data from CellMinerCDB'), list(extend='pdf',filename='pattern_comp',title='Exported data from CellMinerCDB')),text = 'Download'))))
 	  DT::datatable(results, rownames=FALSE, colnames=colnames(results),
-	  							filter='top', style='bootstrap', selection = "none",
-	  							options=list(lengthMenu = c(10, 25, 50, 100), pageLength = 10))
+	                filter='top', style='bootstrap', selection = "none",
+	                options=list(lengthMenu = c(10, 50, 100,500), pageLength = 100,language=list(paginate = list(previous = 'Previous page', `next`= 'Next page')) ,dom='lipt'))
+	  
 	})
+	
 
 	#----[Render Data Table in 'Metadata' Tab]-------------------------------------------
 	output$cellLineTable <- DT::renderDataTable({
@@ -557,7 +746,7 @@ shinyServer(function(input, output, session) {
 		
 		DT::datatable(jsonFrame, rownames=FALSE, colnames=colnames(jsonFrame),
 									filter='top', style='bootstrap', selection = "none",
-									options=list(pageLength = 10))
+									options=list(pageLength = 10,language=list(paginate = list(previous = 'Previous page', `next`= 'Next page'))),escape=F)
 	})
 	#---------------------------------------------------------------------------------------
 	output$log <- renderText({
@@ -592,15 +781,20 @@ shinyServer(function(input, output, session) {
 	output$tabsetPanel = renderUI({
 		#verbatimTextOutput("log") can be used for debugging
 		#tabPanel("Plot", verbatimTextOutput("genUrl"), showOutput("rCharts", "highcharts")),
-
-		tab1 <- tabPanel("Download Data",
-                     downloadLink("downloadData", "Download Data as Tab-Delimited File"),
+	  tab4 <- tabPanel("Tissue Correlation",
+	                   #downloadLink("downloadData", "Download selected x and y axis data as a Tab-Delimited File"),
+	                   DT::dataTableOutput("cortable"))
+		tab1 <- tabPanel("View Data",
+                     downloadLink("downloadData", "Download selected x and y axis data as a Tab-Delimited File"),
                      DT::dataTableOutput("table"))
 		tab2 <- tabPanel("Search IDs",
                      includeMarkdown("www/files/help.md"),
                      DT::dataTableOutput("ids"))
 		tab3 <- tabPanel("Compare Patterns",
 										 includeMarkdown("www/files/help.md"),
+										 #br(),
+										 HTML("<b>Pattern comparison results are computed with respect to that data defined and shared by both the x and y-axis inputs.</b>"),
+										 br(),br(),
 										 fluidRow(
                      	#column(3, selectInput("patternComparisonType", "Pattern Comparison",
                       #           						choices=c("Molecular Data"="molData", "Drug Data"="drug"), 
@@ -617,9 +811,18 @@ shinyServer(function(input, output, session) {
 										 	  paste("<label class='control-label' for='patternComparisonSeed'>With Respect to</label>","<select id='patternComparisonSeed'><option value='xPattern' selected>x-Axis Entry</option><option value='yPattern'>y-Axis Entry</option></select>")
 										 	))
 										 ),
-                     DT::dataTableOutput("patternComparison"))
+										 br(),br(),
+										 renderUI({
+										   req(PatternCompTable())
+										   downloadLink("downloadDataComp", "Download All as a Tab-Delimited File")
+										 }),
+										 ##downloadLink("downloadDataComp", "Download All as a Tab-Delimited File"),
+                     withSpinner(DT::dataTableOutput("patternComparison")))
+		
+		                 # withSpinner(DT::dataTableOutput("patternComparison")),
+		                 # downloadLink("downloadDataComp", "Download All as a Tab-Delimited File"))	
 
-		#if(input$hasRCharts == "TRUE") {
+#if(input$hasRCharts == "TRUE") {
 #		if (FALSE) {
 #			tsPanel <- tabsetPanel(type="tabs",
 #									#tabPanel("Plot Data", htmlOutput("genUrl"), showOutput("rCharts", "highcharts")),
@@ -629,7 +832,8 @@ shinyServer(function(input, output, session) {
 #		} else {
 			plotPanel <- tabPanel("Plot Data", plotlyOutput("rChartsAlternative", width = plotWidth, height = plotHeight),
 														br(), br(), p("Plot point tooltips provide additional information."))
-			tsPanel <- tabsetPanel(plotPanel, tab1, tab2, tab3)
+			#tsPanel <- tabsetPanel(plotPanel, tab1, tab2, tab3)
+			tsPanel <- tabsetPanel(plotPanel, tab1, tab3,tab4)
 #		}
 
 		return(tsPanel)
@@ -656,51 +860,256 @@ shinyServer(function(input, output, session) {
 								)
 		)
 	})
+	##*********************************************************
+	# output$searchPanel = renderUI({
+	#   #verbatimTextOutput("log") can be used for debugging
+	#   #tabPanel("Plot", verbatimTextOutput("genUrl"), showOutput("rCharts", "highcharts")),
+	#   
+	#   includeMarkdown("www/files/help.md")
+	#   DT::dataTableOutput("ids2")
+	#  
+	# })
+	
+	output$searchPanel = renderUI({
+	  #verbatimTextOutput("log") can be used for debugging
+	  #tabPanel("Plot", verbatimTextOutput("genUrl"), showOutput("rCharts", "highcharts")),
+	  
+	  #includeMarkdown("www/files/help.md")
+	  DT::dataTableOutput("ids_s")
+	  
+	})
+	##*********************************************************
 	#**************************************************************************************
 	output$sourceLink <- renderUI({
 		
 		urlString <- metaConfig[[input$mdataSource]][["url"]]
 		sourceName <- metaConfig[[input$mdataSource]][["displayName"]]
 		visibleText <- paste("Select here to learn more about ", sourceName, sep="")
-	
-		a(visibleText, href=paste(urlString), target = "_blank")
+		if (input$mdataSource=="nci60")
+		tags$div(
+		tags$a(visibleText, href=paste(urlString), target = "_blank"),
+		tags$a("   and the DTP",href='https://dtp.cancer.gov', target='_blank'))
+		else tags$a(visibleText, href=paste(urlString), target = "_blank")
+		#  
+		# if (input$mdataSource=="nci60") { 
+		#    a(visibleText, href=paste(urlString), target = "_blank")
+		#    a("DTP",href='https://dtp.cancer.gov', target='_blank')
+		# }
 	})
 	#**********************************************************************************************
+
   output$downloadData <- downloadHandler(
     filename = function() {
-    	query <- parseQueryString(session$clientData$url_search)
-
-    	if("filename" %in% names(query)) {
-    		filename <- query[["filename"]]
-    	} else {
-    		filename <- "dataset"
-    	}
-
-    	if("extension" %in% names(query)) {
-    		extension <- query[["extension"]]
-    	} else {
-    		extension <- "txt"
-    	}
-
-    	paste(filename, extension, sep=".")
+      query <- parseQueryString(session$clientData$url_search)
+      
+      if("filename" %in% names(query)) {
+        filename <- query[["filename"]]
+      } else {
+        filename <- "dataset"
+      }
+      
+      if("extension" %in% names(query)) {
+        extension <- query[["extension"]]
+      } else {
+        extension <- "txt"
+      }
+      
+      paste(filename, extension, sep=".")
     },
     content = function(file) {
-    	df <- getPlotData(xData = xData(), yData = yData(), showColor = input$showColor, 
-    		showColorTissues = input$showColorTissues, dataSource = input$xDataset, 
-    		srcContent = srcContentReactive())
-
-    	# Column selection below is to restrict to cell line, x, y features,
-    	# and tissue type information (source-provided + OncoTree).
-    	dfCols <- c(colnames(df)[1:4], paste0("OncoTree", 1:4))
-    	if ("EMT" %in% colnames(df)) {
-    		dfCols <- c(dfCols, "EMT")
-    	}
-    	df <- df[, dfCols]
-
-    	write.table(df, file, quote=FALSE, row.names=FALSE, sep="\t")
+      df <- getPlotData(xData = xData(), yData = yData(), showColor = input$showColor, 
+                        showColorTissues = input$showColorTissues, dataSource = input$xDataset, 
+                        srcContent = srcContentReactive())
+      
+      # Column selection below is to restrict to cell line, x, y features,
+      # and tissue type information (source-provided + OncoTree).
+      dfCols <- c(colnames(df)[1:4], paste0("OncoTree", 1:4))
+      if ("EMT" %in% colnames(df)) {
+        dfCols <- c(dfCols, "EMT")
+      }
+      df <- df[, dfCols]
+      
+      write.table(df, file, quote=FALSE, row.names=FALSE, sep="\t")
     }
   )
-
+  ### data types for search ---------
+  output$dataTypeUi <- renderUI({
+    srcContent <- srcContentReactive()
+    
+    # The last selected (data type) prefix is recorded in 
+    # globalReactiveValues$xPrefix whenever xData() is updated. When the data set 
+    # is changed, we try to use this same data type prefix, if it is available.
+    prefixChoices <- srcContent[[input$mdataSource]][["featurePrefixes"]]
+    selectedPrefix <- globalReactiveValues$xPrefix
+    if ((is.null(selectedPrefix)) || (!(selectedPrefix %in% prefixChoices))){
+      selectedPrefix <- srcContent[[input$mdataSource]][["defaultFeatureX"]]
+      if (is.na(selectedPrefix)) selectedPrefix <- srcContent[[input$mdataSource]][["defaultFeatureY"]]
+    }
+    opt = "";
+    for(y in 1:length(prefixChoices)){
+      if (prefixChoices[y]==selectedPrefix)
+      {
+        opt =  paste0(opt,"<option value=",prefixChoices[y]," selected>",names(prefixChoices)[y],"</option>;")
+      }
+      else
+      {
+        opt =  paste0(opt,"<option value=",prefixChoices[y],">",names(prefixChoices)[y],"</option>;");
+      }
+    }
+    # selectInput("xPrefix", "x-Axis Type", choices = prefixChoices, selected = selectedPrefix)
+    HTML(
+      paste("<label class='control-label' for='dataType'>Select Data Type to Download</label>","<select id='dataType' style='word-wrap:break-word; width: 100%;'>",opt,"</select>")
+    )
+  })
+ ## new version for search tab
+  output$dataTypeUi_s <- renderUI({
+    srcContent <- srcContentReactive()
+    
+    # The last selected (data type) prefix is recorded in 
+    # globalReactiveValues$xPrefix whenever xData() is updated. When the data set 
+    # is changed, we try to use this same data type prefix, if it is available.
+    prefixChoices <- srcContent[[input$dataSrc]][["featurePrefixes"]]
+    selectedPrefix <- globalReactiveValues$xPrefix
+    if ((is.null(selectedPrefix)) || (!(selectedPrefix %in% prefixChoices))){
+      selectedPrefix <- srcContent[[input$dataSrc]][["defaultFeatureX"]]
+      if (is.na(selectedPrefix)) selectedPrefix <- srcContent[[input$dataSrc]][["defaultFeatureY"]]
+    }
+    opt = "";
+    for(y in 1:length(prefixChoices)){
+      if (prefixChoices[y]==selectedPrefix)
+      {
+        opt =  paste0(opt,"<option value=",prefixChoices[y]," selected>",names(prefixChoices)[y],"</option>;")
+      }
+      else
+      {
+        opt =  paste0(opt,"<option value=",prefixChoices[y],">",names(prefixChoices)[y],"</option>;");
+      }
+    }
+    # selectInput("xPrefix", "x-Axis Type", choices = prefixChoices, selected = selectedPrefix)
+    HTML(
+      paste("<label class='control-label' for='dataTyp'>Select Data Type</label>","<select id='dataTyp' style='word-wrap:break-word; width: 100%;'>",opt,"</select>")
+    )
+  })
+  
+  
+  
+  ### Download data
+  output$downloadExp <- downloadHandler(
+    
+    # This function returns a string which tells the client
+    # browser what name to use when saving the file.
+    filename = function() {
+      paste0("data_",input$mdataSource,"_",input$dataType,".txt")
+    },
+    # filename = function() {
+    #   paste0(input$mdataSource,"_",input$dataType,".zip")
+    # },
+    # This function should write data to a file given to it by
+    # the argument 'file'.
+    content = function(file) {
+      
+      wdata=srcContent[[input$mdataSource]][["molPharmData"]][[input$dataType]]
+      rownames(wdata)=substr(rownames(wdata),4,nchar(rownames(wdata)))
+      # Write to a file specified by the 'file' argument
+      #write.table(srcContent[[input$mdataSource]][["molPharmData"]][[input$dataType]], file, sep = "\t",col.names = NA)      
+      write.table(wdata, file, sep = "\t", col.names = NA)  
+      
+      # myname=paste0(input$mdataSource,"_",input$dataType,".txt")
+      # write.table(srcContent[[input$mdataSource]][["molPharmData"]][[input$dataType]], myname, sep = "\t",
+      #             col.names = NA)
+      # configSelect <- metaConfig[[input$mdataSource]][["packages"]][[1]][["MetaData"]]
+      # jsonFrame <- as.data.frame(configSelect)
+      # 
+      # colnames(jsonFrame) <- c("DataType", "Description", "Units", 
+      #                          "Platform/Assay", "PubMed Ref. ID")
+      # write.table(t(jsonFrame[which(jsonFrame$DataType==input$dataType),]),"footnotes.txt",sep="\t",col.names=F)
+      # zip(zipfile=file, files=c(myname,"footnotes.txt"))
+    }
+  )
+##
+  ### Download footnotes
+  output$downloadFoot <- downloadHandler(
+    
+    # This function returns a string which tells the client
+    # browser what name to use when saving the file.
+    filename = function() {
+      paste0("footnotes_",input$mdataSource,"_",input$dataType,".csv")
+    },
+    # filename = function() {
+    #   paste0(input$mdataSource,"_",input$dataType,".zip")
+    # },
+    # This function should write data to a file given to it by
+    # the argument 'file'.
+    content = function(file) {
+      
+      # Write to a file specified by the 'file' argument
+      #write.table(srcContent[[input$mdataSource]][["molPharmData"]][[input$dataType]], file, sep = "\t",
+      #            col.names = NA)      
+      
+      # myname=paste0(input$mdataSource,"_",input$dataType,".txt")
+      # write.table(srcContent[[input$mdataSource]][["molPharmData"]][[input$dataType]], myname, sep = "\t",
+      #             col.names = NA)
+      configSelect <- metaConfig[[input$mdataSource]][["packages"]][[1]][["MetaData"]]
+      jsonFrame <- as.data.frame(configSelect)
+       
+      colnames(jsonFrame) <- c("DataType", "Description", "Units", 
+                                "Platform/Assay", "PubMed Ref. ID")
+      mydata=t(jsonFrame[which(jsonFrame$DataType==input$dataType),])
+      colnames(mydata)=paste("footnotes for data source:",input$mdataSource)
+       write.csv(mydata,file)
+       #write.table(t(jsonFrame[which(jsonFrame$DataType==input$dataType),]),file,sep="\t",col.names=F)
+       # zip(zipfile=file, files=c(myname,"footnotes.txt"))
+    }
+  )
+  
+  ### Download Synonym table
+  output$downloadSyn <- downloadHandler(
+    
+    # This function returns a string which tells the client
+    # browser what name to use when saving the file.
+    filename = function() {
+      paste0("Table_","Drugs_Synonyms_cdb",".txt")
+    },
+    
+     content = function(file) {
+      
+      write.table(findDrugIDs("*"), file, sep = "\t", row.names = F,quote=F)  
+      
+     }
+  )
+  ##
+  output$downloadDataComp <- downloadHandler(
+    
+    # This function returns a string which tells the client
+    # browser what name to use when saving the file.
+    filename = function() {
+      if (input$patternComparisonSeed == "xPattern"){
+        
+        pcDataset <- input$xDataset
+        pcType <- input$xPrefix
+        pcId <- input$xId
+      } 
+      else{
+        
+        pcDataset <- input$yDataset
+        pcType <- input$yPrefix
+        pcId <- input$yId
+      
+      }
+        
+      paste0("Pattern_Comp_all_cdb_",input$patternComparisonSeed,"_",pcDataset,"_",pcType,"_",pcId,"_",input$patternComparisonType,".txt")
+    },
+    
+    content = function(file) {
+      
+      write.table(PatternCompTable(), file, sep = "\t", row.names = F,quote=F)  
+      
+    }
+  )
+  
+  
+  ###
+  
   output$xPrefixUi <- renderUI({
   	srcContent <- srcContentReactive()
   	
@@ -711,6 +1120,7 @@ shinyServer(function(input, output, session) {
   	selectedPrefix <- globalReactiveValues$xPrefix
   	if ((is.null(selectedPrefix)) || (!(selectedPrefix %in% prefixChoices))){
   		selectedPrefix <- srcContent[[input$xDataset]][["defaultFeatureX"]]
+  		if (is.na(selectedPrefix)) selectedPrefix <- srcContent[[input$xDataset]][["defaultFeatureY"]]
   	}
   	opt = "";
   	for(y in 1:length(prefixChoices)){
@@ -725,7 +1135,7 @@ shinyServer(function(input, output, session) {
   	}
   	# selectInput("xPrefix", "x-Axis Type", choices = prefixChoices, selected = selectedPrefix)
   	HTML(
-  	  paste("<label class='control-label' for='xPrefix'>x-Axis Type</label>","<select id='xPrefix' style='word-wrap:break-word; width: 100%;'>",opt,"</select>")
+  	  paste("<label class='control-label' for='xPrefix'>x-Axis Data Type</label>","<select id='xPrefix' style='word-wrap:break-word; width: 100%;'>",opt,"</select>")
   	)
   })
 
@@ -749,7 +1159,7 @@ shinyServer(function(input, output, session) {
   	}
   	#selectInput("yPrefix", "y-Axis Type", choices = prefixChoices, selected = selectedPrefix)
   	HTML(
-  	  paste("<label class='control-label' for='yPrefix'>y-Axis Type</label>","<select id='yPrefix' style='word-wrap:break-word; width: 100%;'>",opt,"</select>")
+  	  paste("<label class='control-label' for='yPrefix'>y-Axis Data Type</label>","<select id='yPrefix' style='word-wrap:break-word; width: 100%;'>",opt,"</select>")
   	)
   })
   
@@ -820,10 +1230,10 @@ shinyServer(function(input, output, session) {
   	#}
   	
   	## new code
-  	if (input$tissueSelectionMode == "Include"){
+  	if (input$tissueSelectionMode == "To include"){
   	       choices=c("all", tissueTypes); mysel="all"
   	              
-  	} else{ # input$tissueSelectionMode == "Exclude"
+  	} else{ # input$tissueSelectionMode == "To exclude"
   	       choices=c("none", tissueTypes); mysel="none"
   	}
   	opt = "";
@@ -838,7 +1248,7 @@ shinyServer(function(input, output, session) {
   	  }
   	}
   	HTML(
-  	  paste("<label class='control-label' for='selectedTissues'>Which ones?</label>","<select id='selectedTissues' style='word-wrap:break-word; width: 100%;' multiple>",opt,"</select>")
+  	  paste("<label class='control-label' for='selectedTissues'>Select Tissue/s of Origin</label>","<select id='selectedTissues' style='word-wrap:break-word; width: 100%;' multiple>",opt,"</select>")
   	)
   	
   	## 
@@ -857,7 +1267,7 @@ shinyServer(function(input, output, session) {
   	    opt =  paste0(opt,"<option style='white-space: pre-wrap'>",tissueChoices[y],"</option>;");
   	}
   	HTML(
-  	  paste("<label class='control-label' for='showColorTissues'>Tissues to Color</label>","<select id='showColorTissues' style='word-wrap:break-word; width: 100%;' multiple>",opt,"</select>")
+  	  paste("<label class='control-label' for='showColorTissues'>Select Tissues to Color</label>","<select id='showColorTissues' style='word-wrap:break-word; width: 100%;' multiple>",opt,"</select>")
   	)
   	# selectInput("showColorTissues", "Tissues to Color",choices = tissueChoices, multiple = TRUE)
 	})
@@ -878,7 +1288,7 @@ shinyServer(function(input, output, session) {
 	
   #-----[NavBar Tab Server Code]---------------------------------------------------------
   rm <- callModule(regressionModels, "rm", srcContentReactive = srcContentReactive,
-  								 appConfig = appConfig)
+  								 appConfig = appConfig, oncolor=oncolor)
 
 })
 #-----[end of shinyServer()]-----------------------------------------------------------------------
