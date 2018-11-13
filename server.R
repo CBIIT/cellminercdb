@@ -295,14 +295,22 @@ shinyServer(function(input, output, session) {
 	      results <- results[, c("ids", "NAME", "COR", "PVAL")]
 	      colnames(results) <- c("ID", "Name", "Correlation", "P-Value")
 	    }
+	    DataType <- getMolDataType(results$ID)
+	    DrugID <- removeMolDataType(results$ID)
+	    results$ID <- NULL
 	    results$FDR=p.adjust(results[,"P-Value"],method="BH",nrow(results))
+	    results=cbind(DataType,DrugID,results)
+	    colnames(results)[1:2]=c("Data Type", "Drug ID")
 	    
 	  } else {
 	    molPharmData <- srcContent[[pcDataset]][["molPharmData"]]
 	    molData <- molPharmData[setdiff(names(molPharmData), c("act","copA","mutA","metA","expA","xaiA","proA","mirA","mdaA","swaA","xsqA"))]
 	    shiny::validate(need(length(molData)>0, "No molecular data available for this cell line set"))
 	    ##if (length(molData)==0) stop("No molecular data available for this cell line set")
-	    molData <- lapply(molData, function(X) X[, selectedLines])
+	    ## old: molData <- lapply(molData, function(X) X[, selectedLines])
+	    ## new selection in case a dataset has only one row
+	    ## one solution: molData <- lapply(molData, function(X) subset(X, select=selectedLines))
+	    molData <- lapply(molData, function(X) X[, selectedLines,drop=FALSE])
 	    results <- patternComparison(dat$data, molData)
 	    results$ids <- rownames(results)
 	    
@@ -324,11 +332,17 @@ shinyServer(function(input, output, session) {
 	    results$FDR=p.adjust(results[,"P-Value"],method="BH",nrow(results))
 	    
 	    if (require(geneSetPathwayAnalysis)){
-	      results$Annotation <- geneSetPathwayAnalysis::geneAnnotTab[results$Gene, "SHORT_ANNOT"]
+	      # old :results$Annotation <- geneSetPathwayAnalysis::geneAnnotTab[results$Gene, "SHORT_ANNOT"]
+	      # issue related to prefix subsetting ex: "age" >> gives "ager"
+	      #st=Sys.time()
+	      results$Annotation <- geneSetPathwayAnalysis::geneAnnotTab[match(results$Gene,rownames(geneSetPathwayAnalysis::geneAnnotTab)), "SHORT_ANNOT"]
+	      #et=Sys.time()
+	      #cat(et-st,"\n")
 	      results$Annotation[is.na(results$Annotation)] <- ""
 	    }
 	    
 	    results$ID <- NULL
+	    colnames(results)[2]="ID"
 	  }
 	  
 	  results[, "Correlation"] <- round(results[, "Correlation"], 3)
