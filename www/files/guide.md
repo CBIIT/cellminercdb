@@ -6,6 +6,7 @@
   - [Plot Data](#plot)
   - [View Data](#download)
   - [Compare Patterns](#compare)
+  - [Tissue Correlation](#tcorrel)
 -	[Regression Models](#regression)
   - [Heatmap](#heatmap)
   - [Data](#data)
@@ -39,12 +40,12 @@
 <h2 id="introduction">Introduction</h2>
 CellMinerCDB is an interactive web application that simplifies access and exploration of cancer cell line pharmacogenomic data across different sources (see Metadata section for more details). Navigation in the application is done using main menu tabs (see figure below). It includes 5 tabs: Univariate Analyses, Regression Models, Metadata, Search and Help. Univariate Analyses is selected by default when entering the site. Each option includes a side bar menu (to choose input) and a user interface output to display results. Analysis options are available on the top for both the Univariant Analysis and Regression model tabs (see sub-menu on figure). The sub-menu first option result is displayed by default (Figure 1).
 
-![Screenshot of CellMinerCDB Application](files/Slide01.jpg)
+![Screenshot of CellMinerCDB Application](files/Slide1.jpeg)
 
 **Figure 1**: main application interface
 
 <h2 id="univariate">Univariate Analyses</h2>
-Molecular and/or drug response patterns across sets of cell lines can be compared to look for possible association.  The univariate analysis panel includes 3 options: Plot data, Download Data and Compare Patterns. Almost all options have the same input data in the left side panel.
+Molecular and/or drug response patterns across sets of cell lines can be compared to look for possible association.  The univariate analysis panel includes 4 options: Plot data, Download Data, Compare Patterns and Tissue Correlation. Almost all options have the same input data in the left side panel.
 
 <h4 id="inputs">Input data</h4>
 
@@ -76,7 +77,7 @@ Some options are available to play with the plot image using icons on the top fr
 <tr> <td><img src="files/icon4.png" alt="icon"></td> <td> Allows the user to create horizontal and vertical line from either a cell line dot or the regression line, by hovering over them.</td></tr>
 </table>
 
-![Screenshot of CellMinerCDB Application](files/Slide02.jpg)
+![Screenshot of CellMinerCDB Application](files/Slide2.jpeg)
 
 **Figure 2**: An example scatterplot of SLFN11 gene expression (x-axis)  versus Topotecan drug activity (y-axis)/ both from the NCI60. Since Topotecan has 2 different drug ids in the NCI-60, the one with the lowest number of missing data is selected (here 609699). However, the user can type in their specific drug ID of interest. The Pearson correlation value and p value appear at the top of the plot. A linear fitting curve is included. This is an interactive plot and whenever the user changes any input value, the plot will be updated. Any point in the plot can be hovered over to provide additional information about cell line, tissue, Onco tree designation,  and x and y coordinate values.
 
@@ -84,7 +85,7 @@ Some options are available to play with the plot image using icons on the top fr
 <h3 id="download">View Data</h3>
 This option both displays the data selected from the **Plot Data** tab in tabular form, and provides a **Download selected x and y axis data as Tab-Delimited File** option. The user can change the input data in the left selection panel as described for Plot Data. The displayed table include the cell line, the x-axis value, the y-axis value, the tissue of origin and the 4 onco-tree levels. Within the header the selected features are prefixed by the data type abbreviation and post-fixed by the data source.
 
-![Screenshot of CellMinerCDB Application](files/Slide03.jpg)
+![Screenshot of CellMinerCDB Application](files/Slide3.jpeg)
 
 **Figure 3**: shows the selected values for SLFN11 gene expression (x-axis) and Topotecan (id 609699) drug activity (y-axis) from the NCI-60 across all common lines. The features are coded as expSLFN11_nci60 and act609699_nci60 where “exp” and “act” represent respectively prefixes for gene expression based on z-score and drug activity.
 
@@ -93,9 +94,16 @@ This option allows one to compute the correlation between the selected feature a
 
 Pearson’s correlations are provided, with reported p-values (not adjusted for multiple comparisons) in tabular form. This displays features are organized by level of correlation, and includes target pathway for genes and mechanism of action (MOA) for drugs (if available). 
 
-![Screenshot of CellMinerCDB Application](files/Slide04.jpg)
+![Screenshot of CellMinerCDB Application](files/Slide4.jpeg)
 
 **Figure 4**: shows correlation results for SLFN11 gene with all other molecular features for all NCI60 datasets sorted by correlation value with gene location and target pathways (annotation field).
+
+<h3 id="tcorrel">Tissue Correlation</h3>
+This option enables to display per tissue of origin (oncotype level 1) the number of cell lines with complete observations (non missing values), the correlation between the selected paired features and its p-value.
+
+![Screenshot of CellMinerCDB Application](files/Slide5.jpeg)
+
+**Figure 5**: shows the correlation between the selected values for SLFN11 gene expression (x-axis) and Topotecan (id 609699) drug activity (y-axis) from the NCI-60 across all common lines by tissue of origin. Note: The value "ALL" means all available common tissues between the 2 selected features.
 
 <h2 id="regression">Regression Models</h2>
 The ‘Regression Models’ option (or module) has multiple tabs including Heatmap, Data, Plot, Cross-Validation, Tehnical Details and Partial Correlation (described below), and allows construction and assessment of multivariate linear response prediction models. For instance, we can assess prediction of a drug activity based on some genes expression. To construct a regression model, you need to specify the input data in the left side panel.
@@ -124,48 +132,48 @@ The ‘Regression Models’ option (or module) has multiple tabs including Heatm
 Once all the above information is entered, a regression model is built and the results are shown in different ways such as the technical details of the model, observed vs. predictive responses plots or variables heatmap. Find below an explanation of different output for the regression model module.
 
 <h3 id="heatmap">Heatmap</h3>
-This option provides the observed response and predictor variables across all source cell lines as an interactive heatmap. The user can restrict the number of cell lines to those that have the highest or lowest response values by selecting **Number of High/Low Response Lines to Display** 
+This option provides the observed response and predictor variables across all source cell lines as an interactive heatmap. The user can restrict the number of cell lines to those that have the highest or lowest response values by selecting **Number of High/Low Response Lines to Display**. The user can download the heatmap related data by clicking on **Download Heatmap Data**.
 
-![Screenshot of CellMinerCDB Application](files/Slide05.jpg)
+![Screenshot of CellMinerCDB Application](files/Slide6.jpeg)
 
-**Figure 5**: An example heatmap where we selected topotecan as a response variable and SLFLN11 and BPTF gene expression as predictor variables. In this example, we chose to display only 40 cell lines that have the most 20 highest and 20 lowest values for topotecan activity.
+**Figure 6**: An example heatmap where we selected topotecan as a response variable and SLFLN11 and BPTF gene expression as predictor variables. In this example, we chose to display only 40 cell lines that have the most 20 highest and 20 lowest values for topotecan activity.
 
 In case, the Lasso algorithm is selected	more predicted variables are shown based on model result as shown below (STK17B and ABCD3 new genes added)
 
 
-![Screenshot of CellMinerCDB Application](files/Slide06.jpg)
+![Screenshot of CellMinerCDB Application](files/Slide7.jpeg)
 
-**Figure 6**: same example as previous figure with the lasso algorithm
+**Figure 7**: same example as previous figure with the lasso algorithm
 
 <h3 id="data">Data</h3>
 This option shows the detailed data for the model variables for each cell line. Both the 10-fold cross validation (CV) as well as the predicted responses are given. The data is displayed as a table with filtering options for each column. 
 
 
-![Screenshot of CellMinerCDB Application](files/Slide07.jpg)
+![Screenshot of CellMinerCDB Application](files/Slide8.jpeg)
 
-**Figure 7**: data related to the simple linear regression model presented in the previous section.
+**Figure 8**: data related to the simple linear regression model presented in the previous section.
 
 <h3 id="plotpred">Plot</h3>
 This option enables one to plot and compare the observed response values (y-axis) versus the predicted response values (x-axis). The predicted response values are derived from a linear regression model fit to the full data set.
 
-![Screenshot of CellMinerCDB Application](files/Slide08.jpg)
+![Screenshot of CellMinerCDB Application](files/Slide9.jpeg)
 
-**Figure 8**: plot comparing Topotecan observed vs. predicted activity with high correlation value of 0.84
+**Figure 9**: plot comparing Topotecan observed vs. predicted activity with high correlation value of 0.84
 
 <h3 id="cross">Cross-Validation</h3>
 This option enables to plot the observed response values (y-axis) versus the 10-fold cross-validation predicted response values (x-axis). With this approach, the predicted response values are obtained (over 10 iterations) by successively holding out 10% of the cell lines and predicting their response using a linear regression model fit to the remaining 90% of the data. Cross-validation is widely used in statistics to assess model generalization to independent data – with the caveat that the independent data must still share the same essential structure (i.e., probability distribution) as the training data. It can also indicate possible overfitting of the training data, such as when the observed versus full data set model-predicted correlation (shown in ‘Plot’) is substantially better than the observed versus cross-validation predicted correlation (shown in ‘Cross-Validation’).
 
 
-![Screenshot of CellMinerCDB Application](files/Slide09.jpg)
+![Screenshot of CellMinerCDB Application](files/Slide10.jpeg)
 
-**Figure 9**: plot comparing Topotecan observed vs. cross-validation predicted activity with still high correlation value of 0.82
+**Figure 10**: plot comparing Topotecan observed vs. cross-validation predicted activity with still high correlation value of 0.82
 
 <h3 id="details">Technical Details</h3>
 This option enables the user to view the R statistical and other technical details related to the predicted response model. To save, these results may be copied and pasted into the document or spreadsheet of your choice. 
 
-![Screenshot of CellMinerCDB Application](files/Slide10.jpg)
+![Screenshot of CellMinerCDB Application](files/Slide11.jpeg)
 
-**Figure 10**: example of regular regression model fitting results
+**Figure 11**: example of regular regression model fitting results
 
 <h3 id="partialcorr">Partial correlations</h3>
 
@@ -177,18 +185,16 @@ In order to run a partial correlation analysis, the user should first construct 
   -	optionally, specify the **Minimum Range** for the first listed data type (step 8 in figure below)
   - And finally click on button **run** (step 9 in figure below).
   
-![Screenshot of CellMinerCDB Application](files/Slide11.jpg)
+![Screenshot of CellMinerCDB Application](files/Slide12.jpeg)
 
-**Figure 11**: An example of  partial correlation results for selected gene expression data using all gene sets.
+**Figure 12**: An example of  partial correlation results for selected gene expression data using all gene sets.
 
 <h2 id="metadata">Metadata</h2>
-This option enumerates for each cell line set, the available data types that could be queried within the app providing the data type abbreviation or prefix, description, feature value unit (z-score, intensity, probability …), platform or experiment and related publication reference (pubmed). The user should:
-  - specify the **Cell Line Set** or data source 
-  - **Select Data Type to Download** (optional) and then click on **Download Data type** and/or **Download Data Footnotes** to download any data or footnotes for the selected cell line set.
+This option enumerates for each cell line set, the available data types that could be queried within the app providing the data type abbreviation or prefix, description, feature value unit (z-score, intensity, probability …), platform or experiment and related publication reference (pubmed). First the user should specify the **Cell Line Set** or data source to view all available associated data types. Then he can download data via: **Select Data Type to Download** and then click on **Download Data type** and/or **Download Data Footnotes** to download any data or footnotes for the selected cell line set. Finally the user has the option to **Download drug synonyms table with matching IDs for all cell line sets** by clicking on **Download table**.
 
-![Screenshot of CellMinerCDB Application](files/Slide12.jpg)
+![Screenshot of CellMinerCDB Application](files/Slide13.jpeg)
 
-**Figure 12**: shows all data types for NCI60
+**Figure 13**: shows all data types for NCI60
 
 <h2 id="search">Search IDs</h2>
 This page lists the identifiers (ID) available in the selected data source for use in the univariate analysis or regression models. The user chooses:
@@ -200,17 +206,17 @@ This enables to search all related ID for each combination. For the molecular da
 <h3 id="drugid">Drug IDs</h3>
 For the NCI-60 and NCI/DTP SCLC, the drug identifiers (ID) are NSC's or names. For the CCLE, GTRP, and CTRP, the drug identifiers are the Drug names.
 
-![Screenshot of CellMinerCDB Application](files/Slide13.jpg)
+![Screenshot of CellMinerCDB Application](files/Slide14.jpeg)
 
-**Figure 13**: Example of a search: if looking for a drug ID in the NCI-60 select "NCI-60" as the cell line source and select "Drug Activity" as the data type. You can type in search box of column "Drug name" or "MOA".
+**Figure 14**: Example of a search: if looking for a drug ID in the NCI-60 select "NCI-60" as the cell line source and select "Drug Activity" as the data type. You can type in search box of column "Drug name" or "MOA".
 <br>
 <h3 id="geneid">Gene IDs</h3>
 For all data sources, the gene ID is the gene name (Hugo name)
 
 
-![Screenshot of CellMinerCDB Application](files/Slide14.jpg)
+![Screenshot of CellMinerCDB Application](files/Slide15.jpeg)
 
-**Figure 14**: Example of a search: if looking for a gene ID in the NCI-60 select "NCI-60" as the cell line source and select "gene expression" as the data type. You can type in search box of column "gene name" or "entrez gene id" or "Chromosme"...
+**Figure 15**: Example of a search: if looking for a gene ID in the NCI-60 select "NCI-60" as the cell line source and select "gene expression" as the data type. You can type in search box of column "gene name" or "entrez gene id" or "Chromosome"...
 
 <h2 id="navigation">Navigation guide</h2>
 <h3 id="multiple">Multiple selection</h3>
