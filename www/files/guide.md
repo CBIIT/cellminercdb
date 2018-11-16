@@ -42,7 +42,7 @@ CellMinerCDB is an interactive web application that simplifies access and explor
 
 ![Screenshot of CellMinerCDB Application](files/Slide1.jpeg)
 
-**Figure 1**: main application interface
+**Figure 1**: Main application interface
 
 <h2 id="univariate">Univariate Analyses</h2>
 Molecular and/or drug response patterns across sets of cell lines can be compared to look for possible association.  The univariate analysis panel includes 4 options: Plot data, Download Data, Compare Patterns and Tissue Correlation. Almost all options have the same input data in the left side panel.
@@ -87,7 +87,7 @@ This option both displays the data selected from the **Plot Data** tab in tabula
 
 ![Screenshot of CellMinerCDB Application](files/Slide3.jpeg)
 
-**Figure 3**: shows the selected values for SLFN11 gene expression (x-axis) and Topotecan (id 609699) drug activity (y-axis) from the NCI-60 across all common lines. The features are coded as expSLFN11_nci60 and act609699_nci60 where “exp” and “act” represent respectively prefixes for gene expression based on z-score and drug activity.
+**Figure 3**: Shows the selected values for SLFN11 gene expression (x-axis) and Topotecan (id 609699) drug activity (y-axis) from the NCI-60 across all common lines. The features are coded as expSLFN11_nci60 and act609699_nci60 where “exp” and “act” represent respectively prefixes for gene expression based on z-score and drug activity.
 
 <h3 id="compare">Compare Patterns</h3>
 This option allows one to compute the correlation between the selected feature as defined from the specified **Cell Line Set, Data Type**, and **Identifier** from either the x or y-axis selections, and either all drug or all molecular data from the same source. 
@@ -96,14 +96,14 @@ Pearson’s correlations are provided, with reported p-values (not adjusted for 
 
 ![Screenshot of CellMinerCDB Application](files/Slide4.jpeg)
 
-**Figure 4**: shows correlation results for SLFN11 gene with all other molecular features for all NCI60 datasets sorted by correlation value with gene location and target pathways (annotation field).
+**Figure 4**: Shows correlation results for SLFN11 gene with all other molecular features for all NCI60 datasets sorted by correlation value with gene location and target pathways (annotation field).
 
 <h3 id="tcorrel">Tissue Correlation</h3>
 This option enables to display per tissue of origin (oncotype level 1) the number of cell lines with complete observations (non missing values), the correlation between the selected paired features and its p-value.
 
 ![Screenshot of CellMinerCDB Application](files/Slide5.jpeg)
 
-**Figure 5**: shows the correlation between the selected values for SLFN11 gene expression (x-axis) and Topotecan (id 609699) drug activity (y-axis) from the NCI-60 across all common lines by tissue of origin. Note: The value "ALL" means all available common tissues between the 2 selected features.
+**Figure 5**: Shows the correlation between the selected values for SLFN11 gene expression (x-axis) and Topotecan (id 609699) drug activity (y-axis) from the NCI-60 across all common lines by tissue of origin. Note: The value "ALL" means all available common tissues between the 2 selected features.
 
 <h2 id="regression">Regression Models</h2>
 The ‘Regression Models’ option (or module) has multiple tabs including Heatmap, Data, Plot, Cross-Validation, Tehnical Details and Partial Correlation (described below), and allows construction and assessment of multivariate linear response prediction models. For instance, we can assess prediction of a drug activity based on some genes expression. To construct a regression model, you need to specify the input data in the left side panel.
@@ -143,7 +143,7 @@ In case, the Lasso algorithm is selected	more predicted variables are shown base
 
 ![Screenshot of CellMinerCDB Application](files/Slide7.jpeg)
 
-**Figure 7**: same example as previous figure with the lasso algorithm
+**Figure 7**: Same example as previous figure with the lasso algorithm
 
 <h3 id="data">Data</h3>
 This option shows the detailed data for the model variables for each cell line. Both the 10-fold cross validation (CV) as well as the predicted responses are given. The data is displayed as a table with filtering options for each column. 
@@ -151,14 +151,14 @@ This option shows the detailed data for the model variables for each cell line. 
 
 ![Screenshot of CellMinerCDB Application](files/Slide8.jpeg)
 
-**Figure 8**: data related to the simple linear regression model presented in the previous section.
+**Figure 8**: Data related to the simple linear regression model presented in the previous section.
 
 <h3 id="plotpred">Plot</h3>
 This option enables one to plot and compare the observed response values (y-axis) versus the predicted response values (x-axis). The predicted response values are derived from a linear regression model fit to the full data set.
 
 ![Screenshot of CellMinerCDB Application](files/Slide9.jpeg)
 
-**Figure 9**: plot comparing Topotecan observed vs. predicted activity with high correlation value of 0.84
+**Figure 9**: Plot comparing Topotecan observed vs. predicted activity with high correlation value of 0.84
 
 <h3 id="cross">Cross-Validation</h3>
 This option enables to plot the observed response values (y-axis) versus the 10-fold cross-validation predicted response values (x-axis). With this approach, the predicted response values are obtained (over 10 iterations) by successively holding out 10% of the cell lines and predicting their response using a linear regression model fit to the remaining 90% of the data. Cross-validation is widely used in statistics to assess model generalization to independent data – with the caveat that the independent data must still share the same essential structure (i.e., probability distribution) as the training data. It can also indicate possible overfitting of the training data, such as when the observed versus full data set model-predicted correlation (shown in ‘Plot’) is substantially better than the observed versus cross-validation predicted correlation (shown in ‘Cross-Validation’).
@@ -166,14 +166,14 @@ This option enables to plot the observed response values (y-axis) versus the 10-
 
 ![Screenshot of CellMinerCDB Application](files/Slide10.jpeg)
 
-**Figure 10**: plot comparing Topotecan observed vs. cross-validation predicted activity with still high correlation value of 0.82
+**Figure 10**: Plot comparing Topotecan observed vs. cross-validation predicted activity with still high correlation value of 0.82
 
 <h3 id="details">Technical Details</h3>
 This option enables the user to view the R statistical and other technical details related to the predicted response model. To save, these results may be copied and pasted into the document or spreadsheet of your choice. 
 
 ![Screenshot of CellMinerCDB Application](files/Slide11.jpeg)
 
-**Figure 11**: example of regular regression model fitting results
+**Figure 11**: Example of regular regression model fitting results
 
 <h3 id="partialcorr">Partial correlations</h3>
 
@@ -194,7 +194,7 @@ This option enumerates for each cell line set, the available data types that cou
 
 ![Screenshot of CellMinerCDB Application](files/Slide13.jpeg)
 
-**Figure 13**: shows all data types for NCI60
+**Figure 13**: Shows all data types for NCI60
 
 <h2 id="search">Search IDs</h2>
 This page lists the identifiers (ID) available in the selected data source for use in the univariate analysis or regression models. The user chooses:

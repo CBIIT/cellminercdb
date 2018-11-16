@@ -200,6 +200,11 @@
             "eSetListName":"met",
             "featurePrefix":"met",
             "displayName":"met: DNA Methylation"
+          },
+          {
+            "eSetListName":"mda",
+            "featurePrefix":"mda",
+            "displayName":"mda: Miscellaneous phenotypic data"
           }
         ],
         "DrugData":[

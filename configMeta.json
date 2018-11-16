@@ -252,6 +252,13 @@
         		"units":"negative log10[GI50(molar)]",
         		"platform":"sulforhodamine B total protein cytotoxicity assay, 48hrs post-treatment",
         		"ref_pmid":"27247353"
+        	},
+        	{
+        		"dataType":"mda",
+        		"description":"cell line metadata (phenotypic measures)",
+        		"units":"measure-specific",
+        		"platform":"measure-specific",
+        		"ref_pmid":"na"
         	}
        	]
       }
