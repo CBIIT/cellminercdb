@@ -298,14 +298,13 @@ The CellMinerCDB application is developed and maintained using R and Shiny by:
 * Nikolaus Schultz
 
 <h2 id="references">References</h2>
-Shankavaram UT, Varma S, Kane D, Sunshine M, Chary KK, Reinhold WC, Pommier Y, Weinstein JN. [CellMiner: a relational database and query tool for the NCI-60 cancer cell lines. ](https://www.ncbi.nlm.nih.gov/pubmed/19549304) BMC Genomics. 2009 Jun 23;10:277. doi: 10.1186/1471-2164-10-277.
+Shankavaram UT, Varma S, Kane D, Sunshine M, Chary KK, Reinhold WC, Pommier Y, Weinstein JN. <a href="https://www.ncbi.nlm.nih.gov/pubmed/19549304" target="_blank">CellMiner: a relational database and query tool for the NCI-60 cancer cell lines.</a> BMC Genomics. 2009 Jun 23;10:277. doi: 10.1186/1471-2164-10-277.
 
-Reinhold WC, Sunshine M, Liu H, Varma S, Kohn KW, Morris J, Doroshow J, Pommier Y.
-[CellMiner: a web-based suite of genomic and pharmacologic tools to explore transcript and drug patterns in the NCI-60 cell line set. ](https://www.ncbi.nlm.nih.gov/pubmed/22802077) Cancer Res. 2012 Jul 15;72(14):3499-511. doi: 10.1158/0008-5472.CAN-12-1370.
+Reinhold WC, Sunshine M, Liu H, Varma S, Kohn KW, Morris J, Doroshow J, Pommier Y. <a href="https://www.ncbi.nlm.nih.gov/pubmed/22802077" target="_blank">CellMiner: a web-based suite of genomic and pharmacologic tools to explore transcript and drug patterns in the NCI-60 cell line set.</a> Cancer Res. 2012 Jul 15;72(14):3499-511. doi: 10.1158/0008-5472.CAN-12-1370.
 
-Reinhold WC, Sunshine M, Varma S, Doroshow JH, Pommier Y. [Using CellMiner 1.6 for Systems Pharmacology and Genomic Analysis of the NCI-60. ](https://www.ncbi.nlm.nih.gov/pubmed/26048278) Clin Cancer Res. 2015 Sep 1;21(17):3841-52. doi: 10.1158/1078-0432.CCR-15-0335. Epub 2015 Jun 5.
+Reinhold WC, Sunshine M, Varma S, Doroshow JH, Pommier Y. <a href="https://www.ncbi.nlm.nih.gov/pubmed/26048278" target="_blank">Using CellMiner 1.6 for Systems Pharmacology and Genomic Analysis of the NCI-60.</a> Clin Cancer Res. 2015 Sep 1;21(17):3841-52. doi: 10.1158/1078-0432.CCR-15-0335. Epub 2015 Jun 5.
 
-Luna A, Rajapakse VN, Sousa FG, Gao J, Schultz N, Varma S, Reinhold W, Sander C, Pommier Y. [rcellminer: exploring molecular profiles and drug response of the NCI-60 cell lines in R.](https://www.ncbi.nlm.nih.gov/pubmed/26635141) Bioinformatics. 2015 Dec 3. pii: btv701.
+Luna A, Rajapakse VN, Sousa FG, Gao J, Schultz N, Varma S, Reinhold W, Sander C, Pommier Y. <a href="https://www.ncbi.nlm.nih.gov/pubmed/26635141" target="_blank">rcellminer: exploring molecular profiles and drug response of the NCI-60 cell lines in R.</a> Bioinformatics. 2015 Dec 3. pii: btv701.
 
 <h2 id="others">Related links</h2>
 - <a href="https://cellmodelpassports.sanger.ac.uk/" target="_blank">Sanger Cell Model Passports</a>
