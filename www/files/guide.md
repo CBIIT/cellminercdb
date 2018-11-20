@@ -34,6 +34,7 @@
 	- [Biostatistics and Computational Biology, Dana-Farber Cancer Institute, Harvard Medical School](#biostatistics-and-computational-biology-dana-farber-cancer-institute-harvard-medical-school)
 	- [MSKCC Computational Biology](#mskcc-computational-biology)
 - [References](#references)
+- [Related links](#others)
 
 <!-- /TOC -->
 
@@ -254,20 +255,20 @@ Please send comments and feedback to
 
 <h2 id="data-sources">Data Sources</h2>
 CellMinerCDB integrates data from the following sources, which provide additional data and specialized analyses.
-* [CellMiner NCI-60](https://discover.nci.nih.gov/cellminer/)
-* [Sanger/Massachusetts General Hospital Genomics of Drug Sensitivity in Cancer (GDSC)](http://www.cancerrxgene.org/)
-* [Broad/Novartis Cancer Cell Line Encyclopedia (CCLE)](https://portals.broadinstitute.org/ccle)
-* [Broad Cancer Therapeutics Response Portal (CTRP)](https://portals.broadinstitute.org/ctrp/)
-* [NCI/DTP Small Cell Lung Cancer Project (SCLC)](https://sclccelllines.cancer.gov/sclc/)
+* <a href="https://discover.nci.nih.gov/cellminer/" target="_blank">CellMiner NCI-60</a>
+* <a href="http://www.cancerrxgene.org/" target="_blank">Sanger/Massachusetts General Hospital Genomics of Drug Sensitivity in Cancer (GDSC)</a>
+* <a href="https://portals.broadinstitute.org/ccle" target="_blank">Broad/Novartis Cancer Cell Line Encyclopedia (CCLE)</a>
+* <a href="https://portals.broadinstitute.org/ctrp/" target="_blank">Broad Cancer Therapeutics Response Portal (CTRP)</a>
+* <a href="https://sclccelllines.cancer.gov/sclc/" target="_blank">NCI/DTP Small Cell Lung Cancer Project (SCLC)</a>
 
 
 <h2 id="about-the-data">About the Data</h2>
 For specific information about the data made available for particular sources, please refer to the 'Metadata' navbar tab.
 
 Drug mechanism of action details:
-* [NCI60](https://raw.githubusercontent.com/cannin/rcellminer/devel/inst/extdata/Drug_MOA_Key.txt)
-* [GDSC](http://www.cancerrxgene.org/translation/Drug)
-* [CTRP](https://portals.broadinstitute.org/ctrp/?page=#ctd2Compounds)
+* <a href="https://raw.githubusercontent.com/cannin/rcellminer/devel/inst/extdata/Drug_MOA_Key.txt" target="_blank">NCI60</a>
+* <a href="http://www.cancerrxgene.org/translation/Drug" target="_blank">GDSC</a>
+* <a href="https://portals.broadinstitute.org/ctrp/?page=#ctd2Compounds" target="_blank">CTRP</a>
 
 Gene sets used for annotation of analysis results or algorithm input filtering were curated by the
 NCI/DTB CellMiner team, based on surveys of the applicable research literature.
@@ -306,7 +307,6 @@ Reinhold WC, Sunshine M, Varma S, Doroshow JH, Pommier Y. [Using CellMiner 1.6 f
 
 Luna A, Rajapakse VN, Sousa FG, Gao J, Schultz N, Varma S, Reinhold W, Sander C, Pommier Y. [rcellminer: exploring molecular profiles and drug response of the NCI-60 cell lines in R.](https://www.ncbi.nlm.nih.gov/pubmed/26635141) Bioinformatics. 2015 Dec 3. pii: btv701.
 
-
-
-
+<h2 id="others">Related links</h2>
+- <a href="https://cellmodelpassports.sanger.ac.uk/" target="_blank">Sanger Cell Model Passports</a>
 
