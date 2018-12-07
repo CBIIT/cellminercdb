@@ -252,7 +252,9 @@ makePlotStatic <- function(xData, yData, showColor, showColorTissues, dataSource
 													 srcContent, xLimVals = NULL, yLimVals = NULL,oncolor) {
 	df <- getPlotData(xData, yData, showColor, showColorTissues, dataSource, srcContent)
 	# contains column color
-	df$tooltip <- paste0(
+	shiny::validate(need(nrow(df)>0, paste("ERROR:", " No common complete data found.")))
+	shiny::validate(need(nrow(df)>2, paste("ERROR:", " No display for less than 3 observations.")))
+		df$tooltip <- paste0(
 		"Cell: ", df$name, "\n",
 		"Tissue: ", df$PlotTissueType, "\n",
 		"OncoTree1: ", df$OncoTree1, "\n",

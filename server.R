@@ -279,6 +279,9 @@ shinyServer(function(input, output, session) {
 	  }
 	  selectedLines <- names(dat$data)
 	  
+	  shiny::validate(need(length(selectedLines)>0, paste("ERROR:", " No common complete data found.")))
+	  shiny::validate(need(length(selectedLines)>2, paste("ERROR:", " No display for less than 3 observations.")))
+	  
 	  if(input$patternComparisonType == "drug") {
 	    shiny::validate(need(srcContent[[pcDataset]][["molPharmData"]][["act"]], "No drug available for this cell line set"))
 	    #if (is.null(srcContent[[pcDataset]][["molPharmData"]][["act"]])) stop("No drug available for this cell line set")
@@ -528,6 +531,9 @@ shinyServer(function(input, output, session) {
   	dlDataTab <- getPlotData(xData = xData(), yData = yData(), showColor = input$showColor, 
   		showColorTissues = input$showColorTissues, dataSource = input$xDataset, 
   		srcContent = srcContentReactive())
+  
+  		shiny::validate(need(nrow(dlDataTab)>0, paste("ERROR:", " No common complete data found.")))
+  
   	dlDataTabCols <- c(colnames(dlDataTab)[1:4], paste0("OncoTree", 1:4))
   	if ("EMT" %in% colnames(dlDataTab)) {
   		dlDataTabCols <- c(dlDataTabCols, "EMT")

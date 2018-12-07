@@ -264,6 +264,38 @@
       }
     }
   },
+  "sarcoma":{
+    "displayName":"NCI/DTP Sarcoma project",
+    "fullName": "NCI/DTP Sarcoma cell lines Project",
+    "url": "https://sarcoma.cancer.gov/sarcoma/",
+    "packages":{
+      "nciSarcomaData":{
+        "MetaData":[
+        	{
+        		"dataType":"exp",
+        		"description":"mRNA expression",
+        		"units":"microarray log2 intensity",
+        		"platform":"Affymetrix Exon array",
+        		"ref_pmid":"na"
+        	},
+        	{
+        		"dataType":"mir",
+        		"description":"microRNA",
+        		"units":"log2 normalized counts",
+        		"platform":"NanoString microRNA array",
+        		"ref_pmid":"na"
+        	},
+          {
+        		"dataType":"act",
+        		"description":"drug activity",
+        		"units":"negative log[IC50(molar)]",
+        		"platform":"na",
+        		"ref_pmid":"na"
+        	}
+       	]
+      }
+    }
+  },
   "almanac":{
     "displayName":"NCI-60/DTP Almanac",
     "fullName": "NCI/DTP FDA 105 paired Drug Project",
