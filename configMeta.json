@@ -276,21 +276,21 @@
         		"description":"mRNA expression",
         		"units":"microarray log2 intensity",
         		"platform":"Affymetrix Exon array",
-        		"ref_pmid":"na"
+        		"ref_pmid":"26351324"
         	},
         	{
         		"dataType":"mir",
         		"description":"microRNA",
         		"units":"log2 normalized counts",
         		"platform":"NanoString microRNA array",
-        		"ref_pmid":"na"
+        		"ref_pmid":"26351324"
         	},
           {
         		"dataType":"act",
         		"description":"drug activity",
         		"units":"negative log[IC50(molar)]",
         		"platform":"na",
-        		"ref_pmid":"na"
+        		"ref_pmid":"26351324"
         	}
        	]
       }
