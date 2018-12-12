@@ -23,3 +23,13 @@ isGeneProtDataType <- function(prefix){
 		return(FALSE)
 	}
 }
+
+isGeneID <- function(prefix){
+  # TO DO: Make configurable.
+  geneProtDataTypePrefixes <- c("cop", "mut", "met", "exp", "xai", "xsq")
+  if (prefix %in% geneProtDataTypePrefixes){
+    return(TRUE)
+  } else{
+    return(FALSE)
+  }
+}

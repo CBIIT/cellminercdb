@@ -28,6 +28,20 @@ getMatchedIds <- function(prefix, id, dataSource, srcContent){
 			  matchedIds <- vnames[grep(toupper(id),toupper(vnames[,2])),1]
 			}
 		}
+	  #
+	  if (require(rcellminerUtilsCDB) && isGeneID(prefix)){
+	    synonyms <- trimws(rcellminerUtilsCDB::getGeneSynonyms(id))
+	    # cat(synonyms,"\n")
+	    if (!is.null(synonyms) & length(synonyms)>1) {
+	       matchedIndex <- which(!is.na(match(synonyms, idSet)))
+         # cat(synonyms,":",matchedIndex,"\n")
+	       if (length(matchedIndex)==1) {
+
+	           matchedIds <- synonyms[matchedIndex]
+	       }
+	    }
+	  }
+	  #
 	}
 	
 	return(matchedIds)
@@ -43,7 +57,7 @@ validateEntry <- function(prefix, id, dataSource, srcContent) {
 	return(FALSE)
 }
 
-getFeatureData <- function(prefix, id, dataSource, srcContent) {
+getFeatureData <- function(prefix, id, dataSource, srcContent, originalId) {
 	molPharmData <- srcContent[[dataSource]][["molPharmData"]]
 	
 	name <- paste0(prefix, id)
@@ -54,7 +68,13 @@ getFeatureData <- function(prefix, id, dataSource, srcContent) {
 	
 	# e.g., expTOP1 with dataSource=nci60 becomes TOP1 (exp, nci60)
 	labs=metaConfig[[dataSource]][["displayName"]]
+	if (toupper(id)==toupper(originalId))  {
 	results$plotLabel <- paste0(id, " (", prefix, ", ", labs, ")")
+	}
+	else {
+	  results$plotLabel <- paste0(originalId,": ",id, " (", prefix, ", ", labs, ")")
+	}
+	  
 	
 	# e.g., expTOP1 with dataSource=nci60 becomes expTOP1_nci60; needed for 
 	# getPlotData() results (data.frame) with data for same feature from different sources.

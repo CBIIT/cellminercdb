@@ -391,7 +391,9 @@ shinyServer(function(input, output, session) {
 		if (!is.character(xPrefix)){
 			xPrefix <- srcContentReactive()[[input$xDataset]][["defaultFeatureX"]]
 		}
-		
+		#
+		originalId <- trimws(input$xId)
+		# 
 		xId <- getMatchedIds(xPrefix, trimws(input$xId), input$xDataset, srcContent = srcContentReactive())
 		
 		if (length(xId) == 0){
@@ -404,7 +406,8 @@ shinyServer(function(input, output, session) {
 				showNotification(warningMsg, duration = 10, type = "message")
 				xId <- xId[1]
 			}
-			xData <- getFeatureData(xPrefix, xId, input$xDataset, srcContent = srcContentReactive())
+			# xData <- getFeatureData(xPrefix, xId, input$xDataset, srcContent = srcContentReactive())
+			xData <- getFeatureData(xPrefix, xId, input$xDataset, srcContent = srcContentReactive(), originalId)
 			
 			matchedLinesTab <- matchedCellLinesTab()
 			# xData$data <- xData$data[matchedLinesTab[, "xDataset"]]
@@ -427,6 +430,9 @@ shinyServer(function(input, output, session) {
 		if (!is.character(yPrefix)){
 			yPrefix <- srcContentReactive()[[input$yDataset]][["defaultFeatureY"]]
 		}
+		#
+		originalId <- trimws(input$yId)
+		# 
 		
 		yId <- getMatchedIds(yPrefix, trimws(input$yId), input$yDataset, srcContent = srcContentReactive())
 		
@@ -440,7 +446,8 @@ shinyServer(function(input, output, session) {
 				showNotification(warningMsg, duration = 10, type = "message")
 				yId <- yId[1]
 			}
-			yData <- getFeatureData(yPrefix, yId, input$yDataset, srcContent = srcContentReactive())
+			# yData <- getFeatureData(yPrefix, yId, input$yDataset, srcContent = srcContentReactive())
+			yData <- getFeatureData(yPrefix, yId, input$yDataset, srcContent = srcContentReactive(), originalId)
 			
 			matchedLinesTab <- matchedCellLinesTab()
 			# yData$data <- yData$data[matchedLinesTab[, "yDataset"]]
