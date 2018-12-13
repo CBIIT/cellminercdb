@@ -233,7 +233,9 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 		shiny::validate(need(length(input$selectedTissues) > 0, "Please select tissue types."))
 		shiny::validate(need(length(input$predDataTypes) > 0,
 												 "Please select one or more predictor data types."))
-		
+##
+		originalId <- trimws(input$responseId)
+##
 		responseId <- getMatchedIds(input$responseDataType, trimws(input$responseId), 
 																input$dataset, srcContent = srcContentReactive())
 		if (length(responseId) == 0) {
@@ -246,8 +248,9 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 				showNotification(warningMsg, duration = 10, type = "message")
 				responseId <- responseId[1]
 			}
+## added original Id
 			yData <- getFeatureData(input$responseDataType, responseId, input$dataset, 
-															srcContent = srcContentReactive())
+															srcContent = srcContentReactive(),originalId)
 			yData$data <- na.exclude(yData$data)
 		}
 		
@@ -266,7 +269,8 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 				# retrieved.
 				id <- rcellminer::removeMolDataType(id) # e.g. "expSLFN11" --> "SLFN11"
 				if (validateEntry(idPrefix, id, input$dataset, srcContentReactive())){
-					xData <- getFeatureData(idPrefix, id, input$dataset, srcContentReactive())
+## add new parameter original id
+					xData <- getFeatureData(idPrefix, id, input$dataset, srcContentReactive(),id)
 					xData$data <- xData$data[names(yData$data)] # Match lines w/non-NA response data.
 					dataTab[, xData$uniqName] <- xData$data
 				} else {
@@ -280,7 +284,8 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 				# input$predDataTypes.
 				for (dataType in input$predDataTypes) {
 					if (validateEntry(dataType, id, input$dataset, srcContentReactive())) {
-						xData <- getFeatureData(dataType, id, input$dataset, srcContentReactive())
+## added new parameter
+						xData <- getFeatureData(dataType, id, input$dataset, srcContentReactive(),id)
 						xData$data <- xData$data[names(yData$data)] # Match lines w/non-NA response data.
 						dataTab[, xData$uniqName] <- xData$data
 					} else {
@@ -948,6 +953,7 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 		                     colors = colorRamp(colors = c("blue", "white", "red")),
 		                     xaxis_font_size = xAxisFontSize,
 		                     xaxis_height = 200, yaxis_width = 200)
+		## heatmaply(mtcars, scale_fill_gradient_fun = ggplot2::scale_fill_gradient2(low = "blue", high = "red",midpoint = 200),dendogram="none")
 		
 	})
 	##--- download heatmap data
