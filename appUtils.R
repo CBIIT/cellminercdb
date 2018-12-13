@@ -72,7 +72,8 @@ getFeatureData <- function(prefix, id, dataSource, srcContent, originalId) {
 	results$plotLabel <- paste0(id, " (", prefix, ", ", labs, ")")
 	}
 	else {
-	  results$plotLabel <- paste0(originalId,": ",id, " (", prefix, ", ", labs, ")")
+	  if (prefix!="act") results$plotLabel <- paste0(toupper(originalId),": ",id, " (", prefix, ", ", labs, ")") else results$plotLabel <- paste0(id, " (", prefix, ", ", labs, ")")
+	    
 	}
 	  
 	
