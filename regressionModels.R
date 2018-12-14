@@ -917,7 +917,8 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 	              
 	
 	#----[Show Predictors and Response in 'Heatmap' Tab]------------------------------------
-	output$heatmap <- renderD3heatmap({
+##	output$heatmap <- renderD3heatmap({
+	  output$heatmap <- renderPlotly({
 		rmAlgoResults <- algoResults()
 		if (is.null(rmAlgoResults$updatedInputData)){
 			dataTab <- inputData()
@@ -947,14 +948,28 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 		# 										 colors = colorRamp(colors = c("green", "black", "red")),
 		# 										 xaxis_font_size = xAxisFontSize,
 		# 										 xaxis_height = 200, yaxis_width = 200)
-		d3heatmap::d3heatmap(x = scaledDataMatrix,  # Used for color scaling.
-		                     cellnote = dataMatrix, # Used for tooltip values.
-		                     dendrogram = "none", 
-		                     colors = colorRamp(colors = c("blue", "white", "red")),
-		                     xaxis_font_size = xAxisFontSize,
-		                     xaxis_height = 200, yaxis_width = 200)
-		## heatmaply(mtcars, scale_fill_gradient_fun = ggplot2::scale_fill_gradient2(low = "blue", high = "red",midpoint = 200),dendogram="none")
 		
+		# d3heatmap::d3heatmap(x = scaledDataMatrix,  # Used for color scaling.
+		#                      cellnote = dataMatrix, # Used for tooltip values.
+		#                      dendrogram = "none", 
+		#                      colors = colorRamp(colors = c("blue", "white", "red")),
+		#                      xaxis_font_size = xAxisFontSize,
+		#                      xaxis_height = 200, yaxis_width = 200)
+		
+		#mid = (max(dataMatrix)-min(dataMatrix))/2
+		dataMatrix2=matrix(paste("original_value:",dataMatrix), nrow=nrow(dataMatrix),ncol=ncol(dataMatrix))
+		# heatmaply(x = scaledDataMatrix,cellnote = dataMatrix,
+		#   scale_fill_gradient_fun = ggplot2::scale_fill_gradient2(low = "blue", high = "red",midpoint = mid),
+		#   dendrogram="none",fontsize_col = xAxisFontSize,height = 200, width = 200)
+		g1 <-heatmaply::heatmaply(x = scaledDataMatrix,custom_hovertext = dataMatrix2, grid_gap = 0.5, cellnote_color="black", 
+		          colors= colorpanel(75,low="blue",mid="white",high="red"),fontsize_col = 10 ,fontsize_row = 14,
+		          dendrogram="none",label_names=c("row","column","scaled_value"))   %>% plotly::layout(margin=list(t = 10))
+		# g1 <- layout(g1, margin=list(t = 75))
+		g2 <- config(p = g1, collaborate=FALSE, cloud=FALSE, displaylogo=FALSE, displayModeBar=TRUE,
+		             modeBarButtonsToRemove=c("select2d", "sendDataToCloud", "pan2d", "resetScale2d",
+		                                      "hoverClosestCartesian", "hoverCompareCartesian",
+		                                      "lasso2d", "zoomIn2d", "zoomOut2d","autoScale2d","toggleSpikelines","zoom2d"))
+		g2
 	})
 	##--- download heatmap data
 	output$downloadHeat <- downloadHandler(
@@ -1159,7 +1174,9 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 																						min=1, max=maxNumHiLoResponseLines, 
 																						value=20, width = "50%"),
 																checkboxInput(ns("useHeatmapRowColorScale"), "Use Row Color Scale", FALSE),
-																d3heatmapOutput(ns("heatmap")),
+## 																## d3heatmapOutput(ns("heatmap")),
+                                plotlyOutput(ns("heatmap")),
+##    														withSpinner(plotlyOutput(ns("heatmap"))),	
 															  p("Select cell line or feature name to highlight heatmap columns or rows, respectively."),br(),
 																downloadButton(ns("downloadHeat"), "Download Heatmap Data")
 																)
