@@ -186,8 +186,67 @@
       }
     }
   },
-  "nciSclc":{
-    "displayName":"NCI/DTP SCLC",
+  "almanac":{
+    "displayName":"NCI-60/DTP Almanac",
+    "packages":{
+      "almanacData":{
+  
+        "DrugData":[
+          {
+            "featurePrefix":"act",
+            "displayName":"act: Drug Activity (comboscores)",
+            "drugAnnotIdCol":"NSC",
+            "drugAnnotNameCol":"NAME",
+            "drugAnnotMoaCol":"MOA"
+          }
+        ]
+      }
+    }
+  },
+  "mdaMills":{
+    "displayName":"Protein (RPPA) MDA",
+    "packages":{
+      "mdaMillsData":{
+        "MolData":[
+          {
+            "eSetListName":"pro",
+            "featurePrefix":"pro",
+            "displayName":"pro: Protein (RPPA)"
+          }
+        ]
+      }
+    }
+  },
+    "sarcoma":{
+    "displayName":"Sarcoma NCI/DTP",
+    "packages":{
+      "nciSarcomaData":{
+        "MolData":[
+          {
+            "eSetListName":"exp",
+            "featurePrefix":"exp",
+            "displayName":"exp: mRNA Expression (log2)"
+          },
+           {
+            "eSetListName":"mir",
+            "featurePrefix":"mir",
+            "displayName":"mir: MicroRNA"
+          }
+        ],
+        "DrugData":[
+          {
+            "featurePrefix":"act",
+            "displayName":"act: Drug Activity (-log10[IC50M])",
+            "drugAnnotIdCol":"NSC",
+            "drugAnnotNameCol":"NAME",
+            "drugAnnotMoaCol":"MOA"
+          }
+        ]
+      }
+    }
+  },
+    "nciSclc":{
+    "displayName":"SCLC NCI/DTP",
     "packages":{
       "nciSclcData":{
         "MolData":[
@@ -219,67 +278,8 @@
       }
     }
   },
-  "sarcoma":{
-    "displayName":"NCI/DTP Sarcoma project",
-    "packages":{
-      "nciSarcomaData":{
-        "MolData":[
-          {
-            "eSetListName":"exp",
-            "featurePrefix":"exp",
-            "displayName":"exp: mRNA Expression (log2)"
-          },
-           {
-            "eSetListName":"mir",
-            "featurePrefix":"mir",
-            "displayName":"mir: MicroRNA"
-          }
-        ],
-        "DrugData":[
-          {
-            "featurePrefix":"act",
-            "displayName":"act: Drug Activity (-log10[IC50M])",
-            "drugAnnotIdCol":"NSC",
-            "drugAnnotNameCol":"NAME",
-            "drugAnnotMoaCol":"MOA"
-          }
-        ]
-      }
-    }
-  },
-  "almanac":{
-    "displayName":"NCI-60/DTP Almanac",
-    "packages":{
-      "almanacData":{
-  
-        "DrugData":[
-          {
-            "featurePrefix":"act",
-            "displayName":"act: Drug Activity (comboscores)",
-            "drugAnnotIdCol":"NSC",
-            "drugAnnotNameCol":"NAME",
-            "drugAnnotMoaCol":"MOA"
-          }
-        ]
-      }
-    }
-  },
-  "mdaMills":{
-    "displayName":"MD.Anderson MCLP",
-    "packages":{
-      "mdaMillsData":{
-        "MolData":[
-          {
-            "eSetListName":"pro",
-            "featurePrefix":"pro",
-            "displayName":"pro: Protein (RPPA)"
-          }
-        ]
-      }
-    }
-  },
   "utsw":{
-    "displayName":"UT Southwestern",
+    "displayName":"SCLC UTSW",
     "packages":{
       "utswData":{
         "MolData":[

@@ -225,8 +225,76 @@
       }
     }
   },
+    "almanac":{
+    "displayName":"NCI-60/DTP Almanac",
+    "fullName": "NCI/DTP FDA 105 paired Drug Project",
+    "url": "https://dtp.cancer.gov/ncialmanac/initializePage.do",
+    "packages":{
+      "almanacData":{
+        "MetaData":[
+          {
+        		"dataType":"act",
+        		"description":"drug activity",
+        		"units":"Combo scores",
+        		"platform":"sulforhodamine B total protein cytotoxicity assay, 48hrs post-treatment",
+        		"ref_pmid":"28446463"
+        	}
+       	]
+      }
+    }
+  },
+    "mdaMills":{
+    "displayName":"Protein (RPPA) MDA",
+    "fullName": "MD Anderson Cell Lines Project",
+    "url": "http://tcpaportal.org/mclp/#/",
+    "packages":{
+      "mdaMillsData":{
+        "MetaData":[
+          {
+        		"dataType":"pro",
+        		"description":"protein expression (RPPA)",
+        		"units":"protein intensities",
+        		"platform":"reverse-phase protein array",
+        		"ref_pmid":"28196595"
+        	}
+       	]
+      }
+    }
+  },
+   "sarcoma":{
+    "displayName":"Sarcoma NCI/DTP",
+    "fullName": "NCI/DTP Sarcoma cell lines Project",
+    "url": "https://sarcoma.cancer.gov/sarcoma/",
+    "packages":{
+      "nciSarcomaData":{
+        "MetaData":[
+        	{
+        		"dataType":"exp",
+        		"description":"mRNA expression",
+        		"units":"microarray log2 intensity",
+        		"platform":"Affymetrix Exon array",
+        		"ref_pmid":"26351324"
+        	},
+        	{
+        		"dataType":"mir",
+        		"description":"microRNA",
+        		"units":"log2 normalized counts",
+        		"platform":"NanoString microRNA array",
+        		"ref_pmid":"26351324"
+        	},
+          {
+        		"dataType":"act",
+        		"description":"drug activity",
+        		"units":"negative log[IC50(molar)]",
+        		"platform":"na",
+        		"ref_pmid":"26351324"
+        	}
+       	]
+      }
+    }
+  },
   "nciSclc":{
-    "displayName":"NCI/DTP SCLC",
+    "displayName":"SCLC NCI/DTP",
     "fullName": "NCI/DTP Small Cell Lung Cancer Project",
     "url": "https://sclccelllines.cancer.gov/sclc/",
     "packages":{
@@ -264,76 +332,8 @@
       }
     }
   },
-  "sarcoma":{
-    "displayName":"NCI/DTP Sarcoma project",
-    "fullName": "NCI/DTP Sarcoma cell lines Project",
-    "url": "https://sarcoma.cancer.gov/sarcoma/",
-    "packages":{
-      "nciSarcomaData":{
-        "MetaData":[
-        	{
-        		"dataType":"exp",
-        		"description":"mRNA expression",
-        		"units":"microarray log2 intensity",
-        		"platform":"Affymetrix Exon array",
-        		"ref_pmid":"26351324"
-        	},
-        	{
-        		"dataType":"mir",
-        		"description":"microRNA",
-        		"units":"log2 normalized counts",
-        		"platform":"NanoString microRNA array",
-        		"ref_pmid":"26351324"
-        	},
-          {
-        		"dataType":"act",
-        		"description":"drug activity",
-        		"units":"negative log[IC50(molar)]",
-        		"platform":"na",
-        		"ref_pmid":"26351324"
-        	}
-       	]
-      }
-    }
-  },
-  "almanac":{
-    "displayName":"NCI-60/DTP Almanac",
-    "fullName": "NCI/DTP FDA 105 paired Drug Project",
-    "url": "https://dtp.cancer.gov/ncialmanac/initializePage.do",
-    "packages":{
-      "almanacData":{
-        "MetaData":[
-          {
-        		"dataType":"act",
-        		"description":"drug activity",
-        		"units":"Combo scores",
-        		"platform":"sulforhodamine B total protein cytotoxicity assay, 48hrs post-treatment",
-        		"ref_pmid":"28446463"
-        	}
-       	]
-      }
-    }
-  },
-  "mdaMills":{
-    "displayName":"MD.Anderson MCLP",
-    "fullName": "MD Anderson Cell Lines Project",
-    "url": "http://tcpaportal.org/mclp/#/",
-    "packages":{
-      "mdaMillsData":{
-        "MetaData":[
-          {
-        		"dataType":"pro",
-        		"description":"protein expression (RPPA)",
-        		"units":"protein intensities",
-        		"platform":"reverse-phase protein array",
-        		"ref_pmid":"28196595"
-        	}
-       	]
-      }
-    }
-  },
   "utsw":{
-    "displayName":"UT Southwestern",
+    "displayName":"SCLC UTSW",
     "fullName": "University of Texas Southwestern",
     "url": "https://www.utsouthwestern.edu/",
     "packages":{
