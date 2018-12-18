@@ -307,7 +307,7 @@ Reinhold WC, Sunshine M, Varma S, Doroshow JH, Pommier Y. <a href="https://www.n
 Luna A, Rajapakse VN, Sousa FG, Gao J, Schultz N, Varma S, Reinhold W, Sander C, Pommier Y. <a href="https://www.ncbi.nlm.nih.gov/pubmed/26635141" target="_blank">rcellminer: exploring molecular profiles and drug response of the NCI-60 cell lines in R.</a> Bioinformatics. 2015 Dec 3. pii: btv701.
 
 Rajapakse VN, Luna A, Yamada M, Loman L, Varma S, Sunshine M, Iorio F, Elloumi F, Aladjem MI, Thomas A, Sander C, Kohn KW, Benes CH, Garnett M, Reinhold WC, Pommier Y. <a href="https://www.cell.com/iscience/fulltext/S2589-0042(18)30219-0" target="_blank">CellMinerCDB for Integrative Cross-Database Genomics and Pharmacogenomics Analyses
-of Cancer Cell Line.</a> iScience, Cell press. 2018 Dec 12.
+of Cancer Cell Lines.</a> iScience, Cell press. 2018 Dec 12.
 
 <h2 id="others">Related links</h2>
 - <a href="https://cellmodelpassports.sanger.ac.uk/" target="_blank">Sanger Cell Model Passports</a>
