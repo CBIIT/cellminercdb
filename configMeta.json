@@ -314,6 +314,13 @@
         		"platform":"Illumina ...",
         		"ref_pmid":"na"
         	},
+        	 {
+        		"dataType":"cop",
+        		"description":"DNA copy number",
+        		"units":"average log2 probe intensity ratio for the cell line (gene-specific chromosomal segment) DNA relative to normal DNA",
+        		"platform":"Data generated from methylation data",
+        		"ref_pmid":""
+        	},
           {
         		"dataType":"act",
         		"description":"drug activity",

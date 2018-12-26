@@ -260,6 +260,11 @@
             "featurePrefix":"met",
             "displayName":"met: DNA Methylation"
           },
+           {
+            "eSetListName":"cop",
+            "featurePrefix":"cop",
+            "displayName":"cop: DNA Copy Number"
+          },
           {
             "eSetListName":"mda",
             "featurePrefix":"mda",
