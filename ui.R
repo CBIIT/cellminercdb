@@ -149,6 +149,7 @@ shinyUI(
 	        	)
 	        ),
         mainPanel(
+          div(style="font-size: 14px", align="center", "CellMinerCDB enables exploration and analysis of cancer cell line pharmacogenomic data across different sources. If publishing results based on this site, please cite: ", a("Rajapakse.VN, Luna.A, Yamada.M et al. iScience, Cell press. 2018 Dec 12.", href="https://www.cell.com/iscience/fulltext/S2589-0042(18)30219-0", target = "_blank", style="font-size: 14px;")),
         	uiOutput('tabsetPanel')
         )
     	 )
@@ -255,7 +256,7 @@ tags$div(style="font-size: 12px",
   tags$a("email us", href="mailto:Webadmin@discover.nci.nih.gov&subject=CellMinerCDB",style="font-size: 12px;"),
   tags$html(" with any problems, questions or feedback on the tool"),
   br(),br(),
-  tags$a("Notice and Disclaimer", href="files/disclaimer.html")
+  tags$a("Notice and Disclaimer", href="files/disclaimer.html", target = "_blank")
   
   
   #includeMarkdown("www/files/guide.md")
