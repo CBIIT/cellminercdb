@@ -133,7 +133,9 @@ The ‘Regression Models’ option (or module) has multiple tabs including Heatm
 Once all the above information is entered, a regression model is built and the results are shown in different ways such as the technical details of the model, observed vs. predictive responses plots or variables heatmap. Find below an explanation of different output for the regression model module.
 
 <h3 id="heatmap">Heatmap</h3>
-This option provides the observed response and predictor variables across all source cell lines as an interactive heatmap. The user can restrict the number of cell lines to those that have the highest or lowest response values by selecting **Number of High/Low Response Lines to Display**. The user can download the heatmap related data by clicking on **Download Heatmap Data**.
+This option provides the observed response and predictor variables across all source cell lines as an interactive heatmap. For the heatmap visualization, data are range standardized to values between 0 and 1, based on the value range within all rows of a given data type (by default) or within each row of data (if ‘Use Row Color Scale’ is selected). For data types other than mutation data, the range is trimmed to the difference between the 95th and 5th percentiles; values below or above the 5th and 95th percentile values are scaled to 0 and 1, respectively. In the case of mutation data, the range used for scaling is the difference between the maximum and minimum values. If the values within a data type (or data row if ‘Use Row Color Scale’ is selected) are constant, the scaled value for heatmap visualization is set to 0.5.
+
+The user can restrict the number of cell lines to those that have the highest or lowest response values by selecting **Number of High/Low Response Lines to Display**. The user can download the heatmap related data by clicking on **Download Heatmap Data**.
 
 ![Screenshot of CellMinerCDB Application](files/Slide6.jpeg)
 
@@ -212,8 +214,7 @@ For the NCI-60 and NCI/DTP SCLC, the drug identifiers (ID) are NSC's or names. F
 **Figure 14**: Example of a search: if looking for a drug ID in the NCI-60 select "NCI-60" as the cell line source and select "Drug Activity" as the data type. You can type in search box of column "Drug name" or "MOA".
 <br>
 <h3 id="geneid">Gene IDs</h3>
-For all data sources, the gene ID is the gene name (Hugo name)
-
+For all data sources, the gene ID is the Hugo gene symbol however the application recognizes any synonym or previous symbol that is included in the Hugo database.
 
 ![Screenshot of CellMinerCDB Application](files/Slide15.jpeg)
 
