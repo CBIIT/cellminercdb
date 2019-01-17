@@ -12,6 +12,7 @@ library(plotly)
 library(shinycssloaders)
 library(gplots)
 library(heatmaply)
+library(memoise)
 ## library(shinyHeatmaply)
 #library(dplyr)
 #library(svglite)
@@ -90,6 +91,20 @@ colorSet <- loadNciColorSet(returnDf=TRUE)
 options("DT.TOJSON_ARGS" = list(na = "string")) ## try dev version of DT
 
 #--------------------------------------------------------------------------------------------------
+sysinfo <- Sys.info()
+if (sysinfo["nodename"]=="discovery.nci.nih.gov") {
+db <- cache_filesystem("/srv/shiny-server/cellminercdb_internal/.rcache")
+ } else {
+  if (sysinfo["nodename"]=="discover.nci.nih.gov") {
+    db <- cache_filesystem("/srv/shiny-server/cellminercdb/.rcache") }
+   else {
+     db <- cache_filesystem("/Users/elloumif/.rcache")
+   }
+}
+patternComparison <- memoise(rcellminer::patternComparison, cache = db)
+# patternComparison <- memoise(rcellminer::patternComparison) # cache = cache_memory()
+getMolDataType <- memoise(rcellminer::getMolDataType, cache = db)
+removeMolDataType <- memoise(rcellminer::removeMolDataType, cache = db)
 
 
 shinyServer(function(input, output, session) {
