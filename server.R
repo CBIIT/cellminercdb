@@ -92,10 +92,10 @@ options("DT.TOJSON_ARGS" = list(na = "string")) ## try dev version of DT
 
 #--------------------------------------------------------------------------------------------------
 sysinfo <- Sys.info()
-if (sysinfo["nodename"]=="discovery.nci.nih.gov") {
+if (sysinfo["nodename"]=="discovery.nci.nih.gov" | sysinfo["nodename"]=="ncias-d2059-v.nci.nih.gov") {
 db <- cache_filesystem("/srv/shiny-server/cellminercdb_internal/.rcache")
  } else {
-  if (sysinfo["nodename"]=="discover.nci.nih.gov") {
+  if (sysinfo["nodename"]=="discover.nci.nih.gov" | sysinfo["nodename"]=="ncias-p2122-v.nci.nih.gov")  {
     db <- cache_filesystem("/srv/shiny-server/cellminercdb/.rcache") }
    else {
      db <- cache_filesystem("/Users/elloumif/.rcache")
