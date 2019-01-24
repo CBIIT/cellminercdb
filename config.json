@@ -261,6 +261,11 @@
             "displayName":"met: DNA Methylation"
           },
            {
+            "eSetListName":"mth",
+            "featurePrefix":"mth",
+            "displayName":"mth: DNA 850K Methylation"
+          },
+           {
             "eSetListName":"cop",
             "featurePrefix":"cop",
             "displayName":"cop: DNA Copy Number"
