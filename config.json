@@ -22,7 +22,7 @@
           {
             "eSetListName":"met",
             "featurePrefix":"met",
-            "displayName":"met: DNA Methylation"
+            "displayName":"met: DNA 450K Methylation"
           },
           {
             "eSetListName":"mut",
@@ -128,7 +128,7 @@
           {
             "eSetListName":"met",
             "featurePrefix":"met",
-            "displayName":"met: DNA Methylation"
+            "displayName":"met: DNA 450K Methylation"
           },
           {
             "eSetListName":"mut",
@@ -258,7 +258,7 @@
            {
             "eSetListName":"met",
             "featurePrefix":"met",
-            "displayName":"met: DNA Methylation"
+            "displayName":"met: DNA 450K Methylation"
           },
            {
             "eSetListName":"mth",

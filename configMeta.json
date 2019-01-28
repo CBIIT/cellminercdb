@@ -36,7 +36,7 @@
         	},
         	{
         		"dataType":"met",
-        		"description":"DNA methylation",
+        		"description":"DNA 450K methylation",
         		"units":"average of beta values for gene-associated probes; 0 (no methylation), 1 (complete methylation)",
         		"platform":"Illumina Infinium Human Methylation 450",
         		"ref_pmid":"27923837"
@@ -110,7 +110,7 @@
         	},
         	{
         		"dataType":"met",
-        		"description":"DNA methylation",
+        		"description":"DNA 450K methylation",
         		"units":"average of beta values for gene-associated probes; 0 (no methylation), 1 (complete methylation)",
         		"platform":"Illumina Infinium Human Methylation 450",
         		"ref_pmid":"27397505"
@@ -311,14 +311,14 @@
         		"dataType":"met",
         		"description":"DNA methylation based on 450K probes",
         		"units":"average of beta values for gene-associated probes; 0 (no methylation), 1 (complete methylation)",
-        		"platform":"Illumina ...",
+        		"platform":"Illumina EPIC Beadchip 850K",
         		"ref_pmid":"na"
         	},
         	{
         		"dataType":"mth",
         		"description":"DNA methylation based on 850K probes",
         		"units":"average of beta values for gene-associated probes; 0 (no methylation), 1 (complete methylation)",
-        		"platform":"Illumina ...",
+        		"platform":"Illumina EPIC Beadchip 850K",
         		"ref_pmid":"na"
         	},
         	 {
