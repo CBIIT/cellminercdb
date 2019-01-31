@@ -432,8 +432,13 @@ findDrugIDs <- function(drugname) {
   {
     matres[,i]= unlist(lapply(res[,i], function(x) paste(x,collapse=";")))
   }
-  colnames(matres)[2:nb]=paste0(vapply(colnames(matres)[2:nb],function(x) {metaConfig[[x]][["displayName"]]},character(1)),"_IDs")
-  return(matres)
+  dmatres=as.data.frame(matres)
+  dmatres = dmatres[,c("Drug_Synonyms",intersect(names(metaConfig),colnames(matres)))]
+  nbd=dim(dmatres)[2]
+  # colnames(matres)[2:nb]=paste0(vapply(colnames(matres)[2:nb],function(x) {metaConfig[[x]][["displayName"]]},character(1)),"_IDs")
+  # return(matres)
+  colnames(dmatres)[2:nbd]=paste0(vapply(colnames(dmatres)[2:nbd],function(x) {metaConfig[[x]][["displayName"]]},character(1)),"_IDs")
+  return(dmatres)
 }
 #---------------------------------------------------------------------------------------------------
 
