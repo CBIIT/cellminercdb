@@ -271,6 +271,11 @@
             "displayName":"cop: DNA Copy Number"
           },
           {
+            "eSetListName":"mir",
+            "featurePrefix":"mir",
+            "displayName":"mir: MicroRNA"
+          },
+          {
             "eSetListName":"mda",
             "featurePrefix":"mda",
             "displayName":"mda: Miscellaneous phenotypic data"

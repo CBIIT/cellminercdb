@@ -557,12 +557,19 @@ shinyServer(function(input, output, session) {
   		showColorTissues = input$showColorTissues, dataSource = input$xDataset, 
   		srcContent = srcContentReactive())
   
+  	# cat(colnames(dlDataTab),"\n")
+  	
   		shiny::validate(need(nrow(dlDataTab)>0, paste("ERROR:", " No common complete data found.")))
   
   	dlDataTabCols <- c(colnames(dlDataTab)[1:4], paste0("OncoTree", 1:4))
   	if ("EMT" %in% colnames(dlDataTab)) {
   		dlDataTabCols <- c(dlDataTabCols, "EMT")
   	}
+  	
+  	if ("NeuroEndocrineScore" %in% colnames(dlDataTab)) {
+  	  dlDataTabCols <- c(dlDataTabCols, "NeuroEndocrineScore")
+  	}
+  	
   	dlDataTab <- dlDataTab[, dlDataTabCols]
   	dlDataTab[, 2] <- round(dlDataTab[, 2], 3)
   	dlDataTab[, 3] <- round(dlDataTab[, 3], 3)

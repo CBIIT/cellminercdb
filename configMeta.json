@@ -307,6 +307,13 @@
         		"platform":"Affymetrix GeneChip Human Exon 1.0 ST array",
         		"ref_pmid":"27247353"
         	},
+        	 {
+        		"dataType":"mir",
+        		"description":"microRNA expression",
+        		"units":"log2 plus 1 normalized counts",
+        		"platform":"Nanostring microRNA",
+        		"ref_pmid":"27247353"
+        	},
         	{
         		"dataType":"met",
         		"description":"DNA methylation based on 450K probes",
