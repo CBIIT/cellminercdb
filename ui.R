@@ -52,7 +52,7 @@ for(y in 1:length(metaChoices)){
 }
 
 listlinks = ''
-for (k in 1:length(toplinks)) {
+for (k in 1:nrow(toplinks)) {
   listlinks=paste0(listlinks,tags$a(href=toplinks$url[k],toplinks$label[k],style="font-size: 14px;float: right;background-color: steelblue;color: white;display: inline-block;margin: 5px 5px;padding: 10px 10px;",target="_blank"),"\n")
 }
 # cat(listlinks)
