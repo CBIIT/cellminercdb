@@ -8,6 +8,8 @@ config <- jsonlite::fromJSON("config.json")
 appConfig <- jsonlite::fromJSON("appConfig.json")
 metaConfig <- jsonlite::fromJSON("configMeta.json")
 
+toplinks <- appConfig$TopLinks
+
 source("modal.R")
 source("appUtils.R")
 
@@ -48,6 +50,13 @@ for(y in 1:length(metaChoices)){
     metaoptions =  paste0(metaoptions,"<option value=",metaChoices[y],">",names(metaChoices)[y],"</option>;");
   }
 }
+
+listlinks = ''
+for (k in 1:length(toplinks)) {
+  listlinks=paste0(listlinks,tags$a(href=toplinks$url[k],toplinks$label[k],style="font-size: 14px;float: right;background-color: steelblue;color: white;display: inline-block;margin: 5px 5px;padding: 10px 10px;",target="_blank"),"\n")
+}
+# cat(listlinks)
+
 #if("rCharts" %in% installed.packages()) {
 #	options(RCHART_LIB='highcharts')	
 #	library(rCharts)
@@ -69,8 +78,9 @@ shinyUI(
   # br(),
   # tags$html("~Internal version~",style="text-align: center; font-size: 20px"),
  
-  tags$a(href="https://discover.nci.nih.gov/cellminer/"," CellMiner NCI-60 ",style="font-size: 14px;float: right;background-color: steelblue;color: white;display: inline-block;margin: 5px 5px;padding: 10px 10px;",target="_blank"),
-  tags$a(href="https://dtp.cancer.gov"," NCI/DCTD/DTP ",style="font-size: 14px;float: right;background-color: steelblue;color: white;display: inline-block;margin: 5px 5px;padding: 10px 10px;",target="_blank"),
+  # tags$a(href="https://discover.nci.nih.gov/cellminer/"," CellMiner NCI-60 ",style="font-size: 14px;float: right;background-color: steelblue;color: white;display: inline-block;margin: 5px 5px;padding: 10px 10px;",target="_blank"),
+  # tags$a(href="https://dtp.cancer.gov"," NCI/DCTD/DTP ",style="font-size: 14px;float: right;background-color: steelblue;color: white;display: inline-block;margin: 5px 5px;padding: 10px 10px;",target="_blank"),
+  HTML(listlinks),
   
   #tags$p("CellMinerCDB",style="font-size: 24px;color: white;background-color: dodgerblue;text-align:center;height:50px;"),
   # tags$img(src = "files/banner.jpg",height="110px",width="1650px"),
