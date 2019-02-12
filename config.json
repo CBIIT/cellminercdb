@@ -68,7 +68,7 @@
     }
   },
   "ccle":{
-    "displayName":"CCLE",
+    "displayName":"CCLE-Broad-MIT",
     "packages":{
       "ccleData":{
         "MolData":[
@@ -116,7 +116,7 @@
     }
   },
   "gdscDec15":{
-    "displayName":"GDSC",
+    "displayName":"GDSC-MGH-Sanger",
     "packages":{
       "gdscDataDec15":{
         "MolData":[
@@ -154,7 +154,7 @@
     }
   },
   "ctrp":{
-    "displayName":"CTRP",
+    "displayName":"CTRP-Broad-MIT",
     "packages":{
       "ctrpData":{
         "MolData":[
