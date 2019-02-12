@@ -149,15 +149,32 @@ getPlotData <- function(xData, yData, showColor, showColorTissues, dataSource=NU
 				highlightedLineSet <- unname(intersect(cellLineSet,
 					getTissueTypeSamples(showColorTissues, dataSource, srcContent)))
 			}
-			
+			#cat(highlightedLineSet,"22 \n")
 			if (length(highlightedLineSet) > 0){
 				colorsToUse <- rep("rgba(0,0,255,0.3)", nrow(df)) #blue
 				names(colorsToUse) <- rownames(df)
 				colorsToUse[highlightedLineSet] <- "rgba(255,0,0,0.7)" # red
+				##---
+				sampleTissueTypes <- rep("others", nrow(df))
+				names(sampleTissueTypes) <- rownames(df)
+				for (k in 1:length(showColorTissues)) { 
+				  ind=intersect(rownames(df),getTissueTypeSamples(showColorTissues[k], dataSource, srcContent))
+				  ## sampleTissueTypes[ind]=showColorTissues[k] 
+				  sampleTissueTypes[ind]=gsub(":","\n",showColorTissues[k])
+				  }
+			
+				#cat(sampleTissueTypes,length(sampleTissueTypes),"\n")
+				##---
 			} else{
-				sampleTissueTypes <- srcContent[[dataSource]]$sampleData[rownames(df), "OncoTree1"]
-				colorsToUse <- srcContent[[dataSource]]$tissueColorMap[sampleTissueTypes]
+				# sampleTissueTypes <- srcContent[[dataSource]]$sampleData[rownames(df), "OncoTree1"]
+				# colorsToUse <- srcContent[[dataSource]]$tissueColorMap[sampleTissueTypes]
+				
+				sampleTissueTypes <- rep("others", nrow(df))
+				colorsToUse <- rep("rgba(0,0,255,0.3)", nrow(df)) #blue
 			}
+			## ------
+			df$sampleTissueTypes <- sampleTissueTypes
+			## ------
 		} else{
 			colorsToUse <- rep("rgba(0,0,255,0.3)", nrow(df)) #blue
 		}
@@ -185,7 +202,7 @@ getPlotData <- function(xData, yData, showColor, showColorTissues, dataSource=NU
 		}
 		
 	}
-	
+	# cat(dim(df),"\n")
 	return(df)
 }
 
@@ -309,9 +326,12 @@ makePlotStatic <- function(xData, yData, showColor, showColorTissues, dataSource
 	         colorPalette <- df[, "color"]
 	   
 	   if (length(showColorTissues) > 0)  {
-	     classCol <- "color"
-	     leg <- FALSE
-	   }
+	     # classCol <- "color"
+	     # leg <- FALSE
+	     classCol <- "sampleTissueTypes"
+	     colorPalette <- df[, "color"]
+	     
+	     	}
 	
 	df[, classCol] <- as.factor(df[, classCol])
 	
