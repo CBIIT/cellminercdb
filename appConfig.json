@@ -11,5 +11,7 @@
             "label":" NCI/DCTD/DTP ",
             "url":"https://dtp.cancer.gov"
           }
-          ]
+          ],
+   "category": "internal",
+   "banner": "files/bannerNew.jpg"
 }

@@ -9,6 +9,8 @@ appConfig <- jsonlite::fromJSON("appConfig.json")
 metaConfig <- jsonlite::fromJSON("configMeta.json")
 
 toplinks <- appConfig$TopLinks
+category <- appConfig$category
+banner <- appConfig$banner
 
 source("modal.R")
 source("appUtils.R")
@@ -56,6 +58,9 @@ for (k in 1:nrow(toplinks)) {
   listlinks=paste0(listlinks,tags$a(href=toplinks$url[k],toplinks$label[k],style="font-size: 14px;float: right;background-color: steelblue;color: white;display: inline-block;margin: 5px 5px;padding: 10px 10px;",target="_blank"),"\n")
 }
 # cat(listlinks)
+if (category == "internal") mytitle="<p style='text-align: center; font-size: 20px; color:blue;' >~ Internal version ~</p>" else  
+     if (category == "private") mytitle="<p style='text-align: center; font-size: 20px; color:red;' >~ Private version ~</p>" else 
+          mytitle=""
 
 #if("rCharts" %in% installed.packages()) {
 #	options(RCHART_LIB='highcharts')	
@@ -72,8 +77,8 @@ shinyUI(
   #tags$head(tags$style(type="text/css", ".body {color: blue;}",".clear {clear:both}")),
   tags$a(href="#skiplink","Skip over navigation",style="font-size: 10px; float: left"),
   
-  HTML("<p style='text-align: center; font-size: 20px; color:blue;' >~ Internal version ~</p>"),
-  
+  # HTML("<p style='text-align: center; font-size: 20px; color:blue;' >~ Internal version ~</p>"),
+  HTML(mytitle),
   #tags$h4("~Internal version~",style="color: blue"),
   # br(),
   # tags$html("~Internal version~",style="text-align: center; font-size: 20px"),
@@ -82,9 +87,10 @@ shinyUI(
   # tags$a(href="https://dtp.cancer.gov"," NCI/DCTD/DTP ",style="font-size: 14px;float: right;background-color: steelblue;color: white;display: inline-block;margin: 5px 5px;padding: 10px 10px;",target="_blank"),
   HTML(listlinks),
   
-  #tags$p("CellMinerCDB",style="font-size: 24px;color: white;background-color: dodgerblue;text-align:center;height:50px;"),
-  # tags$img(src = "files/banner.jpg",height="110px",width="1650px"),
-  tags$img(src = "files/banner.png",alt= "banner",height="100%",width="100%", border="0"),
+  ###tags$p("CellMinerCDB",style="font-size: 24px;color: white;background-color: dodgerblue;text-align:center;height:50px;"),
+  ### tags$img(src = "files/banner.jpg",height="110px",width="1650px"),
+  # tags$img(src = "files/banner.png",alt= "banner",height="100%",width="100%", border="0"),
+  tags$img(src = banner,alt= "banner",height="100%",width="100%", border="0"),
   
   #tags$img(src = "files/banner.png",alt= "banner",height="100%",width="100%", border="0", style="padding: 0px; display: block; line-height: 0; font-size: 0px; border: 0px; clear: both; vertical-align: top; margin: 0px 0px 0px 0px;"),
    #navbarPage(h6(style="vertical-align:top;font-size: 24px;color: dodgerblue;",appTitle), 
