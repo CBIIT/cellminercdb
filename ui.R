@@ -12,7 +12,7 @@ toplinks <- appConfig$TopLinks
 category <- appConfig$category
 banner <- appConfig$banner
 
-source("modal.R")
+source("modal1.R")
 source("appUtils.R")
 
 if (!is.null(appConfig$appName)){
