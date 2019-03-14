@@ -397,7 +397,11 @@ loadSourceContentFiltered <- function(srcConfig,onco1=NA,onco2=NA){
       { if (!is.na(onco1)) 
         selindex = which(toupper(sampleData$OncoTree1)==toupper(onco1))
       else 
-        stop("Check onco1 and onco2 parameters")
+        { if (!is.na(onco2)) 
+          selindex = grep(onco2,sampleData$OncoTree2,ignore.case = T) 
+        else 
+           stop("Check onco1 and onco2 parameters")
+        }
       }
       cat(onco1, ",", onco2, ",",length(selindex),"\n")
       if (length(selindex)==0) stop("Filtering by cell lines is not possible for package: ",pkgName)
