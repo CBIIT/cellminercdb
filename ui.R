@@ -122,6 +122,7 @@ shinyUI(
 						 							   )
 						 							   )
 						 							 ),
+						 							 tags$head(tags$title("CellMinerCDB")),
 						 							 tags$head(tags$meta(name="description",content="CellMiner Cross Database (CellMinerCDB) is the first web application to allow translational researchers to conduct analyses across all major cancer cell line pharmacogenomic data sources from NCI-DTP NCI-60, Sanger GDSC, and Broad CCLE/CTRP"))
 						              ),
 		#background-color: blue; font-color: white;
@@ -259,22 +260,39 @@ shinyUI(
 br(),br(),hr(),
  # tags$a(id="skiplink")
 tags$div(style="font-size: 12px",
-  tags$html("CellMinerCDB is a development of the "),
-  tags$a("Genomics and Pharmacology Facility,", href="https://discover.nci.nih.gov/", target = "_blank",style="font-size: 12px;"),
-  tags$a(" Developmental Therapeutics Branch (DTB), ",href='https://ccr.cancer.gov/Developmental-Therapeutics-Branch', target='_blank',style="font-size: 12px;"),
-  tags$a("Center for Cancer Research (CCR), ", href="https://ccr.cancer.gov/", target = "_blank",style="font-size: 12px;"),
-  tags$a("National Cancer Institute (NCI) ", href="https://www.cancer.gov/", target = "_blank",style="font-size: 12px;"),
-  tags$html("prepared in collaboration with the "),
-  tags$a("cBio Center", href="http://www.sanderlab.org/", target = "_blank",style="font-size: 12px;"),
-  tags$html(" at the Dana-Farber Cancer Institute."),
-  br(),br(),
-  # tags$html("Please email 'Webadmin@discover.nci.nih.gov' with any problems, questions or feedback on the tool",style="font-size: 12px; float: left"),
-  tags$html("Please "), 
-  tags$a("email us", href="mailto:Webadmin@discover.nci.nih.gov&subject=CellMinerCDB",style="font-size: 12px;"),
-  tags$html(" with any problems, questions or feedback on the tool"),
-  br(),br(),
-  tags$a("Notice and Disclaimer", href="files/disclaimer.html", target = "_blank")
-  
+  # tags$html("CellMinerCDB is a development of the "),
+  # tags$a("Genomics and Pharmacology Facility,", href="https://discover.nci.nih.gov/", target = "_blank",style="font-size: 12px;"),
+  # tags$a(" Developmental Therapeutics Branch (DTB), ",href='https://ccr.cancer.gov/Developmental-Therapeutics-Branch', target='_blank',style="font-size: 12px;"),
+  # tags$a("Center for Cancer Research (CCR), ", href="https://ccr.cancer.gov/", target = "_blank",style="font-size: 12px;"),
+  # tags$a("National Cancer Institute (NCI) ", href="https://www.cancer.gov/", target = "_blank",style="font-size: 12px;"),
+  # tags$html("prepared in collaboration with the "),
+  # tags$a("cBio Center", href="http://www.sanderlab.org/", target = "_blank",style="font-size: 12px;"),
+  # tags$html(" at the Dana-Farber Cancer Institute."),
+  # br(),br(),
+  # # tags$html("Please email 'Webadmin@discover.nci.nih.gov' with any problems, questions or feedback on the tool",style="font-size: 12px; float: left"),
+  # tags$html("Please "), 
+  # tags$a("email us", href="mailto:Webadmin@discover.nci.nih.gov&subject=CellMinerCDB",style="font-size: 12px;"),
+  # tags$html(" with any problems, questions or feedback on the tool"),
+  # br(),br(),
+  # tags$a("Notice and Disclaimer", href="files/disclaimer.html", target = "_blank")
+#
+tags$p("CellMinerCDB is a development of the ",
+tags$a("Genomics and Pharmacology Facility,", href="https://discover.nci.nih.gov/", target = "_blank",style="font-size: 12px;"),
+tags$a(" Developmental Therapeutics Branch (DTB), ",href='https://ccr.cancer.gov/Developmental-Therapeutics-Branch', target='_blank',style="font-size: 12px;"),
+tags$a("Center for Cancer Research (CCR), ", href="https://ccr.cancer.gov/", target = "_blank",style="font-size: 12px;"),
+tags$a("National Cancer Institute (NCI) ", href="https://www.cancer.gov/", target = "_blank",style="font-size: 12px;"),
+"prepared in collaboration with the ",
+tags$a("cBio Center", href="http://www.sanderlab.org/", target = "_blank",style="font-size: 12px;"),
+" at the Dana-Farber Cancer Institute.",
+br(),br(),
+# tags$html("Please email 'Webadmin@discover.nci.nih.gov' with any problems, questions or feedback on the tool",style="font-size: 12px; float: left"),
+"Please ", 
+tags$a("email us", href="mailto:Webadmin@discover.nci.nih.gov&subject=CellMinerCDB",style="font-size: 12px;"),
+" with any problems, questions or feedback on the tool",
+br(),br(),
+tags$a("Notice and Disclaimer", href="files/disclaimer.html", target = "_blank")
+)
+
   
   #includeMarkdown("www/files/guide.md")
   ## add email + Notice and Disclaimer + check font size to lower?

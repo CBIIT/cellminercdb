@@ -19,16 +19,33 @@ if (is.null(pmodal)){
       style="width: 100%"
     )
   ))
-} else{
+} else {
   vclass = "modal-dialog modal-lg"
-  disp_content <- as.character(tags$img(
-    class="img-fluid",
-    # src="http://www.google.nl/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png",
-    src =base64enc::dataURI(file = pmodal, mime = "image/png"),
-    alt="Pharmaco-genomics picture"
-    # style="width: 100%, display: flex"
-  ))
-}
+  if (length(grep(".png",pmodal)!=0))
+  {
+    disp_content <- as.character(tags$img(
+      class="img-fluid",
+      # src="http://www.google.nl/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png",
+      src =base64enc::dataURI(file = pmodal, mime = "image/png"),
+      alt="Pharmaco-genomics picture"
+      # style="width: 100%, display: flex"
+    ))
+  } else
+  {
+    disp_content <- as.character(tags$video(
+      src =base64enc::dataURI(file = pmodal, mime = "video/mp4"),
+      # src=pmodal,
+      type="video/mp4",
+      autoplay = NA,
+      muted = NA,
+      controls = NA
+      #alt="Pharmaco-genomics picture"
+      # style="width: 100%, display: flex"
+    ))
+    
+  }
+  
+  }
 
 
 # Simple load modal using Bootstrap
@@ -58,10 +75,14 @@ loadingModal <- function() {
 				# 	  # style="width: 100%, display: flex"
 				# 	)
 				 HTML(disp_content)
+				),
+				tags$div(
+				  class="modal-footer",
+				  HTML('<button type="button" class="btn btn-primary" data-dismiss="modal">Skip</button>')
 				)
 			)
 		)
 	)
 	
-	tags$html(modal)
+	modal
 }

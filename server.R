@@ -106,6 +106,9 @@ patternComparison <- memoise(rcellminer::patternComparison, cache = db)
 getMolDataType <- memoise(rcellminer::getMolDataType, cache = db)
 removeMolDataType <- memoise(rcellminer::removeMolDataType, cache = db)
 
+# sink("sessioninfo.txt")
+# print(sessionInfo())
+# sink()
 
 shinyServer(function(input, output, session) {
 	#----[Reactive Variables]---------------------------------------------------------------
@@ -1334,7 +1337,7 @@ shinyServer(function(input, output, session) {
   # Observe reactive variable and send message to Javascript code
   observe({
   	if(isPackageLoadingComplete()) {
-  		session$sendCustomMessage(type='showLoading', list(show=FALSE))
+  #		session$sendCustomMessage(type='showLoading', list(show=FALSE))
   	}
   })
 	
