@@ -19,7 +19,9 @@ if (is.null(pmodal)){
       style="width: 100%"
     )
   ))
+  disp_foot <- ''
 } else {
+  disp_foot <- '<button type="button" class="btn btn-primary" data-dismiss="modal">Skip</button>'
   vclass = "modal-dialog modal-lg"
   if (length(grep(".png",pmodal)!=0))
   {
@@ -78,7 +80,8 @@ loadingModal <- function() {
 				),
 				tags$div(
 				  class="modal-footer",
-				  HTML('<button type="button" class="btn btn-primary" data-dismiss="modal">Skip</button>')
+				#  HTML('<button type="button" class="btn btn-primary" data-dismiss="modal">Skip</button>')
+           HTML(disp_foot)
 				)
 			)
 		)
