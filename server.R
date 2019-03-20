@@ -1337,7 +1337,8 @@ shinyServer(function(input, output, session) {
   # Observe reactive variable and send message to Javascript code
   observe({
   	if(isPackageLoadingComplete()) {
-  #		session$sendCustomMessage(type='showLoading', list(show=FALSE))
+  if (is.null(appConfig$modal))
+  	  session$sendCustomMessage(type='showLoading', list(show=FALSE))
   	}
   })
 	
