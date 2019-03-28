@@ -21,7 +21,7 @@ if (is.null(pmodal)){
   ))
   disp_foot <- ''
 } else {
-  disp_foot <- '<button type="button" class="btn btn-primary" data-dismiss="modal">Skip</button>'
+  disp_foot <- '<button type="button" class="btn btn-primary" style="font-size: 25px;" data-dismiss="modal"> Skip </button>'
   vclass = "modal-dialog modal-lg"
   if (length(grep(".png",pmodal)!=0))
   {
@@ -29,8 +29,8 @@ if (is.null(pmodal)){
       class="img-fluid",
       # src="http://www.google.nl/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png",
       src =base64enc::dataURI(file = pmodal, mime = "image/png"),
-      alt="Pharmaco-genomics picture"
-      # style="width: 100%, display: flex"
+      alt="Pharmaco-genomics picture",
+      style="width: 100%;"
     ))
   } else
   {
@@ -40,9 +40,8 @@ if (is.null(pmodal)){
       type="video/mp4",
       autoplay = NA,
       muted = NA,
-      controls = NA
-      #alt="Pharmaco-genomics picture"
-      # style="width: 100%, display: flex"
+      controls = NA,
+      style="width: 100%; height: auto !important;"
     ))
     
   }
@@ -55,11 +54,14 @@ if (is.null(pmodal)){
 loadingModal <- function() {
 	modal <- tags$div(
 		class="modal",
+#		style="height: 80%; margin-bottom: 0 !important",
 		id="loadingModal",
 		tags$div(
 			class=vclass,
+			style="width: 80%; max-height: calc(100% -200px); overflow-y: auto;",
 			tags$div(
 				class="modal-content",
+			#	style="height: 80%;",
 				tags$div(
 					class="modal-header",
 					tags$h4(
