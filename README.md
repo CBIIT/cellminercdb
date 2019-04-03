@@ -5,9 +5,9 @@ CellMinerCDB is a Shiny/R app that simplifies access and  exploration of cancer 
 ## DTB Created Dependencies 
 * rcellminer: https://github.com/CBIIT/rcellminer
 * rcellminerData: https://github.com/CBIIT/rcellminerData
-* rcellminerUtils: https://github.com/CBIIT/DTB-devel
-* rcellminerElasticNet: https://github.com/CBIIT/DTB-devel
-* geneSetPathwayAnalysis: https://github.com/CBIIT/DTB-devel 
+* rcellminerUtilsCDB: https://github.com/CBIIT/rcellminerUtilsCDB
+* rcellminerElasticNet: https://github.com/CBIIT/rcellminerElasticNet
+* geneSetPathwayAnalysis: https://github.com/CBIIT/geneSetPathwayAnalysis
 
 ## Other Dependencies 
 * shiny
