@@ -3,6 +3,18 @@
 onloadJs <- '
 $(document).ready(function() {
   $("#loadingModal").modal({backdrop: "static", keyboard: false, show: true});
+
+  $("#video1").on("ended", function() {
+   //TO DO: Your code goes here...
+     setTimeout( 
+         function() {
+           // alert("Video Finished");
+         $("#loadingModal").modal("hide");
+         },
+       5000
+     ) ;
+   });
+
 });
 '
 
@@ -36,6 +48,7 @@ if (is.null(pmodal)){
   {
     disp_content <- as.character(tags$video(
       src =base64enc::dataURI(file = pmodal, mime = "video/mp4"),
+      id="video1",
       # src=pmodal,
       type="video/mp4",
       autoplay = NA,

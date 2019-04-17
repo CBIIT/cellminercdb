@@ -116,6 +116,13 @@
         		"ref_pmid":"27397505"
         	},
         	{
+        		"dataType":"mut",
+        		"description":"DNA mutation",
+        		"units":"probability of homozygous, function-impacting mutation",
+        		"platform":"exome capture sequencing",
+        		"ref_pmid":"27397505"
+        	},
+        	{
         		"dataType":"mda",
         		"description":"cell line metadata (phenotypic measures)",
         		"units":"measure-specific",
@@ -365,6 +372,13 @@
         		"description":"mRNA Expression",
         		"units":"RNA-seq Expression (log2 FPKM+1.)",
         		"platform":"NA",
+        		"ref_pmid":"NA"
+        	},
+        	{
+        		"dataType":"mut",
+        		"description":"DNA mutation",
+        		"units":"probability of homozygous, function-impacting mutation",
+        		"platform":"exome capture sequencing (from UTSW)",
         		"ref_pmid":"NA"
         	}
        	]

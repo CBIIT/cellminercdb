@@ -541,6 +541,7 @@ shinyServer(function(input, output, session) {
 												 showColorTissues = input$showColorTissues, dataSource = input$xDataset, 
 												 xLimVals = xLimits, yLimVals = yLimits,
 												 srcContent = srcContentReactive(),oncolor=oncolor)
+		p1 <- p1 + theme(axis.text = element_text(size=12))
 		g1 <- ggplotly(p1, width=plotWidth, height=plotHeight, tooltip=tooltipCol)
 		g1 <- layout(g1, margin=list(t = 75))
 		g2 <- config(p = g1, collaborate=FALSE, cloud=FALSE, displaylogo=FALSE, displayModeBar=TRUE,

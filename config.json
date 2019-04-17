@@ -302,6 +302,11 @@
             "eSetListName":"xsq",
             "featurePrefix":"xsq",
             "displayName":"xsq: RNA-seq Expression (log2 FPKM+1.)"
+          },
+          {
+            "eSetListName":"mut",
+            "featurePrefix":"mut",
+            "displayName":"mut: DNA Mutation"
           }
         ]
       }
