@@ -1,6 +1,5 @@
 <!-- TOC -->
 # Table of Contents
-- <a href="https://youtu.be/XljXazRGkQ8" target="_blank">Video tutorial</a>
 -	[Introduction](#introduction)
 -	[Univariate Analyses](#univariate)
   - [Plot Data](#plot)

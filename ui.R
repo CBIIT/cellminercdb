@@ -256,7 +256,13 @@ shinyUI(
 		         includeMarkdown("www/files/guide.md")
 		         #h1("For testing"),
 		         #textOutput("ipAddress")
-		)
+		),
+    tabPanel("Video tutorial",
+         tags$a(id="skiplink"),
+         includeMarkdown("www/files/video.md")
+         #h1("For testing"),
+         #textOutput("ipAddress")
+     )
 	),
 br(),br(),hr(),
  # tags$a(id="skiplink")
