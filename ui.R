@@ -103,6 +103,7 @@ shinyUI(
 						 							 tags$head(tags$script(onloadJs)),
 						 							 # Use JQuery (built into Shiny) calls to show/hide modal based on message
 						 							 tags$head(includeScript("www/js/showLoading.js")),
+						 							 tags$head(includeScript("www/js/showSkip.js")),
 						 							 tags$head(includeScript("www/js/leaving.js")),
 						 							 # load Javascript snippet to parse the query string.
 						 							 #tags$script(includeScript("www/js/parse_input.js")),

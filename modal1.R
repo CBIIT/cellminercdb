@@ -4,6 +4,9 @@ onloadJs <- '
 $(document).ready(function() {
   $("#loadingModal").modal({backdrop: "static", keyboard: false, show: true});
 
+  $("#but1").prop("disabled",true) 
+ 
+
   $("#video1").on("ended", function() {
    //TO DO: Your code goes here...
      setTimeout( 
@@ -33,7 +36,7 @@ if (is.null(pmodal)){
   ))
   disp_foot <- ''
 } else {
-  disp_foot <- '<button type="button" class="btn btn-primary" style="font-size: 25px;" data-dismiss="modal"> Skip </button>'
+  disp_foot <- '<button id="but1" type="button" class="btn btn-primary" style="font-size: 25px;" data-dismiss="modal"> Skip presentation</button>'
   vclass = "modal-dialog modal-lg"
   if (length(grep(".png",pmodal)!=0))
   {

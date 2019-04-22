@@ -541,9 +541,11 @@ shinyServer(function(input, output, session) {
 												 showColorTissues = input$showColorTissues, dataSource = input$xDataset, 
 												 xLimVals = xLimits, yLimVals = yLimits,
 												 srcContent = srcContentReactive(),oncolor=oncolor)
-		p1 <- p1 + theme(axis.text = element_text(size=12))
+		p1 <- p1 + theme(axis.text = element_text(size=16), plot.title = element_text(size = 16), 
+		                 axis.title.x = element_text(size = 16), axis.title.y = element_text(size = 16))
 		g1 <- ggplotly(p1, width=plotWidth, height=plotHeight, tooltip=tooltipCol)
-		g1 <- layout(g1, margin=list(t = 75))
+		#g1 <- layout(g1, margin=list(t = 75))
+		g1 <- layout(g1, margin=list(t = 75), legend = list(font = list(size = 14)))
 		g2 <- config(p = g1, collaborate=FALSE, cloud=FALSE, displaylogo=FALSE, displayModeBar=TRUE,
 								 modeBarButtonsToRemove=c("select2d", "sendDataToCloud", "pan2d", "resetScale2d",
 								 												 "hoverClosestCartesian", "hoverCompareCartesian",
@@ -1340,7 +1342,9 @@ shinyServer(function(input, output, session) {
   	if(isPackageLoadingComplete()) {
   if (is.null(appConfig$modal))
   	  session$sendCustomMessage(type='showLoading', list(show=FALSE))
-  	}
+  	 else 
+  	  session$sendCustomMessage(type='showSkip', list(show=TRUE))
+     }
   })
 	
   #-----[NavBar Tab Server Code]---------------------------------------------------------
