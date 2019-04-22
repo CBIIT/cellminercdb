@@ -4,8 +4,8 @@ onloadJs <- '
 $(document).ready(function() {
   $("#loadingModal").modal({backdrop: "static", keyboard: false, show: true});
 
-  $("#but1").prop("disabled",true) 
- 
+  // $("#but1").prop("disabled",true) 
+  $("#but1").hide()
 
   $("#video1").on("ended", function() {
    //TO DO: Your code goes here...
