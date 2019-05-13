@@ -384,5 +384,23 @@
        	]
       }
     }
+  },
+    "genSclc":{
+    "displayName":"SCLC Global",
+    "fullName": "NCI DTB",
+    "url": "https://discover.nci.nih.gov",
+    "packages":{
+      "genSclcData":{
+        "MetaData":[
+          {
+        		"dataType":"exp",
+        		"description":"mRNA Expression",
+        		"units":"Average z-score from NCI SCLC, CCLE, GDSC, CTRP, UTSW",
+        		"platform":"NA",
+        		"ref_pmid":"NA"
+        	}
+        	]
+      }
+    }
   }
 }

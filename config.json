@@ -311,5 +311,19 @@
         ]
       }
     }
+  },
+    "genSclc":{
+    "displayName":"SCLC Global",
+    "packages":{
+      "genSclcData":{
+        "MolData":[
+          {
+            "eSetListName":"exp",
+            "featurePrefix":"exp",
+            "displayName":"exp: Average z-score from all sources"
+          }
+        ]
+      }
+    }
   }
 }
