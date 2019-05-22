@@ -153,14 +153,18 @@ getPlotData <- function(xData, yData, showColor, showColorTissues, dataSource=NU
 			if (length(highlightedLineSet) > 0){
 				colorsToUse <- rep("rgba(0,0,255,0.3)", nrow(df)) #blue
 				names(colorsToUse) <- rownames(df)
-				colorsToUse[highlightedLineSet] <- "rgba(255,0,0,0.7)" # red
-				##---
+				# colorsToUse[highlightedLineSet] <- "rgba(255,0,0,0.7)" # red
+				sel4=c("red","green","blue","orange")
+
 				sampleTissueTypes <- rep("others", nrow(df))
 				names(sampleTissueTypes) <- rownames(df)
 				for (k in 1:length(showColorTissues)) { 
 				  ind=intersect(rownames(df),getTissueTypeSamples(showColorTissues[k], dataSource, srcContent))
 				  ## sampleTissueTypes[ind]=showColorTissues[k] 
 				  sampleTissueTypes[ind]=gsub(":","\n",showColorTissues[k])
+				  ##
+				  if (k >=1 & k<=4) colorsToUse[ind] <- sel4[k] else colorsToUse[ind] <-  "rgba(255,160,122,0.7)" # lightsalmon
+				  ##
 				  }
 			
 				#cat(sampleTissueTypes,length(sampleTissueTypes),"\n")
