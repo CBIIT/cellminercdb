@@ -28,6 +28,7 @@
 - [Contact/Feedback](#contactfeedback)
 - [Data Sources](#data-sources)
 - [About the Data](#about-the-data)
+- [Release history](#release)
 - [About CellMinerCDB](#about-cellminercdb)
 	- [NCI-DTB Genomics and Bioinformatics Group](#nci-dtb-genomics-and-bioinformatics-group)
 	- [Biostatistics and Computational Biology, Dana-Farber Cancer Institute, Harvard Medical School](#biostatistics-and-computational-biology-dana-farber-cancer-institute-harvard-medical-school)
@@ -261,6 +262,12 @@ CellMinerCDB integrates data from the following sources, which provide additiona
 * <a href="https://portals.broadinstitute.org/ctrp/" target="_blank">Broad Cancer Therapeutics Response Portal (CTRP)</a>
 * <a href="https://sclccelllines.cancer.gov/sclc/" target="_blank">NCI/DTP Small Cell Lung Cancer Project (SCLC)</a>
 
+![Screenshot of CellMinerCDB Application](files/Slide16.jpeg)
+
+**Figure 16**: Summary of Molecular Drug Activity Data for the five data sources currently included in CellMinerCDB. For the drug data, combo is a two-drug combinations from the NCI60 Almanac. For molecular data types, the numbers indicate the number of genes with a particular data type. Gene level mutation and methylation (numbers in red) were computed using specific scripts described in cellminercdb paper (see reference below). A Grey tab indicates that is no data available.
+
+![Screenshot of CellMinerCDB Application](files/Slide17.jpeg)
+**Figure 17**: Cell line overlaps between data sources.
 
 <h2 id="about-the-data">About the Data</h2>
 For specific information about the data made available for particular sources, please refer to the 'Metadata' navbar tab.
@@ -272,6 +279,25 @@ Drug mechanism of action details:
 
 Gene sets used for annotation of analysis results or algorithm input filtering were curated by the
 NCI/DTB CellMiner team, based on surveys of the applicable research literature.
+
+<h2 id="release">Release history</h2>
+
+May 2019: release v1.1
+- New NCI60 RNASeq data
+- New SCLC microRNA data
+- New modal start video
+- New tab for tutorial video
+- Increased size of title, x-axis and y-axis legends
+- Improved pattern comparison speed by caching main functions
+- Implemented leaving federal Javascript pop-up dialog
+
+December 2018: release v1.0
+- Official lunch of website
+- Data sources are NCI60, CCLE, CTRP, GDSC NCI SCLC and NCI Almanac
+- Integrated new automatic gene search by synonyms in univariate analysis
+- Added a new menu option to display correlation values by tissue of origin
+- Made option to download any dataset in Metadata tab
+
 
 <h2 id="about-cellminercdb">About CellMinerCDB</h2>
 The CellMinerCDB application is developed and maintained using R and Shiny by:
@@ -306,8 +332,9 @@ Reinhold WC, Sunshine M, Varma S, Doroshow JH, Pommier Y. <a href="https://www.n
 
 Luna A, Rajapakse VN, Sousa FG, Gao J, Schultz N, Varma S, Reinhold W, Sander C, Pommier Y. <a href="https://www.ncbi.nlm.nih.gov/pubmed/26635141" target="_blank">rcellminer: exploring molecular profiles and drug response of the NCI-60 cell lines in R.</a> Bioinformatics. 2015 Dec 3. pii: btv701.
 
-Rajapakse VN, Luna A, Yamade M, Loman L, Varma S, Sunshine M, Iorio F, Elloumi F, Aladjem MI, Thomas A, Sander C, Kohn KW, Benes CH, Garnett M, Reinhold WC, Pommier Y. <a href="https://www.cell.com/iscience/fulltext/S2589-0042(18)30219-0" target="_blank">CellMinerCDB for Integrative Cross-Database Genomics and Pharmacogenomics Analyses
-of Cancer Cell Lines.</a> iScience, Cell Press. 2018 Dec 12.
+Rajapakse VN, Luna A, Yamade M, Loman L, Varma S, Sunshine M, Iorio F, Elloumi F, Aladjem MI, Thomas A, Sander C, Kohn KW, Benes CH, Garnett M, Reinhold WC, Pommier Y. <a href="https://www.cell.com/iscience/fulltext/S2589-0042(18)30219-0" target="_blank">CellMinerCDB for Integrative Cross-Database Genomics and Pharmacogenomics Analyses of Cancer Cell Lines.</a> iScience, Cell Press. 2018 Dec 12.
+
+Reinhold WC, Varma S, Sunshine M, Elloumi F, Ofori-Atta K, Lee S, Trepel JB, Meltzer PS, Doroshow JH, Pommier Y. <a href="https://www.ncbi.nlm.nih.gov/pubmed/31113817" target="_blank">RNA sequencing of the NCI-60: Integration into CellMiner and CellMiner CDB.</a> Cancer Res. 2019 May 21. pii: canres.2047.2018. doi: 10.1158/0008-5472.CAN-18-2047.
 
 <h2 id="others">Related links</h2>
 - <a href="https://cellmodelpassports.sanger.ac.uk/" target="_blank">Sanger Cell Model Passports</a>

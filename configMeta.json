@@ -32,7 +32,7 @@
         		"description":"mRNA expression",
         		"units":"RNA-seq composite log2 FPKM+1",
         		"platform":"HiSeq 2000 (Illumina)",
-        		"ref_pmid":"NA"
+        		"ref_pmid":"31113817"
         	},
         	{
         		"dataType":"met",
@@ -156,14 +156,14 @@
         	},
         	{
         		"dataType":"xsq",
-        		"description":"mRNA expression",
+        		"description":"mRNA expression. Version 2016-06-17",
         		"units":"RNA-seq composite log2 RPKM+1",
         		"platform":"NA",
         		"ref_pmid":"NA"
         	},
         	{
         		"dataType":"mir",
-        		"description":"microRNA expression",
+        		"description":"microRNA expression. Version 2018-05-25",
         		"units":"log2 normalized counts",
         		"platform":"Nanostring microRNA",
         		"ref_pmid":"NA"
