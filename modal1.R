@@ -35,9 +35,11 @@ if (is.null(pmodal)){
     )
   ))
   disp_foot <- ''
+  vstyle = ''
 } else {
   disp_foot <- '<button id="but1" type="button" class="btn btn-primary" style="font-size: 25px;" data-dismiss="modal"> Skip presentation</button>'
   vclass = "modal-dialog modal-lg"
+  vstyle = "width: 80%; max-height: calc(100% -200px); overflow-y: auto;"
   if (length(grep(".png",pmodal)!=0))
   {
     disp_content <- as.character(tags$img(
@@ -74,7 +76,8 @@ loadingModal <- function() {
 		id="loadingModal",
 		tags$div(
 			class=vclass,
-			style="width: 80%; max-height: calc(100% -200px); overflow-y: auto;",
+			# style="width: 80%; max-height: calc(100% -200px); overflow-y: auto;",
+			style = vstyle,
 			tags$div(
 				class="modal-content",
 			#	style="height: 80%;",

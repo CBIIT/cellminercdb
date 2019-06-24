@@ -407,7 +407,9 @@ shinyServer(function(input, output, session) {
 	# sources are selected) of whatever tissue types are selected.
 	xData <- reactive({
 		shiny::validate(need(length(input$selectedTissues) > 0, "Please select tissue types."))
-
+    ## new
+	  shiny::validate(need(!is.na(match(input$xPrefix,srcContentReactive()[[input$xDataset]][["featurePrefixes"]])), "Non valid data type"))
+	  ##
 		xPrefix <- input$xPrefix
 		if (!is.character(xPrefix)){
 			xPrefix <- srcContentReactive()[[input$xDataset]][["defaultFeatureX"]]
@@ -446,7 +448,10 @@ shinyServer(function(input, output, session) {
 	# sources are selected) of whatever tissue types are selected.
 	yData <- reactive({
 		shiny::validate(need(length(input$selectedTissues) > 0, "Please select tissue types."))
-		
+	  ## new
+	  shiny::validate(need(!is.na(match(input$yPrefix,srcContentReactive()[[input$yDataset]][["featurePrefixes"]])), "Non valid data type"))
+	  ##
+	  
 		yPrefix <- input$yPrefix
 		if (!is.character(yPrefix)){
 			yPrefix <- srcContentReactive()[[input$yDataset]][["defaultFeatureY"]]
@@ -545,7 +550,7 @@ shinyServer(function(input, output, session) {
 		                 axis.title.x = element_text(size = 16), axis.title.y = element_text(size = 16))
 		g1 <- ggplotly(p1, width=plotWidth, height=plotHeight, tooltip=tooltipCol)
 		#g1 <- layout(g1, margin=list(t = 75))
-		g1 <- layout(g1, margin=list(t = 75), legend = list(font = list(size = 14)))
+		g1 <- layout(g1, margin=list(t = 75), legend = list(font = list(size = 16)))
 		g2 <- config(p = g1, collaborate=FALSE, cloud=FALSE, displaylogo=FALSE, displayModeBar=TRUE,
 								 modeBarButtonsToRemove=c("select2d", "sendDataToCloud", "pan2d", "resetScale2d",
 								 												 "hoverClosestCartesian", "hoverCompareCartesian",
@@ -1228,6 +1233,10 @@ shinyServer(function(input, output, session) {
   	# returning the value if so; otherwise the operation is stopped with a silent exception.
   	# The idea is to exit quietly if inputs are momentarily in an invalid state, as might
   	# occur when the app is first loading, etc.
+  	
+  	## new
+  	shiny::validate(need(!is.na(match(input$xPrefix,srcContentReactive()[[input$xDataset]][["featurePrefixes"]])), "Non valid data type"))
+  	
   	valRange <- srcContent[[req(input$xDataset)]][["featureValRanges"]][[req(input$xPrefix)]]
   	
   	xData <- NULL
@@ -1248,6 +1257,9 @@ shinyServer(function(input, output, session) {
   	srcContent <- srcContentReactive()
   	
  		# Note: see comment in output#xAxisRangeUi explaining the use of req().
+  	## new
+  	shiny::validate(need(!is.na(match(input$yPrefix,srcContentReactive()[[input$yDataset]][["featurePrefixes"]])), "Non valid data type"))
+  	
   	valRange <- srcContent[[req(input$yDataset)]][["featureValRanges"]][[req(input$yPrefix)]]
   	
   	yData <- NULL

@@ -282,7 +282,7 @@ NCI/DTB CellMiner team, based on surveys of the applicable research literature.
 
 <h2 id="release">Release history</h2>
 
-May 2019: release v1.1
+May 2019: release v1.1 <a href="https://www.ncbi.nlm.nih.gov/pubmed/31113817" target="_blank"> [pubmed: 31113817]</a>
 - New NCI60 RNASeq data
 - New SCLC microRNA data
 - New modal start video
@@ -291,7 +291,7 @@ May 2019: release v1.1
 - Improved pattern comparison speed by caching main functions
 - Implemented leaving federal Javascript pop-up dialog
 
-December 2018: release v1.0
+December 2018: release v1.0 <a href="https://www.ncbi.nlm.nih.gov/pubmed/30553813" target="_blank"> [pubmed: 30553813]</a>
 - Official lunch of website
 - Data sources are NCI60, CCLE, CTRP, GDSC NCI SCLC and NCI Almanac
 - Integrated new automatic gene search by synonyms in univariate analysis

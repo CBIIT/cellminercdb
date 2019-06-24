@@ -55,7 +55,7 @@ for(y in 1:length(metaChoices)){
 
 listlinks = ''
 for (k in 1:nrow(toplinks)) {
-  listlinks=paste0(listlinks,tags$a(href=toplinks$url[k],toplinks$label[k],style="font-size: 14px;float: right;background-color: steelblue;color: white;display: inline-block;margin: 5px 5px;padding: 10px 10px;",target="_blank"),"\n")
+  listlinks=paste0(listlinks,tags$a(href=toplinks$url[k],toplinks$label[k],style="font-size: 16px;float: right;background-color: steelblue;color: white;display: inline-block;margin: 5px 5px;padding: 10px 10px;",target="_blank"),"\n")
 }
 # cat(listlinks)
 if (category == "internal") mytitle="<p style='text-align: center; font-size: 20px; color:blue;' >~ Internal version ~</p>" else  
@@ -113,7 +113,7 @@ shinyUI(
 						 							   tags$style(type="text/css", ".irs-grid-text { font-size: 8pt;color: black; }",
 						 							              ".irs-min { font-size: 8pt; background: white; }", ".irs-max { font-size: 8pt; background: white;}",
 						 							              ".irs-from { font-size: 8pt; color: black;background: white;}", ".irs-to { font-size: 8pt;  color: black;background: white;}"
-						 							              , "body {font-size: 12pt;}", "img {display: block;}", ".clear {clear: both}"
+						 							              , "body {font-size: 14pt;}", "img {display: block;}", ".clear {clear: both}"
 						 							   )
 						 							 ),
 						 							 tags$head(
@@ -168,7 +168,7 @@ shinyUI(
 	        	)
 	        ),
         mainPanel(
-          div(style="font-size: 14px", align="center", "CellMinerCDB enables exploration and analysis of cancer cell line pharmacogenomic data across different sources. If publishing results based on this site, please cite: ", a("Rajapakse.VN, Luna.A, Yamade.M et al. iScience, Cell Press. 2018 Dec 12.", href="https://www.cell.com/iscience/fulltext/S2589-0042(18)30219-0", target = "_blank", style="font-size: 14px;")),
+          div(style="font-size: 16px", align="center", "CellMinerCDB enables exploration and analysis of cancer cell line pharmacogenomic data across different sources. If publishing results based on this site, please cite: ", a("Rajapakse.VN, Luna.A, Yamade.M et al. iScience, Cell Press. 2018 Dec 12.", href="https://www.cell.com/iscience/fulltext/S2589-0042(18)30219-0", target = "_blank", style="font-size: 16px;")),
         	uiOutput('tabsetPanel')
         )
     	 )

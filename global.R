@@ -1,6 +1,6 @@
 # NOTE: Size is not automatically set for rChartsAlternative output
-plotHeight <- 1000
-plotWidth <- 1200
+plotHeight <- 1100
+plotWidth <- 1100
 
 tooltipCol <- "tooltip"
 

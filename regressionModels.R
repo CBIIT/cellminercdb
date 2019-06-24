@@ -14,7 +14,7 @@ regressionModelsInput <- function(id, dataSourceChoices) {
 	    voptions =  paste0(voptions,"<option value=",dataSourceChoices[y],">",names(dataSourceChoices)[y],"</option>;");
 	  }
 	}
-	tabPanel("Regression Models",
+	tabPanel("Multivariate Analyses",
 					 fluidPage(
 					 	sidebarLayout(
 					 		sidebarPanel(
@@ -521,7 +521,11 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 				uniqPredId <- paste0(predId, "_", input$dataset)
 				lassoModelData[, uniqPredId] <- lassoPredData[, predId]
 			}
+			##
+			shiny::validate(need(ncol(lassoModelData) > 2,
+			                     "No predictor variables selected by LASSO algorithm."))
 			
+			##
 			lassoLmModelData <- lassoModelData[, -1] # dropping CellLine column
 			lassoLmCvFit <- rcellminerElasticNet::getLmCvFit(
 				X = as.matrix(lassoLmModelData[, -1, drop = FALSE]), 
