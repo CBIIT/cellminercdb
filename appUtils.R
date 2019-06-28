@@ -205,6 +205,10 @@ getPlotData <- function(xData, yData, showColor, showColorTissues, dataSource=NU
 		  df$NeuroEndocrineScore <- srcContent[[dataSource]]$sampleData[rownames(df), "NeuroEndocrineScore"]
 		}
 		
+		if ("NAPY" %in% colnames(srcContent[[dataSource]]$sampleData)) {
+		  df$NAPY <- srcContent[[dataSource]]$sampleData[rownames(df), "NAPY"]
+		}
+		
 	}
 	# cat(dim(df),"\n")
 	return(df)

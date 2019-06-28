@@ -581,6 +581,10 @@ shinyServer(function(input, output, session) {
   	  dlDataTabCols <- c(dlDataTabCols, "NeuroEndocrineScore")
   	}
   	
+  	if ("NAPY" %in% colnames(dlDataTab)) {
+  	  dlDataTabCols <- c(dlDataTabCols, "NAPY")
+  	}
+  	
   	dlDataTab <- dlDataTab[, dlDataTabCols]
   	dlDataTab[, 2] <- round(dlDataTab[, 2], 3)
   	dlDataTab[, 3] <- round(dlDataTab[, 3], 3)
