@@ -328,7 +328,7 @@ shinyServer(function(input, output, session) {
 	    
 	  } else {
 	    molPharmData <- srcContent[[pcDataset]][["molPharmData"]]
-	    molData <- molPharmData[setdiff(names(molPharmData), c("act","copA","mutA","metA","expA","xaiA","proA","mirA","mdaA","swaA","xsqA","mthA"))]
+	    molData <- molPharmData[setdiff(names(molPharmData), c("act","copA","mutA","metA","expA","xaiA","proA","mirA","mdaA","swaA","xsqA","mthA","hisA"))]
 	    shiny::validate(need(length(molData)>0, "No molecular data available for this cell line set"))
 	    ##if (length(molData)==0) stop("No molecular data available for this cell line set")
 	    ## old: molData <- lapply(molData, function(X) X[, selectedLines])
@@ -1094,7 +1094,27 @@ shinyServer(function(input, output, session) {
     }
   )
 ##
-  ### Download footnotes
+## -----------Download Cell line info
+  output$downloadCell <- downloadHandler(
+    
+    # This function returns a string which tells the client
+    # browser what name to use when saving the file.
+    filename = function() {
+      paste0("Cell_line_annotation_",input$mdataSource,".txt")
+    },
+     content = function(file) {
+      
+      wdata=srcContent[[input$mdataSource]][["sampleData"]]
+      # rownames(wdata)=substr(rownames(wdata),4,nchar(rownames(wdata)))
+      # Write to a file specified by the 'file' argument
+      #write.table(srcContent[[input$mdataSource]][["molPharmData"]][[input$dataType]], file, sep = "\t",col.names = NA)      
+      write.table(wdata, file, sep = "\t", row.names = F)  
+      
+    }
+  )
+##
+  
+### Download footnotes
   output$downloadFoot <- downloadHandler(
     
     # This function returns a string which tells the client

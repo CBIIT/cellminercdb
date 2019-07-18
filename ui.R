@@ -196,6 +196,9 @@ shinyUI(
 						 				br(),br(),
 						 				downloadButton('downloadFoot', 'Download Footnotes'),
 						 				br(),br(),br(),br(),br(),br(),
+						 				HTML("<b>Download current cell line set information</b>"),
+						 				downloadButton('downloadCell', 'Download cell lines annotation'),
+						 				br(),br(),
 						 				HTML("<b>Download drug synonyms table with matching IDs for all cell line sets</b>"),
 						 				downloadButton('downloadSyn', 'Download Table'),
 						 				br(),br()

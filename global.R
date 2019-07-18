@@ -16,7 +16,7 @@ isDrugActivityDataType <- function(prefix){
 
 isGeneProtDataType <- function(prefix){
 	# TO DO: Make configurable.
-	geneProtDataTypePrefixes <- c("cop", "mut", "met", "exp", "xai", "swa", "pro","xsq","mth")
+	geneProtDataTypePrefixes <- c("cop", "mut", "met", "exp", "xai", "swa", "pro","xsq","mth","his")
 	if (prefix %in% geneProtDataTypePrefixes){
 		return(TRUE)
 	} else{
@@ -26,7 +26,7 @@ isGeneProtDataType <- function(prefix){
 
 isGeneID <- function(prefix){
   # TO DO: Make configurable.
-  geneProtDataTypePrefixes <- c("cop", "mut", "met", "exp", "xai", "xsq","mth")
+  geneProtDataTypePrefixes <- c("cop", "mut", "met", "exp", "xai", "xsq","mth","his")
   if (prefix %in% geneProtDataTypePrefixes){
     return(TRUE)
   } else{
