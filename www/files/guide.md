@@ -6,7 +6,7 @@
   - [View Data](#download)
   - [Compare Patterns](#compare)
   - [Tissue Correlation](#tcorrel)
--	[Regression Models](#regression)
+-	[Multivariate Analysis](#regression)
   - [Heatmap](#heatmap)
   - [Data](#data)
   - [Plot](#plotpred)
@@ -39,7 +39,7 @@
 <!-- /TOC -->
 
 <h2 id="introduction">Introduction</h2>
-CellMinerCDB is an interactive web application that simplifies access and exploration of cancer cell line pharmacogenomic data across different sources (see Metadata section for more details). Navigation in the application is done using main menu tabs (see figure below). It includes 5 tabs: Univariate Analyses, Regression Models, Metadata, Search and Help. Univariate Analyses is selected by default when entering the site. Each option includes a side bar menu (to choose input) and a user interface output to display results. Analysis options are available on the top for both the Univariant Analysis and Regression model tabs (see sub-menu on figure). The sub-menu first option result is displayed by default (Figure 1).
+CellMinerCDB is an interactive web application that simplifies access and exploration of cancer cell line pharmacogenomic data across different sources (see Metadata section for more details). Navigation in the application is done using main menu tabs (see figure below). It includes 6 tabs: Univariate Analyses, Multivariate Analysis, Metadata, Search, Help and Video tutorial. Univariate Analyses is selected by default when entering the site. Each option includes a side bar menu (to choose input) and a user interface output to display results. Analysis options are available on the top for both the Univariant Analysis and Regression model tabs (see sub-menu on figure). The sub-menu first option result is displayed by default (Figure 1).
 
 ![Screenshot of CellMinerCDB Application](files/Slide1.jpeg)
 
@@ -106,8 +106,8 @@ This option enables to display per tissue of origin (oncotype level 1) the numbe
 
 **Figure 5**: Shows the correlation between the selected values for SLFN11 gene expression (x-axis) and Topotecan (id 609699) drug activity (y-axis) from the NCI-60 across all common lines by tissue of origin. Note: The value "ALL" means all available common tissues between the 2 selected features.
 
-<h2 id="regression">Regression Models</h2>
-The ‘Regression Models’ option (or module) has multiple tabs including Heatmap, Data, Plot, Cross-Validation, Tehnical Details and Partial Correlation (described below), and allows construction and assessment of multivariate linear response prediction models. For instance, we can assess prediction of a drug activity based on some genes expression. To construct a regression model, you need to specify the input data in the left side panel.
+<h2 id="regression">Multivariate Analysis</h2>
+The ‘Multivariate Analysis’ option (or module) has multiple tabs including Heatmap, Data, Plot, Cross-Validation, Tehnical Details and Partial Correlation (described below), and allows construction and assessment of multivariate linear response prediction models within a single cell line set. For instance, we can assess prediction of a drug activity based on some genes expression. To construct a regression model, you need to specify the input data in the left side panel.
 
 <h4 id="inputs2">Input data</h4>
 
@@ -193,14 +193,14 @@ In order to run a partial correlation analysis, the user should first construct 
 **Figure 12**: An example of  partial correlation results for selected gene expression data using all gene sets.
 
 <h2 id="metadata">Metadata</h2>
-This option enumerates for each cell line set, the available data types that could be queried within the app providing the data type abbreviation or prefix, description, feature value unit (z-score, intensity, probability …), platform or experiment and related publication reference (pubmed). First the user should specify the **Cell Line Set** or data source to view all available associated data types. Then he can download data via: **Select Data Type to Download** and then click on **Download Data type** and/or **Download Data Footnotes** to download any data or footnotes for the selected cell line set. Finally the user has the option to **Download drug synonyms table with matching IDs for all cell line sets** by clicking on **Download table**.
+This option enumerates for each cell line set, the available data types that could be queried within the app providing the data type abbreviation or prefix, description, feature value unit (z-score, intensity, probability …), platform or experiment and related publication reference (pubmed). First the user should specify the **Cell Line Set** or data source to view all available associated data types. Then he can download data via: **Select Data Type to Download** and then click on **Download Data type** and/or **Download Data Footnotes** to download any data or footnotes for the selected cell line set. Finally the user has the option to **Download current cell line set information** and **Download drug synonyms table with matching IDs for all cell line sets** by clicking respectively on **Download cell line annotation** and **Download table**.
 
 ![Screenshot of CellMinerCDB Application](files/Slide13.jpeg)
 
 **Figure 13**: Shows all data types for NCI60
 
 <h2 id="search">Search IDs</h2>
-This page lists the identifiers (ID) available in the selected data source for use in the univariate analysis or regression models. The user chooses:
+This page lists the identifiers (ID) available in the selected data source for use in the univariate analysis or Multivariate Analysis. The user chooses:
   - **Cell Line Set** selects the data source. The user can choose: NCI60, CCLE, GDSC, CTRP or NCI/DTP SCLC (see Data Sources for more details).
   - **Select Data Type** selects the data type to query. The options for this vary dependent on the source selected above, and appear in the x-Axis Data Type dropdown. See the Metadata tab for descriptions and abbreviations.
 
@@ -256,17 +256,16 @@ Please send comments and feedback to
 
 <h2 id="data-sources">Data Sources</h2>
 CellMinerCDB integrates data from the following sources, which provide additional data and specialized analyses.
-* <a href="https://discover.nci.nih.gov/cellminer/" target="_blank">CellMiner NCI-60</a>
-* <a href="http://www.cancerrxgene.org/" target="_blank">Sanger/Massachusetts General Hospital Genomics of Drug Sensitivity in Cancer (GDSC)</a>
+* <a href="https://discover.nci.nih.gov/cellminer/" target="_blank">CellMiner NCI-60 (NCI60)</a>
+* <a href="https://dtp.cancer.gov/ncialmanac/" target="_blank">DTP NCI-60 Almanac (Almanac)</a>
 * <a href="https://portals.broadinstitute.org/ccle" target="_blank">Broad/Novartis Cancer Cell Line Encyclopedia (CCLE)</a>
 * <a href="https://portals.broadinstitute.org/ctrp/" target="_blank">Broad Cancer Therapeutics Response Portal (CTRP)</a>
+* <a href="http://www.cancerrxgene.org/" target="_blank">Sanger/Massachusetts General Hospital Genomics of Drug Sensitivity in Cancer (GDSC)</a>
 * <a href="https://sclccelllines.cancer.gov/sclc/" target="_blank">NCI/DTP Small Cell Lung Cancer Project (SCLC)</a>
-
-![Screenshot of CellMinerCDB Application](files/Slide16.jpeg)
-
-**Figure 16**: Summary of Molecular Drug Activity Data for the five data sources currently included in CellMinerCDB. For the drug data, combo is a two-drug combinations from the NCI60 Almanac. For molecular data types, the numbers indicate the number of genes with a particular data type. Gene level mutation and methylation (numbers in red) were computed using specific scripts described in cellminercdb paper (see reference below). A Grey tab indicates that is no data available.
-
 ![Screenshot of CellMinerCDB Application](files/Slide17.jpeg)
+**Figure 16**: Summary of Molecular Drug Activity Data for the six data sources currently included in CellMinerCDB. For the drug data, combo is a two-drug combinations from the NCI60 Almanac. For molecular data types, the numbers indicate the number of genes with a particular data type. Gene level mutation and methylation (numbers in red) were computed using specific scripts described in cellminercdb paper (see reference below). A Grey tab indicates that is no data available.
+
+![Screenshot of CellMinerCDB Application](files/Slide18.jpeg)
 **Figure 17**: Cell line overlaps between data sources.
 
 <h2 id="about-the-data">About the Data</h2>

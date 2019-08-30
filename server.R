@@ -548,9 +548,10 @@ shinyServer(function(input, output, session) {
 												 srcContent = srcContentReactive(),oncolor=oncolor)
 		p1 <- p1 + theme(axis.text = element_text(size=16), plot.title = element_text(size = 16), 
 		                 axis.title.x = element_text(size = 16), axis.title.y = element_text(size = 16))
+	  #theme_update(legend.position = c(0,0))
 		g1 <- ggplotly(p1, width=plotWidth, height=plotHeight, tooltip=tooltipCol)
 		#g1 <- layout(g1, margin=list(t = 75))
-		g1 <- layout(g1, margin=list(t = 75), legend = list(font = list(size = 16)))
+		g1 <- layout(g1, margin=list(t = 75), legend = list(font = list(size = 18)))
 		g2 <- config(p = g1, collaborate=FALSE, cloud=FALSE, displaylogo=FALSE, displayModeBar=TRUE,
 								 modeBarButtonsToRemove=c("select2d", "sendDataToCloud", "pan2d", "resetScale2d",
 								 												 "hoverClosestCartesian", "hoverCompareCartesian",

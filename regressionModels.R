@@ -830,8 +830,12 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 		p1 <- makePlotStatic(xData = predResponseData, yData = responseData, showColor = T, 
 												 showColorTissues = character(0), dataSource = input$dataset, 
 												 srcContent = srcContentReactive(),oncolor=oncolor)
+		# new
+		p1 <- p1 + theme(axis.text = element_text(size=16), plot.title = element_text(size = 16), 
+		                 axis.title.x = element_text(size = 16), axis.title.y = element_text(size = 16))
 		g1 <- ggplotly(p1, width=plotWidth, height=plotHeight, tooltip=tooltipCol)
-		g1 <- layout(g1, margin=list(t = 75))
+		# g1 <- layout(g1, margin=list(t = 75))
+		g1 <- layout(g1, margin=list(t = 75), legend = list(font = list(size = 18)))
 		g2 <- config(p = g1, collaborate=FALSE, cloud=FALSE, displaylogo=FALSE,displayModeBar=TRUE,
 								 modeBarButtonsToRemove=c("select2d", "sendDataToCloud", "pan2d", "resetScale2d",
 								 												 "hoverClosestCartesian", "hoverCompareCartesian",
@@ -875,8 +879,12 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 		p1 <- makePlotStatic(xData = cvPredResponseData, yData = responseData, showColor = T, 
 												 showColorTissues = character(0), dataSource = input$dataset, 
 												 srcContent = srcContentReactive(),oncolor=oncolor)
+		# new
+		p1 <- p1 + theme(axis.text = element_text(size=16), plot.title = element_text(size = 16), 
+		                 axis.title.x = element_text(size = 16), axis.title.y = element_text(size = 16))
 		g1 <- ggplotly(p1, width=plotWidth, height=plotHeight, tooltip=tooltipCol)
-		g1 <- layout(g1, margin=list(t = 75))
+		# g1 <- layout(g1, margin=list(t = 75))
+		g1 <- layout(g1, margin=list(t = 75), legend = list(font = list(size = 18)))
 		g2 <- config(p = g1, collaborate=FALSE, cloud=FALSE, displaylogo=FALSE,displayModeBar=TRUE,
 								 modeBarButtonsToRemove=c("select2d", "sendDataToCloud", "pan2d", "resetScale2d",
 								 												 "hoverClosestCartesian", "hoverCompareCartesian",
@@ -1176,7 +1184,7 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 																sliderInput(ns("numHiLoResponseLines"), 
 																						"Number of High/Low Response Lines to Display:", 
 																						min=1, max=maxNumHiLoResponseLines, 
-																						value=20, width = "50%"),
+																						value=30, width = "50%"),
 																checkboxInput(ns("useHeatmapRowColorScale"), "Use Row Color Scale", FALSE),
 ## 																## d3heatmapOutput(ns("heatmap")),
                                 plotlyOutput(ns("heatmap")),
