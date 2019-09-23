@@ -23,7 +23,7 @@ $(document).ready(function() {
 
 appConfig <- jsonlite::fromJSON("appConfig.json")
 pmodal <- appConfig$modal
-
+vtitle <- "Loading Data ... (~30 seconds)"
 if (is.null(pmodal)){
   vclass = "modal-dialog modal-sm"
   disp_content <- as.character(tags$div(
@@ -50,7 +50,8 @@ if (is.null(pmodal)){
       style="width: 100%;"
     ))
   } else
-  {
+  { 
+    vtitle <- "Loading data (~30 seconds). Video skippable after data has loaded."
     disp_content <- as.character(tags$video(
       src =base64enc::dataURI(file = pmodal, mime = "video/mp4"),
       id="video1",
@@ -85,7 +86,8 @@ loadingModal <- function() {
 					class="modal-header",
 					tags$h4(
 						class="modal-title",
-						"Loading Data ... (~30 seconds)"
+						vtitle
+#						"Loading Data ... (~30 seconds)"
 					)
 				),
 				tags$div(

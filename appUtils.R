@@ -349,7 +349,7 @@ makePlotStatic <- function(xData, yData, showColor, showColorTissues, dataSource
 	
 	p1 <- rcellminer::plotCellMiner2D(df, xCol="x", yCol="y", xLabel = xData$plotLabel, yLabel = yData$plotLabel,
 												colorPalette=colorPalette, classCol=classCol, tooltipCol=tooltipCol,
-												xLimVal = xLimVals, yLimVal = yLimVals, showLegend = leg)
+												xLimVal = xLimVals, yLimVal = yLimVals, showLegend = leg,pointSize = 4)
 	
 	return(p1)
 }
