@@ -544,8 +544,9 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 			rmAlgoResults$predictedResponse <- lassoPredictedResponse
 			rmAlgoResults$cvPredictedResponse <- lassoLmCvFit$cvPred
 			rmAlgoResults$techDetails <- lassoResultsObj
-			rmAlgoResults$eqnStr <- getLmEquationString(rmAlgoResults$predictorWts)
-			
+			## rmAlgoResults$eqnStr <- getLmEquationString(rmAlgoResults$predictorWts)
+			rmAlgoResults$eqnStr <- getLmEquationString( c("(Intercept)" =  lassoIntercept, rmAlgoResults$predictorWts) )
+
 			# Feature selection algorithms are expected to find additional 
 			# predictors. The entry updates the starting inputData(), adding
 			# data for selected predictors.
