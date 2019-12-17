@@ -13,6 +13,7 @@ library(shinycssloaders)
 library(gplots)
 library(heatmaply)
 library(memoise)
+
 ## library(shinyHeatmaply)
 #library(dplyr)
 #library(svglite)
@@ -110,7 +111,75 @@ removeMolDataType <- memoise(rcellminer::removeMolDataType, cache = db)
 # print(sessionInfo())
 # sink()
 
+library(bigrquery)
+library(httpuv)
+aproject <-"isb-cgc-fathi"
+
 shinyServer(function(input, output, session) {
+  ##########-------------------#################
+  distPlot <-eventReactive(input$subtcga,{
+    prefixChoices <- srcContent[[input$cmpSource]][["featurePrefixes"]]
+    pf="xsq"
+    if (is.na(match("xsq",prefixChoices))) 
+    {
+      if (is.na(match("exp",prefixChoices)))  pf=NA else pf="exp"
+    }
+    shiny::validate(need(!is.na(pf), 
+                         "There is no gene expression for selected cell line set."))
+    wdata=srcContent[[input$cmpSource]][["molPharmData"]][[pf]]
+    rownames(wdata)=substr(rownames(wdata),4,nchar(rownames(wdata)))
+    ## search for gene in cell line set - for now no synonym
+    shiny::validate(need(toupper(input$vgene)  %in% rownames(wdata), 
+                         "gene not found in selected cell line set"))
+    resu = cbind(genexp=wdata[toupper(input$vgene),],cohort=srcContent[[input$cmpSource]][["sampleData"]][["OncoTree1"]])
+    resu = data.frame(resu,stringsAsFactors = F)
+    resu[,1] = as.numeric(resu[,1])
+    resu[,2] = as.factor(resu[,2])
+    # new
+    if (input$zsid) {
+    resu = resu[order(resu[,2]),]
+    resu[,1]=unlist(tapply(resu[,1],resu[,2],scale))
+    }
+    #
+    print(dim(resu))
+    ## add TCGA
+    dat <- geneExpTcga(toupper(input$vgene), aproject)
+    shiny::validate(need(!is.null(dat), 
+                         "gene not found in TCGA"))
+    ## multiplatform >> batch effect ??
+    if (length(levels(factor(dat$platform))>1)) showNotification("TCGA platform is not unique, possible batch effect.", duration=10, type="warning")
+    ## new
+    print(dim(dat))
+    vind = which(as.numeric(dat$ttype)<10)
+    tcga = dat[vind,c("normalized_count","project_short_name")]
+    colnames(tcga)=c("genexp","cohort")
+    #
+    if (input$zsid) {
+    tcga  = tcga[order(tcga$cohort),]
+    tcga$genexp = unlist(tapply(tcga$genexp,tcga$cohort,scale))
+    }
+    ## select only tumor samples
+    
+    resu= rbind(resu,tcga)
+    print(dim(resu))
+    ## 
+    p<-ggplot(resu, aes(x=cohort, y=genexp)) +
+#      geom_boxplot(aes(fill = cohort)) + theme(plot.title = element_text(size=14, face="bold"), legend.text = element_text(size=14),axis.title.x = element_blank(),axis.text.x = element_blank(),axis.ticks.x = element_blank() ) + ggtitle(paste0("Distribution of ",toupper(input$vgene)," gene expression (z-score)"))
+    geom_boxplot(aes(fill = cohort)) + theme(plot.title = element_text(size=14, face="bold"), legend.text = element_text(size=14),axis.title.x = element_blank(), axis.text.x = element_text(angle = 45) ) + ggtitle(paste0("Distribution of ",toupper(input$vgene)," gene expression"))
+    
+    g <- ggplotly(p,plotWidth=1000,plotHeight=1400)
+    #g1 <- layout(g1, margin=list(t = 75))
+    g <- layout(g, margin=list(t = 75), legend = list(font = list(size = 18)))
+    g1 <- config(p = g, collaborate=FALSE, cloud=FALSE, displaylogo=FALSE, displayModeBar=TRUE,
+                 modeBarButtonsToRemove=c("select2d", "sendDataToCloud", "pan2d", "resetScale2d",
+                                          "hoverClosestCartesian", "hoverCompareCartesian",
+                                          "lasso2d", "zoomIn2d", "zoomOut2d"))
+    g1
+      })
+  
+  #output$tcgaPlot <- renderPlot({distPlot()}, width=1000, height=600)
+  output$tcgaPlot <- renderPlotly({distPlot()})
+  
 	#----[Reactive Variables]---------------------------------------------------------------
 	# Record current input validity status, data type prefix values.
 	globalReactiveValues <- reactiveValues(xPrefix = NULL, yPrefix = NULL)
@@ -290,15 +359,36 @@ shinyServer(function(input, output, session) {
 	##------------
 	PatternCompTable <- reactive({
 	  srcContent <- srcContentReactive()
+	  ## new
+	  if (input$crossdb == "Yes")
+	  {
+	    # if (input$patternComparisonSeed == "xPattern"){
+	      dat <- xData()
+	      pcDataset <- input$yDataset
+	      # selectedLines <- names(yData()$data)
+	      selectedLines <- as.character(matchedCellLinesTab()[, "yDataset"])
+	    # } else{
+	    #   dat <- yData()
+	    #   pcDataset <- input$xDataset
+	    #   # selectedLines <- names(xData()$data)
+	    #   selectedLines <- as.character(matchedCellLinesTab()[, "xDataset"])
+	    # }
+	    names(dat$data) = selectedLines
+	  }
 	  
-	  if (input$patternComparisonSeed == "xPattern"){
+	  else
+	  {
+	  
+	  # if (input$patternComparisonSeed == "xPattern"){
 	    dat <- xData()
 	    pcDataset <- input$xDataset
-	  } else{
-	    dat <- yData()
-	    pcDataset <- input$yDataset
-	  }
-	  selectedLines <- names(dat$data)
+	  # } else{
+	  #   dat <- yData()
+	  #   pcDataset <- input$yDataset
+	  # }
+	    selectedLines <- names(dat$data)
+	  } # end new
+	  
 	  
 	  shiny::validate(need(length(selectedLines)>0, paste("ERROR:", " No common complete data found.")))
 	  shiny::validate(need(length(selectedLines)>2, paste("ERROR:", " No display for less than 3 observations.")))
@@ -792,7 +882,9 @@ shinyServer(function(input, output, session) {
 	#   results[, "FDR"] <- signif(results[, "FDR"], 3)
 	# 	## sort by p-value
 	#   results <- results[order(results[, "P-Value"]),]
-    results= PatternCompTable()	 
+    results= PatternCompTable()	
+    
+    
 	  # DT::datatable(results, rownames=FALSE, colnames=colnames(results),extensions='Buttons',
 	  # 							filter='top', style='bootstrap', selection = "none",
 	  # 							options=list(lengthMenu = c(10, 50, 100,500), pageLength = 100,language=list(paginate = list(previous = 'Previous page', `next`= 'Next page')) ,dom='lipBt', buttons = list('copy', 'print', list(extend = 'collection',buttons = list(list(extend='csv',filename='pattern_comp',title='Exported data from CellMinerCDB'), list(extend='excel',filename='pattern_comp',title='Exported data from CellMinerCDB'), list(extend='pdf',filename='pattern_comp',title='Exported data from CellMinerCDB')),text = 'Download'))))
@@ -849,16 +941,16 @@ shinyServer(function(input, output, session) {
 	output$tabsetPanel = renderUI({
 		#verbatimTextOutput("log") can be used for debugging
 		#tabPanel("Plot", verbatimTextOutput("genUrl"), showOutput("rCharts", "highcharts")),
-	  tab4 <- tabPanel("Tissue Correlation",
+	  tab4 <- tabPanel("Tissue Correlation", value=4,
 	                   #downloadLink("downloadData", "Download selected x and y axis data as a Tab-Delimited File"),
 	                   DT::dataTableOutput("cortable"))
-		tab1 <- tabPanel("View Data",
+		tab1 <- tabPanel("View Data", value=2,
                      downloadLink("downloadData", "Download selected x and y axis data as a Tab-Delimited File"),
                      DT::dataTableOutput("table"))
 		tab2 <- tabPanel("Search IDs",
                      includeMarkdown("www/files/help.md"),
                      DT::dataTableOutput("ids"))
-		tab3 <- tabPanel("Compare Patterns",
+		tab3 <- tabPanel("Compare Patterns", value=3,
 										 includeMarkdown("www/files/help.md"),
 										 #br(),
 										 HTML("<b>Pattern comparison results are computed with respect to that data defined and shared by both the x and y-axis inputs.</b>"),
@@ -875,11 +967,19 @@ shinyServer(function(input, output, session) {
 										 	#											choices=c("x-Axis Entry"="xPattern", 
 										 	#																"y-Axis Entry"="yPattern"), 
 										 	#											selected="xPattern"))
-										 	column(3, HTML(
-										 	  paste("<label class='control-label' for='patternComparisonSeed'>With Respect to</label>","<select id='patternComparisonSeed'><option value='xPattern' selected>x-Axis Entry</option><option value='yPattern'>y-Axis Entry</option></select>")
-										 	))
+# removed
+										 	# column(3, HTML(
+										 	#   paste("<label class='control-label' for='patternComparisonSeed' id='lpcs'>With Respect to</label>","<select id='patternComparisonSeed'><option value='xPattern' selected>x-Axis Entry</option><option value='yPattern'>y-Axis Entry</option></select>")
+										 	# )),
+										 	## new staff
+										 	# column(3, HTML(
+										 	#   paste("<label class='control-label' for='crossdb'>Use y-Axis cell line set?</label>","<br><input type='radio' id='crossdb' value='No' checked> No  <input type='radio' id='crossdb' value='Yes'> Yes")
+										 	# ))
+										 	column(3, radioButtons("crossdb", label = "Compare to y-Axis cell line set?", choices = list("No" = "No", "Yes" = "Yes"), selected  = "No", inline=T)
+										 	 )
+										 	
 										 ),
-										 br(),br(),
+										 br(),
 										 renderUI({
 										   req(PatternCompTable())
 										   downloadLink("downloadDataComp", "Download All as a Tab-Delimited File")
@@ -898,10 +998,10 @@ shinyServer(function(input, output, session) {
 #									tab1, tab2, tab3
 #			)
 #		} else {
-			plotPanel <- tabPanel("Plot Data", plotlyOutput("rChartsAlternative", width = plotWidth, height = plotHeight),
+			plotPanel <- tabPanel("Plot Data", value=1, plotlyOutput("rChartsAlternative", width = plotWidth, height = plotHeight),
 														br(), br(), p("Plot point tooltips provide additional information."))
 			#tsPanel <- tabsetPanel(plotPanel, tab1, tab2, tab3)
-			tsPanel <- tabsetPanel(plotPanel, tab1, tab3,tab4)
+			tsPanel <- tabsetPanel(id="ts",plotPanel, tab1, tab3,tab4)
 #		}
 
 		return(tsPanel)
@@ -957,7 +1057,8 @@ shinyServer(function(input, output, session) {
 		tags$div(
 		tags$a(visibleText, href=paste(urlString), target = "_blank"),
 		tags$a("   and the DTP",href='https://dtp.cancer.gov', target='_blank'))
-		else tags$a(visibleText, href=paste(urlString), target = "_blank")
+		else tags$a(visibleText, href=paste(urlString), target = "_blank",id="tmd")
+		
 		#  
 		# if (input$mdataSource=="nci60") { 
 		#    a(visibleText, href=paste(urlString), target = "_blank")
@@ -1171,22 +1272,28 @@ shinyServer(function(input, output, session) {
     # This function returns a string which tells the client
     # browser what name to use when saving the file.
     filename = function() {
-      if (input$patternComparisonSeed == "xPattern"){
+#      if (input$patternComparisonSeed == "xPattern"){
         
         pcDataset <- input$xDataset
         pcType <- input$xPrefix
         pcId <- input$xId
-      } 
-      else{
-        
-        pcDataset <- input$yDataset
-        pcType <- input$yPrefix
-        pcId <- input$yId
-      
+      # } 
+      # else{
+      #   
+      #   pcDataset <- input$yDataset
+      #   pcType <- input$yPrefix
+      #   pcId <- input$yId
+      # 
+      # }
+        pcDataset2 <- input$yDataset
+      if (input$crossdb == "No") {  
+      ##paste0("Pattern_Comp_all_cdb_",input$patternComparisonSeed,"_",pcDataset,"_",pcType,"_",pcId,"_",input$patternComparisonType,".txt")
+      paste0("Pattern_Comp_all_cdb_",pcDataset,"_",pcType,"_",pcId,"_",input$patternComparisonType,".txt") 
       }
-        
-      paste0("Pattern_Comp_all_cdb_",input$patternComparisonSeed,"_",pcDataset,"_",pcType,"_",pcId,"_",input$patternComparisonType,".txt")
-    },
+        else {
+          paste0("Pattern_Comp_all_cdb_",pcDataset,"_",pcType,"_",pcId,"_",input$patternComparisonType,"_from_",pcDataset2,".txt") 
+        }
+      },
     
     content = function(file) {
       
@@ -1247,7 +1354,7 @@ shinyServer(function(input, output, session) {
   	}
   	#selectInput("yPrefix", "y-Axis Type", choices = prefixChoices, selected = selectedPrefix)
   	HTML(
-  	  paste("<label class='control-label' for='yPrefix'>y-Axis Data Type</label>","<select id='yPrefix' style='word-wrap:break-word; width: 100%;'>",opt,"</select>")
+  	  paste("<label class='control-label' for='yPrefix' id='lyp'>y-Axis Data Type</label>","<select id='yPrefix' style='word-wrap:break-word; width: 100%;'>",opt,"</select>")
   	)
   })
   
@@ -1349,6 +1456,7 @@ shinyServer(function(input, output, session) {
   	## 
   })
 
+  ##
   output$showColorTissuesUi <- renderUI({
   	#tissueChoices <- analysisTissueTypes()
   	tissueChoices <- getSampleSetTissueTypes(
@@ -1362,7 +1470,7 @@ shinyServer(function(input, output, session) {
   	    opt =  paste0(opt,"<option style='white-space: pre-wrap'>",tissueChoices[y],"</option>;");
   	}
   	HTML(
-  	  paste("<label class='control-label' for='showColorTissues'>Select Tissues to Color</label>","<select id='showColorTissues' style='word-wrap:break-word; width: 100%;' multiple>",opt,"</select>")
+  	  paste("<label class='control-label' for='showColorTissues' id='lsc'>Select Tissues to Color</label>","<select id='showColorTissues' style='word-wrap:break-word; width: 100%;' multiple>",opt,"</select>")
   	)
   	# selectInput("showColorTissues", "Tissues to Color",choices = tissueChoices, multiple = TRUE)
 	})

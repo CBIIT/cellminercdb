@@ -474,4 +474,32 @@ findDrugIDs <- function(drugname) {
   return(dmatres)
 }
 #---------------------------------------------------------------------------------------------------
+# query TCGA data 
+#---------------------------------------------------------
 
+geneExpTcga <- function(varName, aproject) {
+  #
+  # First we're going to build the string representing the BigQuery #
+  #
+  # q <- paste(
+  #   "SELECT project_short_name, sample_barcode, HGNC_gene_symbol, normalized_count,platform FROM `isb-cgc.TCGA_hg19_data_v0.RNAseq_Gene_Expression_UNC_RSEM` WHERE platform = 'IlluminaHiSeq' AND HGNC_gene_symbol = '", varName, "'",sep="")
+ 
+  q <- paste(
+    "SELECT project_short_name, Safe.SUBSTR(sample_barcode,14,2) AS ttype, HGNC_gene_symbol, normalized_count,platform FROM `isb-cgc.TCGA_hg19_data_v0.RNAseq_Gene_Expression_UNC_RSEM` WHERE HGNC_gene_symbol = '", varName, "'",sep="")
+  
+  ## new
+  service_token <- set_service_token("/Users/elloumif/km/isb-cgc-fathi-b2c2573d2b53.json")
+  ##
+  response <- query_exec(q, project = aproject, use_legacy_sql =FALSE,max_pages = Inf)
+  
+  ##   dat <- data.frame()
+  dat <- response
+  if(!is.null(response))
+  {
+    
+    # then we need to do a little data-cleaning to get ready for our survival model
+    dat$project_short_name <- as.factor(dat$project_short_name)
+    dat$normalized_count <- log2(dat$normalized_count+1)
+  }
+  return(dat)
+} ## end expression query

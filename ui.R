@@ -1,5 +1,8 @@
 library(shiny)
 library(rcellminer)
+library(shinycssloaders)
+library(plotly)
+
 # library(microplot)
 #--------------------------------------------------------------------------------------------------
 # LOAD CONFIGURATION AND REQUIRED DATA SOURCE PACKAGES.
@@ -95,7 +98,7 @@ shinyUI(
   #tags$img(src = "files/banner.png",alt= "banner",height="100%",width="100%", border="0", style="padding: 0px; display: block; line-height: 0; font-size: 0px; border: 0px; clear: both; vertical-align: top; margin: 0px 0px 0px 0px;"),
    #navbarPage(h6(style="vertical-align:top;font-size: 24px;color: dodgerblue;",appTitle), 
    # navbarPage(HTML("<p style='font-size: 24px;color: dodgerblue;'>", appTitle,"</p>"), 
-  	navbarPage(title="",
+  	navbarPage(title="", id="nv",
 						 inverse=FALSE,
 						 header = list(tags$head(includeCSS("www/css/hacks.css")),
 						 							 #tags$head(includeCSS("www/css/tooltip.css")),
@@ -124,7 +127,32 @@ shinyUI(
 						 							   )
 						 							 ),
 						 							 tags$head(tags$title("CellMinerCDB")),
-						 							 tags$head(tags$meta(name="description",content="CellMiner Cross Database (CellMinerCDB) is the first web application to allow translational researchers to conduct analyses across all major cancer cell line pharmacogenomic data sources from NCI-DTP NCI-60, Sanger GDSC, and Broad CCLE/CTRP"))
+						 							 tags$head(tags$meta(name="description",content="CellMiner Cross Database (CellMinerCDB) is the first web application to allow translational researchers to conduct analyses across all major cancer cell line pharmacogenomic data sources from NCI-DTP NCI-60, Sanger GDSC, and Broad CCLE/CTRP")),
+						 							 tags$head(HTML("<script type=\"application/ld+json\">
+  {
+  \"@context\":\"https://schema.org/\",
+  \"@type\":\"Dataset\",
+  \"name\":\"NCI60 and other cancer cell line datasets\",
+  \"description\":\" CellMinerCDB is a resource that simplifies access and exploration of cancer cell line pharmacogenomic data across different sources\",
+  \"url\":\" https://discover.nci.nih.gov/cellminercdb/\",
+  \"keywords\":[
+  \"NCI60\",
+  \"GDSC\",
+  \"CCLE\",
+  \"CTRP\"
+  ],
+  \"creator\":{
+  \"@type\":\"Organization\",
+  \"url\": \" https://discover.nci.nih.gov/ \",
+  \"name\":\"GPF/DTB/CCR/NCI/NIH\",
+  \"contactPoint\":{
+  \"@type\":\"ContactPoint\",
+  \"contactType\": \"customer service\",
+  \"email\":\"Webadmin@discover.nih.gov\"
+  }
+  }
+  }
+  </script>"))
 						              ),
 		#background-color: blue; font-color: white;
 		#------[NavBar Tab: Univariate Analyses]---------------------------------------------------------
@@ -143,29 +171,32 @@ shinyUI(
 	        	  ),
 	        	  uiOutput("xPrefixUi"),
 	            textInput("xId", "Identifier: (e.g. topotecan or SLFN11)", "SLFN11"),
-	        	  uiOutput("xAxisRangeUi"),
-	        	  br(),
+	        	  conditionalPanel(condition="input.ts==1 || input.ts==2 || input.ts==4",
+	        	  uiOutput("xAxisRangeUi") ),
+	        	  br(),br(),
 	            #selectInput("yDataset", "y-Axis Dataset", choices=dataSourceChoices, selected = "nci60"),
 	        	  HTML(
-	        	    paste("<label class='control-label' for='yDataset'>y-Axis Cell Line Set</label>","<select id='yDataset'>",options,"</select>")
+	        	    paste("<label class='control-label' for='yDataset' id='lyd'>y-Axis Cell Line Set</label>","<select id='yDataset'>",options,"</select>")
 	        	  ),
+	        	  conditionalPanel(condition="input.ts==1 || input.ts==2 || input.ts==4",
 	        	  uiOutput("yPrefixUi"),
 	          	textInput("yId", "Identifier: (e.g. topotecan or SLFN11)", "topotecan"),
 	          	uiOutput("yAxisRangeUi"),
 	          	
 	            # checkboxInput("showColor", "Show Color?", value=TRUE),
-
+              br()
+	        	  ) # end conditional panel
+	        	  , 
 	          	radioButtons("tissueSelectionMode", "Select Tissues", c("To include", "To exclude")),
 	          	uiOutput("selectTissuesUi"),
 	        	  
+	        	  conditionalPanel(condition="input.ts==1 || input.ts==2 || input.ts==4",
 	        	  checkboxInput("showColor", "Show Color?", value=TRUE),
-	        	  
 	            uiOutput("showColorTissuesUi")
-	            
-	            # Generate a hidden input with TRUE or FALSE if rCharts is installed
-	          	#tags$label("hasRCharts"),
-	        		#tags$input(id="hasRCharts", type="text", value=hasRCharts, style="display:none")
+	        	  ) # end conditional panel
+	             
 	        	)
+	       
 	        ),
         mainPanel(
           div(style="font-size: 16px", align="center", "CellMinerCDB enables exploration and analysis of cancer cell line pharmacogenomic data across different sources. If publishing results based on this site, please cite: ", a("Rajapakse.VN, Luna.A, Yamade.M et al. iScience, Cell Press. 2018 Dec 12.", href="https://www.cell.com/iscience/fulltext/S2589-0042(18)30219-0", target = "_blank", style="font-size: 16px;")),
@@ -206,8 +237,8 @@ shinyUI(
 						 			)
 						 		), #end sidebarPanel
 						 		mainPanel(
-						 		  htmlOutput('sourceLink'),
-						 		  #uiOutput('sourceLink'),
+						 		  # htmlOutput('sourceLink'),
+						 		  uiOutput('sourceLink'),
 						 			uiOutput('metadataPanel')
 						 			#h4(htmlOutput('sourceLink'))
 						 			# htmlOutput('sourceLink')
@@ -248,12 +279,42 @@ shinyUI(
 		         ) #end fluidPage
 		), #end tabPane
 		#-----[NavBar Tab: About]------------------------------------------------------------------------
-# 		   tabPanel("About",
-#              tags$a(id="skiplink"),
-#     	includeMarkdown("www/files/about.md")
-#     	#h1("For testing"),
-#     	#textOutput("ipAddress")
-#     ),
+		tabPanel("TCGA distribution",
+		            fluidPage(	
+		              sidebarLayout(
+		                sidebarPanel(
+		                  width=3, 
+		                  tags$div(
+		                    id="input_container", 
+		                    tags$a(id="skiplink"),
+		                    #selectInput("mdataSource", "Data Source", choices=metaChoices, selected = "nci60")
+		                    HTML(
+		                      paste("<label class='control-label' for='mdataSource'>Cell Line Set</label>","<select id='cmpSource'>",metaoptions,"</select>")
+		                    ),
+		                    br(),br(),
+		                    textInput("vgene", "Gene symbol: ", "SLFN11"),
+		                    #uiOutput("cmpTypeUi"),
+		                    br(),br(),
+		                    checkboxInput("zsid","z-score ",value=T),
+		                    br(),br(),
+		                    br(),br(),
+		                    HTML("<b>Compare current cell line set expression to TCGA</b>"),
+		                    br(),
+		                    actionButton('subtcga', 'Submit'),
+		                    br(),br(),br(),br(),
+		                    br(),br(),br(),br()
+		                  )
+		                ), #end sidebarPanel
+		                mainPanel(
+		                  #htmlOutput('sourceLink'),
+		                  #uiOutput('sourceLink'),
+		                  ## includeMarkdown("www/files/tcga.md"),
+		                  withSpinner(plotlyOutput('tcgaPlot'))
+		                  
+		                )
+		              )
+		            ) #end fluidPage
+           ), 
 		tabPanel("Help",
 		         tags$a(id="skiplink"),
 		         includeMarkdown("www/files/guide.md")
