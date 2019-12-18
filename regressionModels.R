@@ -1,4 +1,5 @@
 #-----[NavBar Tab: Regression Models (UI code)]----------------------------------------------------
+## new version where the predictors could belong to a new data source
 
 regressionModelsInput <- function(id, dataSourceChoices) {
 	# Create a namespace function using the provided id
