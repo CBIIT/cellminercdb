@@ -22,7 +22,7 @@
           {
             "eSetListName":"met",
             "featurePrefix":"met",
-            "displayName":"met: DNA Methylation"
+            "displayName":"met: DNA 450K Methylation"
           },
           {
             "eSetListName":"mut",
@@ -42,7 +42,7 @@
           {
             "eSetListName":"mda",
             "featurePrefix":"mda",
-            "displayName":"mda: Miscellaneous phenotypic data"
+            "displayName":"mda: Signatures, Miscellaneous data"
           },
           {
             "eSetListName":"pro",
@@ -52,7 +52,7 @@
           {
             "eSetListName":"swa",
             "featurePrefix":"swa",
-            "displayName":"swa: Protein (SWATH-MS)"
+            "displayName":"swa: Protein (Mass spec.-SWATH)"
           }
         ],
         "DrugData":[
@@ -68,7 +68,7 @@
     }
   },
   "ccle":{
-    "displayName":"CCLE",
+    "displayName":"CCLE-Broad-MIT",
     "packages":{
       "ccleData":{
         "MolData":[
@@ -98,9 +98,14 @@
             "displayName":"cop: DNA Copy Number"
           },
           {
+            "eSetListName":"pro",
+            "featurePrefix":"pro",
+            "displayName":"pro: Protein (RPPA)"
+          },
+          {
             "eSetListName":"mda",
             "featurePrefix":"mda",
-            "displayName":"mda: Miscellaneous phenotypic data"
+            "displayName":"mda: Signatures, Miscellaneous data"
           }
         ],
         "DrugData":[
@@ -116,7 +121,7 @@
     }
   },
   "gdscDec15":{
-    "displayName":"GDSC",
+    "displayName":"GDSC-MGH-Sanger",
     "packages":{
       "gdscDataDec15":{
         "MolData":[
@@ -128,7 +133,7 @@
           {
             "eSetListName":"met",
             "featurePrefix":"met",
-            "displayName":"met: DNA Methylation"
+            "displayName":"met: DNA 450K Methylation"
           },
           {
             "eSetListName":"mut",
@@ -136,9 +141,14 @@
             "displayName":"mut: DNA Mutation"
           },
           {
+            "eSetListName":"cop",
+            "featurePrefix":"cop",
+            "displayName":"cop: DNA Copy Number"
+          },
+          {
             "eSetListName":"mda",
             "featurePrefix":"mda",
-            "displayName":"mda: Miscellaneous phenotypic data"
+            "displayName":"mda: Signatures, Miscellaneous data"
           }
         ],
         "DrugData":[
@@ -154,7 +164,7 @@
     }
   },
   "ctrp":{
-    "displayName":"CTRP",
+    "displayName":"CTRP-Broad-MIT",
     "packages":{
       "ctrpData":{
         "MolData":[
@@ -172,6 +182,11 @@
             "eSetListName":"cop",
             "featurePrefix":"cop",
             "displayName":"cop: DNA Copy Number"
+          },
+          {
+            "eSetListName":"mda",
+            "featurePrefix":"mda",
+            "displayName":"mda: Signatures, Miscellaneous data"
           }
         ],
         "DrugData":[
@@ -179,34 +194,6 @@
             "featurePrefix":"act",
             "displayName":"act: Drug Activity (AUC)",
             "drugAnnotIdCol":"ID",
-            "drugAnnotNameCol":"NAME",
-            "drugAnnotMoaCol":"MOA"
-          }
-        ]
-      }
-    }
-  },
-  "nciSclc":{
-    "displayName":"NCI/DTP SCLC",
-    "packages":{
-      "nciSclcData":{
-        "MolData":[
-          {
-            "eSetListName":"exp",
-            "featurePrefix":"exp",
-            "displayName":"exp: mRNA Expression (log2)"
-          },
-           {
-            "eSetListName":"met",
-            "featurePrefix":"met",
-            "displayName":"met: DNA Methylation"
-          }
-        ],
-        "DrugData":[
-          {
-            "featurePrefix":"act",
-            "displayName":"act: Drug Activity (-log10[IC50M])",
-            "drugAnnotIdCol":"NSC",
             "drugAnnotNameCol":"NAME",
             "drugAnnotMoaCol":"MOA"
           }
@@ -231,8 +218,42 @@
       }
     }
   },
+    "ncats":{
+    "displayName":"NCATS Matt Hall",
+    "packages":{
+      "ncatsData":{
+  
+        "DrugData":[
+          {
+            "featurePrefix":"act",
+            "displayName":"act: Drug Activity",
+            "drugAnnotIdCol":"ID",
+            "drugAnnotNameCol":"NAME",
+            "drugAnnotMoaCol":"MOA"
+          }
+        ]
+      }
+    }
+  },
+  "tncats":{
+    "displayName":"NCATS Craig Thomas",
+    "packages":{
+      "tncatsData":{
+  
+        "DrugData":[
+          {
+            "featurePrefix":"act",
+            "displayName":"act: Drug Activity",
+            "drugAnnotIdCol":"ID",
+            "drugAnnotNameCol":"NAME",
+            "drugAnnotMoaCol":"MOA"
+          }
+        ]
+      }
+    }
+  },
   "mdaMills":{
-    "displayName":"MD.Anderson MCLP",
+    "displayName":"MD Anderson",
     "packages":{
       "mdaMillsData":{
         "MolData":[
@@ -245,8 +266,104 @@
       }
     }
   },
+    "uniSarcoma":{
+    "displayName":"Sarcoma NCI",
+    "packages":{
+      "uniSarcomaData":{
+        "MolData":[
+          {
+            "eSetListName":"exp",
+            "featurePrefix":"exp",
+            "displayName":"exp: mRNA Expression (log2)"
+          },
+           {
+            "eSetListName":"mir",
+            "featurePrefix":"mir",
+            "displayName":"mir: MicroRNA"
+          },
+          {
+            "eSetListName":"mth",
+            "featurePrefix":"mth",
+            "displayName":"mth: DNA 850K Methylation"
+          },
+          {
+            "eSetListName":"xsq",
+            "featurePrefix":"xsq",
+            "displayName":"xsq: RNA-seq Expression (log2 RPKM+1.)"
+          },
+          {
+            "eSetListName":"cop",
+            "featurePrefix":"cop",
+            "displayName":"cop: DNA Copy Number"
+          },
+          {
+            "eSetListName":"mda",
+            "featurePrefix":"mda",
+            "displayName":"mda: Signatures, Miscellaneous data"
+          }
+        ],
+        "DrugData":[
+          {
+            "featurePrefix":"act",
+            "displayName":"act: Drug Activity (-log10[IC50M])",
+            "drugAnnotIdCol":"NSC",
+            "drugAnnotNameCol":"NAME",
+            "drugAnnotMoaCol":"MOA"
+          }
+        ]
+      }
+    }
+  },
+    "nciSclc":{
+    "displayName":"SCLC NCI-DTP",
+    "packages":{
+      "nciSclcData":{
+        "MolData":[
+          {
+            "eSetListName":"exp",
+            "featurePrefix":"exp",
+            "displayName":"exp: mRNA Expression (log2)"
+          },
+           {
+            "eSetListName":"met",
+            "featurePrefix":"met",
+            "displayName":"met: DNA 450K Methylation"
+          },
+           {
+            "eSetListName":"mth",
+            "featurePrefix":"mth",
+            "displayName":"mth: DNA 850K Methylation"
+          },
+           {
+            "eSetListName":"cop",
+            "featurePrefix":"cop",
+            "displayName":"cop: DNA Copy Number"
+          },
+          {
+            "eSetListName":"mir",
+            "featurePrefix":"mir",
+            "displayName":"mir: MicroRNA"
+          },
+          {
+            "eSetListName":"mda",
+            "featurePrefix":"mda",
+            "displayName":"mda: Signatures, Miscellaneous data"
+          }
+        ],
+        "DrugData":[
+          {
+            "featurePrefix":"act",
+            "displayName":"act: Drug Activity (-log10[IC50M])",
+            "drugAnnotIdCol":"NSC",
+            "drugAnnotNameCol":"NAME",
+            "drugAnnotMoaCol":"MOA"
+          }
+        ]
+      }
+    }
+  },
   "utsw":{
-    "displayName":"UT Southwestern",
+    "displayName":"SCLC UTSW",
     "packages":{
       "utswData":{
         "MolData":[
@@ -254,9 +371,179 @@
             "eSetListName":"xsq",
             "featurePrefix":"xsq",
             "displayName":"xsq: RNA-seq Expression (log2 FPKM+1.)"
+          },
+          {
+            "eSetListName":"mut",
+            "featurePrefix":"mut",
+            "displayName":"mut: DNA Mutation"
+          },
+          {
+            "eSetListName":"mda",
+            "featurePrefix":"mda",
+            "displayName":"mda: Signatures, Miscellaneous data"
+          }
+        ]
+      }
+    }
+  },
+    "genSclc":{
+    "displayName":"SCLC Global",
+    "packages":{
+      "genSclcData":{
+        "MolData":[
+          {
+            "eSetListName":"exp",
+            "featurePrefix":"exp",
+            "displayName":"exp: Average z-score from all sources"
+          },
+          {
+            "eSetListName":"mda",
+            "featurePrefix":"mda",
+            "displayName":"mda: Signatures, Miscellaneous data",
+            "includedFeaturesFile":"Global_Sclc_selectedmda.txt"
+          }
+        ]
+      }
+    }
+  },
+      "genSarcoma":{
+    "displayName":"Sarcoma Global",
+    "packages":{
+      "genSarcomaData":{
+        "MolData":[
+          {
+            "eSetListName":"exp",
+            "featurePrefix":"exp",
+            "displayName":"exp: Average z-score from all sources"
+          },
+          {
+            "eSetListName":"mda",
+            "featurePrefix":"mda",
+            "displayName":"mda: Signatures, Miscellaneous data"
+          }
+        ]
+      }
+    }
+  },
+  "nob":{
+    "displayName":"NOB cell lines",
+    "packages":{
+      "nobData":{
+        "MolData":[
+          {
+            "eSetListName":"mth",
+            "featurePrefix":"mth",
+            "displayName":"mth: DNA 850K Methylation"
+          },
+            {
+            "eSetListName":"xsq",
+            "featurePrefix":"xsq",
+            "displayName":"xsq: RNA-seq Expression (log2 FPKM+1.)"
+          }
+        ]
+      }
+    }
+  },
+    "cshl":{
+    "displayName":"Histone_CSHL",
+    "packages":{
+      "cshlData":{
+        "MolData":[
+          {
+            "eSetListName":"his",
+            "featurePrefix":"his",
+            "displayName":"his: Histone H3K27ac"
+          }
+        ]
+      }
+    }
+  },
+    "lantern":{
+    "displayName":"Lantern Pharma",
+    "packages":{
+      "lanternData":{
+  
+        "DrugData":[
+          {
+            "featurePrefix":"act",
+            "displayName":"act: Drug Activity (-log10[IC50M])",
+            "drugAnnotIdCol":"ID",
+            "drugAnnotNameCol":"NAME",
+            "drugAnnotMoaCol":"MOA"
+          }
+        ]
+      }
+    }
+  },
+  "lantnci":{
+    "displayName":"NCI60_Lantern",
+    "packages":{
+      "lantnciData":{
+        "MolData":[
+          {
+            "eSetListName":"exp",
+            "featurePrefix":"exp",
+            "displayName":"exp: mRNA Expression (Z-Score)"
+          },
+          {
+            "eSetListName":"xai",
+            "featurePrefix":"xai",
+            "displayName":"xai: mRNA Expression (Avg. log2 Int.)"
+          },
+          {
+            "eSetListName":"xsq",
+            "featurePrefix":"xsq",
+            "displayName":"xsq: RNA-seq Expression (log2 FPKM+1.)"
+          },
+          {
+            "eSetListName":"met",
+            "featurePrefix":"met",
+            "displayName":"met: DNA 450K Methylation"
+          },
+          {
+            "eSetListName":"mut",
+            "featurePrefix":"mut",
+            "displayName":"mut: DNA Mutation"
+          },
+          {
+            "eSetListName":"cop",
+            "featurePrefix":"cop",
+            "displayName":"cop: DNA Copy Number"
+          },
+          {
+            "eSetListName":"mir",
+            "featurePrefix":"mir",
+            "displayName":"mir: MicroRNA"
+          },
+          {
+            "eSetListName":"mda",
+            "featurePrefix":"mda",
+            "displayName":"mda: Signatures, Miscellaneous data"
+          },
+          {
+            "eSetListName":"pro",
+            "featurePrefix":"pro",
+            "displayName":"pro: Protein (RPPA)"
+          },
+          {
+            "eSetListName":"swa",
+            "featurePrefix":"swa",
+            "displayName":"swa: Protein (SWATH-MS)"
+          }
+        ],
+        "DrugData":[
+          {
+            "featurePrefix":"act",
+            "displayName":"act: Drug Activity",
+            "drugAnnotIdCol":"NSC",
+            "drugAnnotNameCol":"NAME",
+            "drugAnnotMoaCol":"MOA"
           }
         ]
       }
     }
   }
+  
+  
+  
 }

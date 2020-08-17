@@ -1,4 +1,5 @@
 #-----[NavBar Tab: Regression Models (UI code)]----------------------------------------------------
+## new version where the predictors could belong to a new data source
 
 regressionModelsInput <- function(id, dataSourceChoices) {
 	# Create a namespace function using the provided id
@@ -14,7 +15,7 @@ regressionModelsInput <- function(id, dataSourceChoices) {
 	    voptions =  paste0(voptions,"<option value=",dataSourceChoices[y],">",names(dataSourceChoices)[y],"</option>;");
 	  }
 	}
-	tabPanel("Regression Models",
+	tabPanel("Multivariate Analyses",
 					 fluidPage(
 					 	sidebarLayout(
 					 		sidebarPanel(
@@ -24,19 +25,27 @@ regressionModelsInput <- function(id, dataSourceChoices) {
 					 				tags$a(id="skiplink"),
 					 				#selectInput(ns("dataset"), "Dataset", choices=dataSourceChoices, selected = "nci60"),
 					 				HTML(
-					 				  paste("<label class='control-label' for=",ns("dataset"),">Cell Line Set</label>","<select id=",ns("dataset"),">",voptions,"</select>")
+					 				  paste("<label class='control-label' for=",ns("dataset"),">Response Cell Line Set</label>","<select id=",ns("dataset"),">",voptions,"</select>")
 					 				),
 					 				br(),br(),
 					 				uiOutput(ns("responseDataTypeUi")),
 					 				textInput(ns("responseId"), "Response Identifier:", "topotecan"),
 					 				br(),
-					 				uiOutput(ns("predDataTypesUi")),
+## 1 new stuff here to add new data source !!!
+					 				HTML(
+					 				  paste("<label class='control-label' for=",ns("Pdataset"),">Predictor Cell Line Set</label>","<select id=",ns("Pdataset"),">",voptions,"</select>")
+					 				),
+					 				br(),br(),
+					 				##
+## 2 new stuff - predDataTypesUi need changes !!!
+					 				uiOutput(ns("predDataTypesUi")), 
 					 				sliderInput(ns("minPredValueRange"), 
 					 										"Minimum Predictor Range (for first listed data type):", 
 					 										min=0, max=5, value=0, step = 0.25),
 					 				textInput(ns("predIds"), "Predictor Identifiers: (Case-Sensitive, e.g. SLFN11 BPTF)", "SLFN11 BPTF"),
 					 				br(),
-					 				radioButtons(ns("tissueSelectionMode"), "Select Tissues", c("To include", "To exclude")),
+                  ##radioButtons(ns("tissueSelectionMode"), "Select Tissues", c("To include", "To exclude")),
+					 				radioButtons(ns("tissueSelectionMode"), "Select Tissue/s of Origin", c("To include", "To exclude")),
 					 				uiOutput(ns("selectTissuesUi")),
 					 				#selectInput(ns("algorithm"), "Algorithm", 
 					 				#						choices=c("Linear Regression", "Lasso"), 
@@ -77,8 +86,10 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 	getFeatureDataMatrix <- function(dataSetName, dataTypes, srcContent, rmNaCols = TRUE,
 																	 responseVec = NULL, geneSetNames = NULL, 
 																	 minValueRange = 0, valueRangeLowQtl = 0.05,
-																	 valueRangeHighQtl = 0.95) {
-# Get gene set-associated genes, if necessary.
+																	 valueRangeHighQtl = 0.95,dataSetNamePred) {
+		# response and dataSetname are from different sources now
+	  
+	  # Get gene set-associated genes, if necessary.
 		genes <- character(0)
 		if ((!is.null(geneSetNames)) && (!("All Genes" %in% geneSetNames))) {
 			geneSetNames <- intersect(geneSetNames, names((geneSetPathwayAnalysis::geneSets)))
@@ -87,14 +98,21 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 															 recursive = TRUE)))
 			}
 		} 
-		
+		## new stuf 
+		matchedCellLinesTab <- getMatchedCellLines(c(dataSetName, dataSetNamePred)) #UtilsCDB
+		rownames(matchedCellLinesTab) = matchedCellLinesTab[,1]
+		selectedcellsPred = matchedCellLinesTab[names(responseVec),2,drop=TRUE]
+		##
 		featureDataMat <- NULL
 		for (dType in dataTypes) {
-			tmpData <- srcContent[[dataSetName]][["molPharmData"]][[dType]]
+		  ## new stuff
+			tmpData <- srcContent[[dataSetNamePred]][["molPharmData"]][[dType]]
 			if (!is.null(responseVec)){
 				# This ensures that any cell line set restrictions associated with the 
 				# response vector (e.g. by tissue type) are applied to the feature matrix.
-				tmpData <- tmpData[, names(responseVec), drop = FALSE]
+## new stuff	here		  
+				# tmpData <- tmpData[, names(responseVec), drop = FALSE]
+				tmpData <- tmpData[, selectedcellsPred, drop = FALSE]
 			}
 			
 			# ----[restrict to selected gene set genes if necessary]--------------------
@@ -109,7 +127,10 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 			# --------------------------------------------------------------------------
 			
 			featureDataMat <- rbind(featureDataMat, tmpData)
-		}
+		} # end for dType
+		
+# new stuff , rename colnames with response source
+		colnames(featureDataMat) = names(responseVec)
 		
 		# Remove columns with missing values (if requested).
 		if ((nrow(featureDataMat) > 0) && rmNaCols) {
@@ -128,8 +149,9 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 		}
 		
 		return(featureDataMat)
-	}
+	} ## end of getFeatureDataMatrix
 	
+	##-------------------------------------------------------------------------------
 	# TO DO: Move to appropriate general functions file/package.
 	scaleDataForHeatmap <- function(dat, scaleByRow = FALSE){
 		if (is.vector(dat)){
@@ -233,7 +255,9 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 		shiny::validate(need(length(input$selectedTissues) > 0, "Please select tissue types."))
 		shiny::validate(need(length(input$predDataTypes) > 0,
 												 "Please select one or more predictor data types."))
-		
+##
+		originalId <- trimws(input$responseId)
+##
 		responseId <- getMatchedIds(input$responseDataType, trimws(input$responseId), 
 																input$dataset, srcContent = srcContentReactive())
 		if (length(responseId) == 0) {
@@ -246,18 +270,29 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 				showNotification(warningMsg, duration = 10, type = "message")
 				responseId <- responseId[1]
 			}
+## added original Id ###  get response data for topotecan
 			yData <- getFeatureData(input$responseDataType, responseId, input$dataset, 
-															srcContent = srcContentReactive())
+															srcContent = srcContentReactive(),originalId)
 			yData$data <- na.exclude(yData$data)
 		}
 		
 		dataTab <- data.frame(CellLine = names(yData$data), stringsAsFactors = FALSE)
 		rownames(dataTab) <- dataTab$CellLine
-		dataTab[, yData$uniqName] <- yData$data
+		dataTab[, yData$uniqName] <- yData$data ## response data
+		## 3 new stuff
+		matchedCellLinesTab <- getMatchedCellLines(c(input$dataset, input$Pdataset)) #UtilsCDB
+		rownames(matchedCellLinesTab) = matchedCellLinesTab[,1]
+		selectedcells = intersect(rownames(dataTab),rownames(matchedCellLinesTab))
+		dataTab = dataTab[selectedcells, , drop = FALSE]
+		matchedCellLinesTab = matchedCellLinesTab[selectedcells, , drop = FALSE]
+		##
 		
-		featurePrefixes <- unname(srcContentReactive()[[input$dataset]][["featurePrefixes"]])
+## 4 new stuff 	--------------------replace input$dataset by input$Pdataset
+		featurePrefixes <- unname(srcContentReactive()[[input$Pdataset]][["featurePrefixes"]])
+##
 		predIds <- stringr::str_split(stringr::str_trim(input$predIds), pattern = "\\s+")[[1]] 
-		for (id in predIds) {
+ 
+   for (id in predIds) {
 			idPrefix <- rcellminer::getMolDataType(id)
 			if (idPrefix %in% featurePrefixes) {
 				#------------------------------------------------------------------------------------
@@ -265,9 +300,14 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 				# prefix indicates that one (and only one) specified data type is to be 
 				# retrieved.
 				id <- rcellminer::removeMolDataType(id) # e.g. "expSLFN11" --> "SLFN11"
-				if (validateEntry(idPrefix, id, input$dataset, srcContentReactive())){
-					xData <- getFeatureData(idPrefix, id, input$dataset, srcContentReactive())
-					xData$data <- xData$data[names(yData$data)] # Match lines w/non-NA response data.
+## 5 new stuff 	--------------------replace input$dataset by input$Pdataset				
+				if (validateEntry(idPrefix, id, input$Pdataset, srcContentReactive())){
+## add new parameter original id
+					xData <- getFeatureData(idPrefix, id, input$Pdataset, srcContentReactive(),id)
+## 6 new stuff ??					
+				#	xData$data <- xData$data[names(yData$data)] # Match lines w/non-NA response data.
+					xData$data <- xData$data[matchedCellLinesTab[,2]] # Match lines w/non-NA response data.
+				##					
 					dataTab[, xData$uniqName] <- xData$data
 				} else {
 					warning(paste0(idPrefix, id), " not found.")
@@ -279,21 +319,25 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 				# retrieve data for this predictor from all data types specified in
 				# input$predDataTypes.
 				for (dataType in input$predDataTypes) {
-					if (validateEntry(dataType, id, input$dataset, srcContentReactive())) {
-						xData <- getFeatureData(dataType, id, input$dataset, srcContentReactive())
-						xData$data <- xData$data[names(yData$data)] # Match lines w/non-NA response data.
+## new stuff
+					if (validateEntry(dataType, id, input$Pdataset, srcContentReactive())) {
+## added new parameter
+						xData <- getFeatureData(dataType, id, input$Pdataset, srcContentReactive(),id)
+## new stuff ??
+						# xData$data <- xData$data[names(yData$data)] # Match lines w/non-NA response data.
+						xData$data <- xData$data[matchedCellLinesTab[,2]]
 						dataTab[, xData$uniqName] <- xData$data
 					} else {
 						warning(paste0(dataType, id), " not found.")
 					}
-				}
+				} # end for
 				#------------------------------------------------------------------------------------
 			}
-		}
+		} ## end	for (id in predIds) ## stopped here now
 		
-		dataTab <- na.exclude(dataTab)
+		dataTab <- na.exclude(dataTab) # remove all NA
 		
-		if (!isFeatureSelectionAlgorithm()) {
+		if (!isFeatureSelectionAlgorithm()) {  ## if NOT  Lasso
 			shiny::validate(need(ncol(dataTab) > 2,
 													 paste("ERROR: No data for specified predictors.")))
 		}
@@ -335,7 +379,7 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 		if ((minValueRange > 0) && (ncol(dataTab) >= 3)){
 			colsToDrop <- NULL
 			for (j in (3:ncol(dataTab))) {
-				predictorDataType <- rcellminer::getMolDataType(colnames(dataTab)[j])
+				predictorDataType <- rcellminer::getMolDataType(colnames(dataTab)[j]) # retrieve prefix
 				if (predictorDataType != rangeFilterDataType) {
 					next
 				}
@@ -350,7 +394,7 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 			}
 		}
 		
-		if (!isFeatureSelectionAlgorithm()) {
+		if (!isFeatureSelectionAlgorithm()) { # if not lasso
 			shiny::validate(need(ncol(dataTab) > 2,
 				paste("ERROR: None of the selected predictors have the specified minimum value range.")))
 		}
@@ -403,13 +447,17 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 			# or other characters that cannot be used within a formula.
 			colnames(lmData) <- stringr::str_replace_all(colnames(lmData), 
 				pattern = "[-|/| ]", replacement = "")
-			
+
+			## new stuff
+			colnames(lmData) = gsub("Dec15","",colnames(lmData)) 
+			#
 			lmFormula <- as.formula(paste0(colnames(lmData)[1], " ~ ."))
 			lmFit <- lm(lmFormula, lmData)
 			lmCvFit <- rcellminerElasticNet::getLmCvFit(X = as.matrix(lmData[, -1, drop = FALSE]), 
 																									y = lmData[, 1, drop = TRUE], nFolds = 10, nRepeats = 1)
 			# -----[assemble results]---------------------------------------------------
 			rmAlgoResults$algorithm <- "Linear Regression"
+			#
 			rmAlgoResults$predictorWts <- coef(lmFit)
 			rmAlgoResults$predictedResponse <- predict(lmFit)
 			rmAlgoResults$cvPredictedResponse <- lmCvFit$cvPred
@@ -441,8 +489,12 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 			lassoPredData <- t(getFeatureDataMatrix(dataSetName = input$dataset,
 				dataTypes = input$predDataTypes, srcContent = srcContent,
 				responseVec = lassoResponseVec, geneSetNames = input$inputGeneSets,
-				minValueRange = input$minPredValueRange))
+				minValueRange = input$minPredValueRange, dataSetNamePred = input$Pdataset))
 			
+## new stuff, issue here
+			finalcellLines = rownames(lassoPredData)
+			dataTab = dataTab[finalcellLines,]
+##
 			#shiny::validate(need((!is.null(lassoPredData)) && (ncol(lassoPredData) > 0),
 			# "Insufficient admissible predictor data to run lasso algorithm."))
 			
@@ -461,9 +513,10 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 					# (1) Match cell lines between userPredData and lassoPredData (some lines
 					# may have been dropped from the latter due to missing values for some
 					# predictors).
-					userPredData  <- userPredData[rownames(lassoPredData), , drop = FALSE]
+## new stuff: next command not needed !!!
+					##					userPredData  <- userPredData[rownames(lassoPredData), , drop = FALSE]
 					
-					lassoPredData <- cbind(userPredData, lassoPredData)
+					lassoPredData <- cbind(userPredData, lassoPredData) ## rownames (cell lines) are from response cell line names
 					
 					# (2) Remove any additional lines with missing predictor data 
 					# (introduced by userPredData).
@@ -486,6 +539,7 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 			# Check and update: lines with missing predictor data may have been removed.
 			shiny::validate(need(nrow(lassoPredData) > 10, 
 													 "10 or more cell lines (with NA-free data for candidate predictor set) are required to run LASSO"))
+	
 			lassoResponseVec <- lassoResponseVec[rownames(lassoPredData)]
 			
 			#-----[glmnet]--------------------------------------------------------------
@@ -513,10 +567,15 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 			# ultimately selected by Lasso.
 			lassoModelData <- dataTab[names(lassoResponseVec), 1:2] # CellLine, Response.
 			for (predId in names(lassoPredictorWts)){
-				uniqPredId <- paste0(predId, "_", input$dataset)
+## new stuff -- replace input$dataset by input$Pdataset
+				uniqPredId <- paste0(predId, "_", input$Pdataset)
 				lassoModelData[, uniqPredId] <- lassoPredData[, predId]
 			}
+			##
+			shiny::validate(need(ncol(lassoModelData) > 2,
+			                     "No predictor variables selected by LASSO algorithm."))
 			
+			##
 			lassoLmModelData <- lassoModelData[, -1] # dropping CellLine column
 			lassoLmCvFit <- rcellminerElasticNet::getLmCvFit(
 				X = as.matrix(lassoLmModelData[, -1, drop = FALSE]), 
@@ -535,8 +594,9 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 			rmAlgoResults$predictedResponse <- lassoPredictedResponse
 			rmAlgoResults$cvPredictedResponse <- lassoLmCvFit$cvPred
 			rmAlgoResults$techDetails <- lassoResultsObj
-			rmAlgoResults$eqnStr <- getLmEquationString(rmAlgoResults$predictorWts)
-			
+			## rmAlgoResults$eqnStr <- getLmEquationString(rmAlgoResults$predictorWts)
+			rmAlgoResults$eqnStr <- getLmEquationString( c("(Intercept)" =  lassoIntercept, rmAlgoResults$predictorWts) )
+
 			# Feature selection algorithms are expected to find additional 
 			# predictors. The entry updates the starting inputData(), adding
 			# data for selected predictors.
@@ -590,18 +650,22 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 												 "Initial predictors must be available for partial correlation computation."))
 		
 		# TO DO: investigate NA handling details in partial correlation computation.
+		## new stuff : question : new datatypes, new gene set, minpar cor range
+		## no clear relation with current model WHY HAVING INPUT ??
 		comparisonData <- getFeatureDataMatrix(dataSetName = input$dataset, 
 			dataTypes = input$pcDataTypes, srcContent = srcContent,
 			responseVec = responseVec, geneSetNames = input$pcGeneSets,
 			minValueRange = input$minParCorDataValueRange,
-			rmNaCols = FALSE)
-		shiny::validate(need(nrow(comparisonData) > 0,
+			rmNaCols = FALSE, dataSetNamePred = input$Pdataset)
+
+				shiny::validate(need(nrow(comparisonData) > 0,
 												 "No data (satisfying range criteria) for partial correlation computation."))
 
 		N <- nrow(comparisonData)
 		
 		if ((appConfig$runParCorsInParallel) && 
-				(N > appConfig$runParCorsInParallelThreshold)){
+				(N > appConfig$runParCorsInParallelThreshold))
+		  {
 			library(foreach)
 			library(doSNOW)
 			library(parallel) # Needed for detectCores
@@ -640,7 +704,9 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 			pcResults$PVAL   <- signif(pcResults$PVAL, 3)
 			# pcResults$FDR <- p.adjust(pcResults[,"PVAL"],method="BH",nrow(pcResults))
 			# pcResults$FDR   <- signif(pcResults$FDR, 3)
-		} else{
+		} # parallel computing
+		else
+		  {
 			# ----[enable progress bar]--------------------------------------------------
 			progress <- shiny::Progress$new()
 			progress$set(message = "Computing Partial Correlation Results: ", value = 0)
@@ -711,14 +777,14 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 																dataTypes = input$deDataTypes[1], srcContent = srcContent,
 																responseVec = responseVec, geneSetNames = input$deGeneSets,
 																minValueRange = input$minDiffExpDataValueRange,
-																rmNaCols = FALSE)
+																rmNaCols = FALSE, dataSetNamePred = input$Pdataset)
 		if (length(input$deDataTypes) > 1) {
 			# Range restriction specified in the interface only applies to the first listed data type.
 			dat <- rbind(dat,
 									 getFeatureDataMatrix(dataSetName = input$dataset, 
 									 										  dataTypes = input$deDataTypes[-1], srcContent = srcContent,
 									 										  responseVec = responseVec, geneSetNames = input$deGeneSets,
-									 										  minValueRange = 0, rmNaCols = FALSE))
+									 										  minValueRange = 0, rmNaCols = FALSE, dataSetNamePred = input$Pdataset))
 		}
 		shiny::validate(need(nrow(dat) > 0,
 												 "No data (satisfying range criteria) for differential expression analysis."))
@@ -821,8 +887,12 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 		p1 <- makePlotStatic(xData = predResponseData, yData = responseData, showColor = T, 
 												 showColorTissues = character(0), dataSource = input$dataset, 
 												 srcContent = srcContentReactive(),oncolor=oncolor)
+		# new
+		p1 <- p1 + theme(axis.text = element_text(size=16), plot.title = element_text(size = 16), 
+		                 axis.title.x = element_text(size = 16), axis.title.y = element_text(size = 16))
 		g1 <- ggplotly(p1, width=plotWidth, height=plotHeight, tooltip=tooltipCol)
-		g1 <- layout(g1, margin=list(t = 75))
+		# g1 <- layout(g1, margin=list(t = 75))
+		g1 <- layout(g1, margin=list(t = 75), legend = list(font = list(size = 18)))
 		g2 <- config(p = g1, collaborate=FALSE, cloud=FALSE, displaylogo=FALSE,displayModeBar=TRUE,
 								 modeBarButtonsToRemove=c("select2d", "sendDataToCloud", "pan2d", "resetScale2d",
 								 												 "hoverClosestCartesian", "hoverCompareCartesian",
@@ -866,8 +936,12 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 		p1 <- makePlotStatic(xData = cvPredResponseData, yData = responseData, showColor = T, 
 												 showColorTissues = character(0), dataSource = input$dataset, 
 												 srcContent = srcContentReactive(),oncolor=oncolor)
+		# new
+		p1 <- p1 + theme(axis.text = element_text(size=16), plot.title = element_text(size = 16), 
+		                 axis.title.x = element_text(size = 16), axis.title.y = element_text(size = 16))
 		g1 <- ggplotly(p1, width=plotWidth, height=plotHeight, tooltip=tooltipCol)
-		g1 <- layout(g1, margin=list(t = 75))
+		# g1 <- layout(g1, margin=list(t = 75))
+		g1 <- layout(g1, margin=list(t = 75), legend = list(font = list(size = 18)))
 		g2 <- config(p = g1, collaborate=FALSE, cloud=FALSE, displaylogo=FALSE,displayModeBar=TRUE,
 								 modeBarButtonsToRemove=c("select2d", "sendDataToCloud", "pan2d", "resetScale2d",
 								 												 "hoverClosestCartesian", "hoverCompareCartesian",
@@ -899,7 +973,9 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 # 		              rownames=FALSE, colnames=colnames(dat), filter='top', selection = "none",extensions='Buttons',
 # 									style='bootstrap', options=list(pageLength = nrow(dat),language=list(paginate = list(previous = 'Previous page', `next`= 'Next page')) ,dom='lipBt',buttons = list('copy', 'print',list(extend='excel',filename='regression_data',text='Download'))))
 
-
+#new stuff
+		colnames(dat) = gsub("Dec15","",colnames(dat))
+##
 		DT::datatable(dat, rownames=FALSE, colnames=colnames(dat), filter='top', selection = "none",extensions='Buttons',
 		               style='bootstrap', options=list(pageLength = nrow(dat),language=list(paginate = list(previous = 'Previous page', `next`= 'Next page')) ,dom='lipBt',buttons = list('copy', 'print', list(extend = 'collection',buttons = list(list(extend='csv',filename='regression_data',title='Exported data from CellMinerCDB'), list(extend='excel',filename='regression_data',title='Exported data from CellMinerCDB'), list(extend='pdf',filename='regression_data',title='Exported data from CellMinerCDB')),text = 'download'))))
 		
@@ -912,7 +988,8 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 	              
 	
 	#----[Show Predictors and Response in 'Heatmap' Tab]------------------------------------
-	output$heatmap <- renderD3heatmap({
+##	output$heatmap <- renderD3heatmap({
+	  output$heatmap <- renderPlotly({
 		rmAlgoResults <- algoResults()
 		if (is.null(rmAlgoResults$updatedInputData)){
 			dataTab <- inputData()
@@ -928,9 +1005,12 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 		colIndexSet <- c(1:numHiLoCols, (ncol(dataMatrix) - numHiLoCols + 1):ncol(dataMatrix))
 		dataMatrix <- dataMatrix[, colIndexSet, drop = FALSE]
 		# Remove data source identifier in predictor names.
-		rownames(dataMatrix) <- vapply(rownames(dataMatrix), function(x) { 
-			stringr::str_split(x, "_")[[1]][1] }, character(1))
-		
+## new stuff : removed trimming rownames
+		# rownames(dataMatrix) <- vapply(rownames(dataMatrix), function(x) { 
+		# 	stringr::str_split(x, "_")[[1]][1] }, character(1))
+## new stuff : remove Dec15
+		rownames(dataMatrix) = gsub("Dec15","",rownames(dataMatrix))
+##		
 		xAxisFontSize <- "6pt"
 
 		scaledDataMatrix <- scaleDataForHeatmap(dataMatrix, input$useHeatmapRowColorScale)
@@ -942,13 +1022,28 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 		# 										 colors = colorRamp(colors = c("green", "black", "red")),
 		# 										 xaxis_font_size = xAxisFontSize,
 		# 										 xaxis_height = 200, yaxis_width = 200)
-		d3heatmap::d3heatmap(x = scaledDataMatrix,  # Used for color scaling.
-		                     cellnote = dataMatrix, # Used for tooltip values.
-		                     dendrogram = "none", 
-		                     colors = colorRamp(colors = c("blue", "white", "red")),
-		                     xaxis_font_size = xAxisFontSize,
-		                     xaxis_height = 200, yaxis_width = 200)
 		
+		# d3heatmap::d3heatmap(x = scaledDataMatrix,  # Used for color scaling.
+		#                      cellnote = dataMatrix, # Used for tooltip values.
+		#                      dendrogram = "none", 
+		#                      colors = colorRamp(colors = c("blue", "white", "red")),
+		#                      xaxis_font_size = xAxisFontSize,
+		#                      xaxis_height = 200, yaxis_width = 200)
+		
+		#mid = (max(dataMatrix)-min(dataMatrix))/2
+		dataMatrix2=matrix(paste("original_value:",dataMatrix), nrow=nrow(dataMatrix),ncol=ncol(dataMatrix))
+		# heatmaply(x = scaledDataMatrix,cellnote = dataMatrix,
+		#   scale_fill_gradient_fun = ggplot2::scale_fill_gradient2(low = "blue", high = "red",midpoint = mid),
+		#   dendrogram="none",fontsize_col = xAxisFontSize,height = 200, width = 200)
+		g1 <-heatmaply::heatmaply(x = scaledDataMatrix,custom_hovertext = dataMatrix2, grid_gap = 0.5, cellnote_color="black", 
+		          colors= colorpanel(75,low="blue",mid="white",high="red"),fontsize_col = 10 ,fontsize_row = 14,
+		          dendrogram="none",label_names=c("row","column","scaled_value"))   %>% plotly::layout(margin=list(t = 10))
+		# g1 <- layout(g1, margin=list(t = 75))
+		g2 <- config(p = g1, collaborate=FALSE, cloud=FALSE, displaylogo=FALSE, displayModeBar=TRUE,
+		             modeBarButtonsToRemove=c("select2d", "sendDataToCloud", "pan2d", "resetScale2d",
+		                                      "hoverClosestCartesian", "hoverCompareCartesian",
+		                                      "lasso2d", "zoomIn2d", "zoomOut2d","autoScale2d","toggleSpikelines","zoom2d"))
+		g2
 	})
 	##--- download heatmap data
 	output$downloadHeat <- downloadHandler(
@@ -1151,9 +1246,11 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 																sliderInput(ns("numHiLoResponseLines"), 
 																						"Number of High/Low Response Lines to Display:", 
 																						min=1, max=maxNumHiLoResponseLines, 
-																						value=20, width = "50%"),
+																						value=30, width = "50%"),
 																checkboxInput(ns("useHeatmapRowColorScale"), "Use Row Color Scale", FALSE),
-																d3heatmapOutput(ns("heatmap")),
+## 																## d3heatmapOutput(ns("heatmap")),
+                                plotlyOutput(ns("heatmap")),
+##    														withSpinner(plotlyOutput(ns("heatmap"))),	
 															  p("Select cell line or feature name to highlight heatmap columns or rows, respectively."),br(),
 																downloadButton(ns("downloadHeat"), "Download Heatmap Data")
 																)
@@ -1267,9 +1364,11 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 		#						selected = srcContent[[input$dataset]][["defaultFeatureX"]],
 		#						multiple=TRUE)
 		vopt = ""
-		choices  = srcContent[[input$dataset]][["featurePrefixes"]]
-		mych= srcContent[[input$dataset]][["defaultFeatureX"]]
-		if (is.na(mych)) mych= srcContent[[input$dataset]][["defaultFeatureY"]]
+		
+## 2 new stuff here : replace input$dataset by input$Pdataset
+		choices  = srcContent[[input$Pdataset]][["featurePrefixes"]]
+		mych= srcContent[[input$Pdataset]][["defaultFeatureX"]]
+		if (is.na(mych)) mych= srcContent[[input$Pdataset]][["defaultFeatureY"]]
 		for(y in 1:length(choices)){
 		  if (choices[y]==mych)
 		  {
@@ -1316,8 +1415,9 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 		  }
 		}
 		HTML(
-		  paste("<label class='control-label' for=",ns("selectedTissues"),">Select Tissue/s of Origin</label>","<select id=",ns("selectedTissues")," style='word-wrap:break-word; width: 100%;' multiple>",opt,"</select>")
-		)
+		  ## paste("<label class='control-label' for=",ns("selectedTissues"),">Select Tissue/s of Origin</label>","<select id=",ns("selectedTissues")," style='word-wrap:break-word; width: 100%;' multiple>",opt,"</select>")
+		  paste("<label class='control-label' for=",ns("selectedTissues"),"></label>","<select id=",ns("selectedTissues")," style='word-wrap:break-word; width: 100%;' multiple>",opt,"</select>")
+		  		)
 		
 		## 
 	})

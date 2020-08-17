@@ -28,6 +28,20 @@ getMatchedIds <- function(prefix, id, dataSource, srcContent){
 			  matchedIds <- vnames[grep(toupper(id),toupper(vnames[,2])),1]
 			}
 		}
+	  #
+	  if (require(rcellminerUtilsCDB) && isGeneID(prefix)){
+	    synonyms <- trimws(rcellminerUtilsCDB::getGeneSynonyms(id))
+	    # cat(synonyms,"\n")
+	    if (!is.null(synonyms) & length(synonyms)>1) {
+	       matchedIndex <- which(!is.na(match(synonyms, idSet)))
+         # cat(synonyms,":",matchedIndex,"\n")
+	       if (length(matchedIndex)==1) {
+
+	           matchedIds <- synonyms[matchedIndex]
+	       }
+	    }
+	  }
+	  #
 	}
 	
 	return(matchedIds)
@@ -43,7 +57,7 @@ validateEntry <- function(prefix, id, dataSource, srcContent) {
 	return(FALSE)
 }
 
-getFeatureData <- function(prefix, id, dataSource, srcContent) {
+getFeatureData <- function(prefix, id, dataSource, srcContent, originalId) {
 	molPharmData <- srcContent[[dataSource]][["molPharmData"]]
 	
 	name <- paste0(prefix, id)
@@ -54,7 +68,14 @@ getFeatureData <- function(prefix, id, dataSource, srcContent) {
 	
 	# e.g., expTOP1 with dataSource=nci60 becomes TOP1 (exp, nci60)
 	labs=metaConfig[[dataSource]][["displayName"]]
+	if (toupper(id)==toupper(originalId))  {
 	results$plotLabel <- paste0(id, " (", prefix, ", ", labs, ")")
+	}
+	else {
+	  if (prefix!="act") results$plotLabel <- paste0(toupper(originalId),": ",id, " (", prefix, ", ", labs, ")") else results$plotLabel <- paste0(id, " (", prefix, ", ", labs, ")")
+	    
+	}
+	  
 	
 	# e.g., expTOP1 with dataSource=nci60 becomes expTOP1_nci60; needed for 
 	# getPlotData() results (data.frame) with data for same feature from different sources.
@@ -128,15 +149,36 @@ getPlotData <- function(xData, yData, showColor, showColorTissues, dataSource=NU
 				highlightedLineSet <- unname(intersect(cellLineSet,
 					getTissueTypeSamples(showColorTissues, dataSource, srcContent)))
 			}
-			
+			#cat(highlightedLineSet,"22 \n")
 			if (length(highlightedLineSet) > 0){
 				colorsToUse <- rep("rgba(0,0,255,0.3)", nrow(df)) #blue
 				names(colorsToUse) <- rownames(df)
-				colorsToUse[highlightedLineSet] <- "rgba(255,0,0,0.7)" # red
+				# colorsToUse[highlightedLineSet] <- "rgba(255,0,0,0.7)" # red
+				sel4=c("red","green","blue","orange")
+
+				sampleTissueTypes <- rep("others", nrow(df))
+				names(sampleTissueTypes) <- rownames(df)
+				for (k in 1:length(showColorTissues)) { 
+				  ind=intersect(rownames(df),getTissueTypeSamples(showColorTissues[k], dataSource, srcContent))
+				  ## sampleTissueTypes[ind]=showColorTissues[k] 
+				  sampleTissueTypes[ind]=gsub(":","\n",showColorTissues[k])
+				  ##
+				  if (k >=1 & k<=4) colorsToUse[ind] <- sel4[k] else colorsToUse[ind] <-  "rgba(255,160,122,0.7)" # lightsalmon
+				  ##
+				  }
+			
+				#cat(sampleTissueTypes,length(sampleTissueTypes),"\n")
+				##---
 			} else{
-				sampleTissueTypes <- srcContent[[dataSource]]$sampleData[rownames(df), "OncoTree1"]
-				colorsToUse <- srcContent[[dataSource]]$tissueColorMap[sampleTissueTypes]
+				# sampleTissueTypes <- srcContent[[dataSource]]$sampleData[rownames(df), "OncoTree1"]
+				# colorsToUse <- srcContent[[dataSource]]$tissueColorMap[sampleTissueTypes]
+				
+				sampleTissueTypes <- rep("others", nrow(df))
+				colorsToUse <- rep("rgba(0,0,255,0.3)", nrow(df)) #blue
 			}
+			## ------
+			df$sampleTissueTypes <- sampleTissueTypes
+			## ------
 		} else{
 			colorsToUse <- rep("rgba(0,0,255,0.3)", nrow(df)) #blue
 		}
@@ -158,101 +200,116 @@ getPlotData <- function(xData, yData, showColor, showColorTissues, dataSource=NU
 		if ("EMT" %in% colnames(srcContent[[dataSource]]$sampleData)) {
 			df$EMT <- srcContent[[dataSource]]$sampleData[rownames(df), "EMT"]
 		}
+		
+		if ("NeuroEndocrineScore" %in% colnames(srcContent[[dataSource]]$sampleData)) {
+		  df$NeuroEndocrineScore <- srcContent[[dataSource]]$sampleData[rownames(df), "NeuroEndocrineScore"]
+		}
+		
+		if ("NAPY" %in% colnames(srcContent[[dataSource]]$sampleData)) {
+		  df$NAPY <- srcContent[[dataSource]]$sampleData[rownames(df), "NAPY"]
+		}
+		
+		if ("TNBC" %in% colnames(srcContent[[dataSource]]$sampleData)) {
+		  df$TNBC <- srcContent[[dataSource]]$sampleData[rownames(df), "TNBC"]
+		}
+		
 	}
-	
+	# cat(dim(df),"\n")
 	return(df)
 }
 
 
-makePlot <- function(xData, yData, showColor, showColorTissues, dataSource,
-										 srcContent, dom="rCharts", showPValue = TRUE) {
-	df <- getPlotData(xData, yData, showColor, showColorTissues, dataSource, srcContent)
-	
-	# Scatter plot
-	h1 <- rCharts::Highcharts$new()
-	
-	# Divide the dataset, split by category and put into list() format
-	# From: http://rcharts.io/viewer/?5735146#.VF6NS4W1Fy4
-	series <- lapply(split(df, df$PlotTissueType), function(x) {
-		res <- lapply(split(x, rownames(x)), as.list)
-		names(res) <- NULL
-		return(res)
-	})
-	
-	invisible(sapply(series, function(x) {
-		h1$series(data=x, type="scatter", name=x[[1]]$PlotTissueType)
-	}
-	))
-	
-	# Regression Line
-	fit <- lm('y~x', data=df)
-	x1 <- min(df[[xData$uniqName]])
-	y1 <- fit$coefficients[[2]]*x1 + fit$coefficients[[1]]
-	x2 <- max(df[[xData$uniqName]])
-	y2 <- fit$coefficients[[2]]*x2 + fit$coefficients[[1]]
-	
-	h1$series(data=list(c(x1,y1), c(x2,y2)), type="line", color="#FF0000",
-						marker=list(enabled=FALSE), enableMouseTracking=FALSE)
-	
-	# corResults <-cor.test(df[,xData$uniqName], df[,yData$uniqName], use="pairwise.complete.obs")
-	# title <- paste0(paste(yData$plotLabel, '~', xData$plotLabel),
-	# 								', r=', round(corResults$estimate, 2),
-	# 								' p=', signif(corResults$p.value, 2))
-	
-	# rbind(y, y) forces more precise pvalue computation.
-	corResults <- crossCors(df[,xData$uniqName], 
-													rbind(df[,yData$uniqName], df[,yData$uniqName]))
-	title <- paste0(paste(yData$plotLabel, '~', xData$plotLabel),
-									', r=', signif(corResults$cor[1], digits=3))
-	if (showPValue){
-		title <- paste0(title, ' p=', signif(corResults$pval[1], digits=3))
-	}
-	
-	h1$title(text=title)
-	
-	xAxisMin <- min(xData$data, na.rm = TRUE) - 0.25
-	xAxisMax <- max(xData$data, na.rm = TRUE) + 0.25
-	
-	yAxisMin <- min(yData$data, na.rm = TRUE) - 0.25
-	yAxisMax <- max(yData$data, na.rm = TRUE) + 0.25
-	
-	h1$xAxis(title=list(enabled=TRUE, text=xData$plotLabel, style=list(fontSize="24px", fontWeight="bold")),
-					 min=xAxisMin, max=xAxisMax, labels=list(style=list(fontSize="20px")))
-	h1$yAxis(title=list(enabled=TRUE, text=yData$plotLabel, style=list(fontSize="24px", fontWeight="bold")),
-					 min=yAxisMin, max=yAxisMax, labels=list(style=list(fontSize="20px")))
-	
-	h1$legend(enabled=FALSE)
-	
-	# Force circle markers, set default size, hover color (otherwise color unpredictable)
-	h1$plotOptions(series=list(animation=50),
-								 scatter=list(marker=list(symbol='circle', radius=6,
-								 												 states=list(hover=list(fillColor='white')))))
-	
-	tooltipFormat <- paste0("#! function() { return 'Cell: ' + this.point.name +
-													'<br/>Tissue: ' + this.series.name +
-													'<br/>", xData$uniqName, ": ' + Math.round(this.x * 100) / 100 +
-													'<br/>", yData$uniqName, ": ' + Math.round(this.y * 100) / 100; } !#")
-	
-	h1$tooltip(backgroundColor="rgba(255,255,255,1)", formatter=tooltipFormat)
-	
-	h1$chart(zoomType="xy", style=list(fontFamily="Helvetica Neue"))
-	
-	# Enable exporting
-	h1$exporting(enabled=TRUE)
-	
-	# Set name
-	h1$set(dom=dom)
-	
-	# Print chart
-	return(h1)
-}
-
+# makePlot <- function(xData, yData, showColor, showColorTissues, dataSource,
+# 										 srcContent, dom="rCharts", showPValue = TRUE) {
+# 	df <- getPlotData(xData, yData, showColor, showColorTissues, dataSource, srcContent)
+# 	
+# 	# Scatter plot
+# 	h1 <- rCharts::Highcharts$new()
+# 	
+# 	# Divide the dataset, split by category and put into list() format
+# 	# From: http://rcharts.io/viewer/?5735146#.VF6NS4W1Fy4
+# 	series <- lapply(split(df, df$PlotTissueType), function(x) {
+# 		res <- lapply(split(x, rownames(x)), as.list)
+# 		names(res) <- NULL
+# 		return(res)
+# 	})
+# 	
+# 	invisible(sapply(series, function(x) {
+# 		h1$series(data=x, type="scatter", name=x[[1]]$PlotTissueType)
+# 	}
+# 	))
+# 	
+# 	# Regression Line
+# 	fit <- lm('y~x', data=df)
+# 	x1 <- min(df[[xData$uniqName]])
+# 	y1 <- fit$coefficients[[2]]*x1 + fit$coefficients[[1]]
+# 	x2 <- max(df[[xData$uniqName]])
+# 	y2 <- fit$coefficients[[2]]*x2 + fit$coefficients[[1]]
+# 	
+# 	h1$series(data=list(c(x1,y1), c(x2,y2)), type="line", color="#FF0000",
+# 						marker=list(enabled=FALSE), enableMouseTracking=FALSE)
+# 	
+# 	# corResults <-cor.test(df[,xData$uniqName], df[,yData$uniqName], use="pairwise.complete.obs")
+# 	# title <- paste0(paste(yData$plotLabel, '~', xData$plotLabel),
+# 	# 								', r=', round(corResults$estimate, 2),
+# 	# 								' p=', signif(corResults$p.value, 2))
+# 	
+# 	# rbind(y, y) forces more precise pvalue computation.
+# 	corResults <- crossCors(df[,xData$uniqName], 
+# 													rbind(df[,yData$uniqName], df[,yData$uniqName]))
+# 	title <- paste0(paste(yData$plotLabel, '~', xData$plotLabel),
+# 									', r=', signif(corResults$cor[1], digits=3))
+# 	if (showPValue){
+# 		title <- paste0(title, ' p=', signif(corResults$pval[1], digits=3))
+# 	}
+# 	
+# 	h1$title(text=title)
+# 	
+# 	xAxisMin <- min(xData$data, na.rm = TRUE) - 0.25
+# 	xAxisMax <- max(xData$data, na.rm = TRUE) + 0.25
+# 	
+# 	yAxisMin <- min(yData$data, na.rm = TRUE) - 0.25
+# 	yAxisMax <- max(yData$data, na.rm = TRUE) + 0.25
+# 	
+# 	h1$xAxis(title=list(enabled=TRUE, text=xData$plotLabel, style=list(fontSize="24px", fontWeight="bold")),
+# 					 min=xAxisMin, max=xAxisMax, labels=list(style=list(fontSize="20px")))
+# 	h1$yAxis(title=list(enabled=TRUE, text=yData$plotLabel, style=list(fontSize="24px", fontWeight="bold")),
+# 					 min=yAxisMin, max=yAxisMax, labels=list(style=list(fontSize="20px")))
+# 	
+# 	h1$legend(enabled=FALSE)
+# 	
+# 	# Force circle markers, set default size, hover color (otherwise color unpredictable)
+# 	h1$plotOptions(series=list(animation=50),
+# 								 scatter=list(marker=list(symbol='circle', radius=6,
+# 								 												 states=list(hover=list(fillColor='white')))))
+# 	
+# 	tooltipFormat <- paste0("#! function() { return 'Cell: ' + this.point.name +
+# 													'<br/>Tissue: ' + this.series.name +
+# 													'<br/>", xData$uniqName, ": ' + Math.round(this.x * 100) / 100 +
+# 													'<br/>", yData$uniqName, ": ' + Math.round(this.y * 100) / 100; } !#")
+# 	
+# 	h1$tooltip(backgroundColor="rgba(255,255,255,1)", formatter=tooltipFormat)
+# 	
+# 	h1$chart(zoomType="xy", style=list(fontFamily="Helvetica Neue"))
+# 	
+# 	# Enable exporting
+# 	h1$exporting(enabled=TRUE)
+# 	
+# 	# Set name
+# 	h1$set(dom=dom)
+# 	
+# 	# Print chart
+# 	return(h1)
+# }
+# 
 
 makePlotStatic <- function(xData, yData, showColor, showColorTissues, dataSource, 
 													 srcContent, xLimVals = NULL, yLimVals = NULL,oncolor) {
 	df <- getPlotData(xData, yData, showColor, showColorTissues, dataSource, srcContent)
 	# contains column color
-	df$tooltip <- paste0(
+	shiny::validate(need(nrow(df)>0, paste("ERROR:", " No common complete data found.")))
+	shiny::validate(need(nrow(df)>2, paste("ERROR:", " No display for less than 3 observations.")))
+		df$tooltip <- paste0(
 		"Cell: ", df$name, "\n",
 		"Tissue: ", df$PlotTissueType, "\n",
 		"OncoTree1: ", df$OncoTree1, "\n",
@@ -281,9 +338,12 @@ makePlotStatic <- function(xData, yData, showColor, showColorTissues, dataSource
 	         colorPalette <- df[, "color"]
 	   
 	   if (length(showColorTissues) > 0)  {
-	     classCol <- "color"
-	     leg <- FALSE
-	   }
+	     # classCol <- "color"
+	     # leg <- FALSE
+	     classCol <- "sampleTissueTypes"
+	     colorPalette <- df[, "color"]
+	     
+	     	}
 	
 	df[, classCol] <- as.factor(df[, classCol])
 	
@@ -293,7 +353,7 @@ makePlotStatic <- function(xData, yData, showColor, showColorTissues, dataSource
 	
 	p1 <- rcellminer::plotCellMiner2D(df, xCol="x", yCol="y", xLabel = xData$plotLabel, yLabel = yData$plotLabel,
 												colorPalette=colorPalette, classCol=classCol, tooltipCol=tooltipCol,
-												xLimVal = xLimVals, yLimVal = yLimVals, showLegend = leg)
+												xLimVal = xLimVals, yLimVal = yLimVals, showLegend = leg,pointSize = 4)
 	
 	return(p1)
 }
@@ -409,8 +469,41 @@ findDrugIDs <- function(drugname) {
   {
     matres[,i]= unlist(lapply(res[,i], function(x) paste(x,collapse=";")))
   }
-  colnames(matres)[2:nb]=paste0(vapply(colnames(matres)[2:nb],function(x) {metaConfig[[x]][["displayName"]]},character(1)),"_IDs")
-  return(matres)
+  dmatres=as.data.frame(matres)
+  dmatres = dmatres[,c("Drug_Synonyms",intersect(names(metaConfig),colnames(matres)))]
+  nbd=dim(dmatres)[2]
+  # colnames(matres)[2:nb]=paste0(vapply(colnames(matres)[2:nb],function(x) {metaConfig[[x]][["displayName"]]},character(1)),"_IDs")
+  # return(matres)
+  colnames(dmatres)[2:nbd]=paste0(vapply(colnames(dmatres)[2:nbd],function(x) {metaConfig[[x]][["displayName"]]},character(1)),"_IDs")
+  return(dmatres)
 }
 #---------------------------------------------------------------------------------------------------
+# query TCGA data 
+#---------------------------------------------------------
 
+geneExpTcga <- function(varName, aproject) {
+  #
+  # First we're going to build the string representing the BigQuery #
+  #
+  # q <- paste(
+  #   "SELECT project_short_name, sample_barcode, HGNC_gene_symbol, normalized_count,platform FROM `isb-cgc.TCGA_hg19_data_v0.RNAseq_Gene_Expression_UNC_RSEM` WHERE platform = 'IlluminaHiSeq' AND HGNC_gene_symbol = '", varName, "'",sep="")
+ 
+  q <- paste(
+    "SELECT project_short_name, Safe.SUBSTR(sample_barcode,14,2) AS ttype, HGNC_gene_symbol, normalized_count,platform FROM `isb-cgc.TCGA_hg19_data_v0.RNAseq_Gene_Expression_UNC_RSEM` WHERE HGNC_gene_symbol = '", varName, "'",sep="")
+  
+  ## new
+  service_token <- set_service_token("./isb-cgc-fathi-b2c2573d2b53.json")
+  ##
+  response <- query_exec(q, project = aproject, use_legacy_sql =FALSE,max_pages = Inf)
+  
+  ##   dat <- data.frame()
+  dat <- response
+  if(!is.null(response))
+  {
+    
+    # then we need to do a little data-cleaning to get ready for our survival model
+    dat$project_short_name <- as.factor(dat$project_short_name)
+    dat$normalized_count <- log2(dat$normalized_count+1)
+  }
+  return(dat)
+} ## end expression query

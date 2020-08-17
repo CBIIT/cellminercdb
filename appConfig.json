@@ -1,5 +1,21 @@
 {
   "appName":"CellMinerCDB",
   "runParCorsInParallel":true,
-  "runParCorsInParallelThreshold":2000
+  "runParCorsInParallelThreshold":2000,
+   "TopLinks":[
+          {
+            "label":" CellMiner NCI-60 ",
+            "url":"https://discover.nci.nih.gov/cellminer/"
+          },
+          {
+            "label":" NCI/DCTD/DTP ",
+            "url":"https://dtp.cancer.gov"
+          }
+          ],
+   "category": "internal",
+ //  "banner": "files/banner1d1.jpg",
+    "banner": "files/banner1.2.jpg",
+   "modal" : "www/files/CellMinerCDB-ver4.mp4"
 }
+
+   
