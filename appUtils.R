@@ -209,95 +209,99 @@ getPlotData <- function(xData, yData, showColor, showColorTissues, dataSource=NU
 		  df$NAPY <- srcContent[[dataSource]]$sampleData[rownames(df), "NAPY"]
 		}
 		
+		if ("TNBC" %in% colnames(srcContent[[dataSource]]$sampleData)) {
+		  df$TNBC <- srcContent[[dataSource]]$sampleData[rownames(df), "TNBC"]
+		}
+		
 	}
 	# cat(dim(df),"\n")
 	return(df)
 }
 
 
-makePlot <- function(xData, yData, showColor, showColorTissues, dataSource,
-										 srcContent, dom="rCharts", showPValue = TRUE) {
-	df <- getPlotData(xData, yData, showColor, showColorTissues, dataSource, srcContent)
-	
-	# Scatter plot
-	h1 <- rCharts::Highcharts$new()
-	
-	# Divide the dataset, split by category and put into list() format
-	# From: http://rcharts.io/viewer/?5735146#.VF6NS4W1Fy4
-	series <- lapply(split(df, df$PlotTissueType), function(x) {
-		res <- lapply(split(x, rownames(x)), as.list)
-		names(res) <- NULL
-		return(res)
-	})
-	
-	invisible(sapply(series, function(x) {
-		h1$series(data=x, type="scatter", name=x[[1]]$PlotTissueType)
-	}
-	))
-	
-	# Regression Line
-	fit <- lm('y~x', data=df)
-	x1 <- min(df[[xData$uniqName]])
-	y1 <- fit$coefficients[[2]]*x1 + fit$coefficients[[1]]
-	x2 <- max(df[[xData$uniqName]])
-	y2 <- fit$coefficients[[2]]*x2 + fit$coefficients[[1]]
-	
-	h1$series(data=list(c(x1,y1), c(x2,y2)), type="line", color="#FF0000",
-						marker=list(enabled=FALSE), enableMouseTracking=FALSE)
-	
-	# corResults <-cor.test(df[,xData$uniqName], df[,yData$uniqName], use="pairwise.complete.obs")
-	# title <- paste0(paste(yData$plotLabel, '~', xData$plotLabel),
-	# 								', r=', round(corResults$estimate, 2),
-	# 								' p=', signif(corResults$p.value, 2))
-	
-	# rbind(y, y) forces more precise pvalue computation.
-	corResults <- crossCors(df[,xData$uniqName], 
-													rbind(df[,yData$uniqName], df[,yData$uniqName]))
-	title <- paste0(paste(yData$plotLabel, '~', xData$plotLabel),
-									', r=', signif(corResults$cor[1], digits=3))
-	if (showPValue){
-		title <- paste0(title, ' p=', signif(corResults$pval[1], digits=3))
-	}
-	
-	h1$title(text=title)
-	
-	xAxisMin <- min(xData$data, na.rm = TRUE) - 0.25
-	xAxisMax <- max(xData$data, na.rm = TRUE) + 0.25
-	
-	yAxisMin <- min(yData$data, na.rm = TRUE) - 0.25
-	yAxisMax <- max(yData$data, na.rm = TRUE) + 0.25
-	
-	h1$xAxis(title=list(enabled=TRUE, text=xData$plotLabel, style=list(fontSize="24px", fontWeight="bold")),
-					 min=xAxisMin, max=xAxisMax, labels=list(style=list(fontSize="20px")))
-	h1$yAxis(title=list(enabled=TRUE, text=yData$plotLabel, style=list(fontSize="24px", fontWeight="bold")),
-					 min=yAxisMin, max=yAxisMax, labels=list(style=list(fontSize="20px")))
-	
-	h1$legend(enabled=FALSE)
-	
-	# Force circle markers, set default size, hover color (otherwise color unpredictable)
-	h1$plotOptions(series=list(animation=50),
-								 scatter=list(marker=list(symbol='circle', radius=6,
-								 												 states=list(hover=list(fillColor='white')))))
-	
-	tooltipFormat <- paste0("#! function() { return 'Cell: ' + this.point.name +
-													'<br/>Tissue: ' + this.series.name +
-													'<br/>", xData$uniqName, ": ' + Math.round(this.x * 100) / 100 +
-													'<br/>", yData$uniqName, ": ' + Math.round(this.y * 100) / 100; } !#")
-	
-	h1$tooltip(backgroundColor="rgba(255,255,255,1)", formatter=tooltipFormat)
-	
-	h1$chart(zoomType="xy", style=list(fontFamily="Helvetica Neue"))
-	
-	# Enable exporting
-	h1$exporting(enabled=TRUE)
-	
-	# Set name
-	h1$set(dom=dom)
-	
-	# Print chart
-	return(h1)
-}
-
+# makePlot <- function(xData, yData, showColor, showColorTissues, dataSource,
+# 										 srcContent, dom="rCharts", showPValue = TRUE) {
+# 	df <- getPlotData(xData, yData, showColor, showColorTissues, dataSource, srcContent)
+# 	
+# 	# Scatter plot
+# 	h1 <- rCharts::Highcharts$new()
+# 	
+# 	# Divide the dataset, split by category and put into list() format
+# 	# From: http://rcharts.io/viewer/?5735146#.VF6NS4W1Fy4
+# 	series <- lapply(split(df, df$PlotTissueType), function(x) {
+# 		res <- lapply(split(x, rownames(x)), as.list)
+# 		names(res) <- NULL
+# 		return(res)
+# 	})
+# 	
+# 	invisible(sapply(series, function(x) {
+# 		h1$series(data=x, type="scatter", name=x[[1]]$PlotTissueType)
+# 	}
+# 	))
+# 	
+# 	# Regression Line
+# 	fit <- lm('y~x', data=df)
+# 	x1 <- min(df[[xData$uniqName]])
+# 	y1 <- fit$coefficients[[2]]*x1 + fit$coefficients[[1]]
+# 	x2 <- max(df[[xData$uniqName]])
+# 	y2 <- fit$coefficients[[2]]*x2 + fit$coefficients[[1]]
+# 	
+# 	h1$series(data=list(c(x1,y1), c(x2,y2)), type="line", color="#FF0000",
+# 						marker=list(enabled=FALSE), enableMouseTracking=FALSE)
+# 	
+# 	# corResults <-cor.test(df[,xData$uniqName], df[,yData$uniqName], use="pairwise.complete.obs")
+# 	# title <- paste0(paste(yData$plotLabel, '~', xData$plotLabel),
+# 	# 								', r=', round(corResults$estimate, 2),
+# 	# 								' p=', signif(corResults$p.value, 2))
+# 	
+# 	# rbind(y, y) forces more precise pvalue computation.
+# 	corResults <- crossCors(df[,xData$uniqName], 
+# 													rbind(df[,yData$uniqName], df[,yData$uniqName]))
+# 	title <- paste0(paste(yData$plotLabel, '~', xData$plotLabel),
+# 									', r=', signif(corResults$cor[1], digits=3))
+# 	if (showPValue){
+# 		title <- paste0(title, ' p=', signif(corResults$pval[1], digits=3))
+# 	}
+# 	
+# 	h1$title(text=title)
+# 	
+# 	xAxisMin <- min(xData$data, na.rm = TRUE) - 0.25
+# 	xAxisMax <- max(xData$data, na.rm = TRUE) + 0.25
+# 	
+# 	yAxisMin <- min(yData$data, na.rm = TRUE) - 0.25
+# 	yAxisMax <- max(yData$data, na.rm = TRUE) + 0.25
+# 	
+# 	h1$xAxis(title=list(enabled=TRUE, text=xData$plotLabel, style=list(fontSize="24px", fontWeight="bold")),
+# 					 min=xAxisMin, max=xAxisMax, labels=list(style=list(fontSize="20px")))
+# 	h1$yAxis(title=list(enabled=TRUE, text=yData$plotLabel, style=list(fontSize="24px", fontWeight="bold")),
+# 					 min=yAxisMin, max=yAxisMax, labels=list(style=list(fontSize="20px")))
+# 	
+# 	h1$legend(enabled=FALSE)
+# 	
+# 	# Force circle markers, set default size, hover color (otherwise color unpredictable)
+# 	h1$plotOptions(series=list(animation=50),
+# 								 scatter=list(marker=list(symbol='circle', radius=6,
+# 								 												 states=list(hover=list(fillColor='white')))))
+# 	
+# 	tooltipFormat <- paste0("#! function() { return 'Cell: ' + this.point.name +
+# 													'<br/>Tissue: ' + this.series.name +
+# 													'<br/>", xData$uniqName, ": ' + Math.round(this.x * 100) / 100 +
+# 													'<br/>", yData$uniqName, ": ' + Math.round(this.y * 100) / 100; } !#")
+# 	
+# 	h1$tooltip(backgroundColor="rgba(255,255,255,1)", formatter=tooltipFormat)
+# 	
+# 	h1$chart(zoomType="xy", style=list(fontFamily="Helvetica Neue"))
+# 	
+# 	# Enable exporting
+# 	h1$exporting(enabled=TRUE)
+# 	
+# 	# Set name
+# 	h1$set(dom=dom)
+# 	
+# 	# Print chart
+# 	return(h1)
+# }
+# 
 
 makePlotStatic <- function(xData, yData, showColor, showColorTissues, dataSource, 
 													 srcContent, xLimVals = NULL, yLimVals = NULL,oncolor) {
@@ -488,7 +492,7 @@ geneExpTcga <- function(varName, aproject) {
     "SELECT project_short_name, Safe.SUBSTR(sample_barcode,14,2) AS ttype, HGNC_gene_symbol, normalized_count,platform FROM `isb-cgc.TCGA_hg19_data_v0.RNAseq_Gene_Expression_UNC_RSEM` WHERE HGNC_gene_symbol = '", varName, "'",sep="")
   
   ## new
-  service_token <- set_service_token("/Users/elloumif/km/isb-cgc-fathi-b2c2573d2b53.json")
+  service_token <- set_service_token("./isb-cgc-fathi-b2c2573d2b53.json")
   ##
   response <- query_exec(q, project = aproject, use_legacy_sql =FALSE,max_pages = Inf)
   

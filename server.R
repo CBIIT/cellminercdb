@@ -14,6 +14,7 @@ library(gplots)
 library(heatmaply)
 library(memoise)
 
+
 ## library(shinyHeatmaply)
 #library(dplyr)
 #library(svglite)
@@ -36,7 +37,7 @@ metaConfig <- jsonlite::fromJSON("configMeta.json")
 oncolor <- read.delim("oncotree1_colors.txt",row.names = 1,stringsAsFactors = F)
 rownames(oncolor)=toupper(rownames(oncolor))
 
-source("modal.R")
+source("modal1.R")
 source("appUtils.R")
 source("dataLoadingFunctions.R")
 
@@ -164,11 +165,15 @@ shinyServer(function(input, output, session) {
     print(dim(resu))
     ## 
     p<-ggplot(resu, aes(x=cohort, y=genexp)) +
-#      geom_boxplot(aes(fill = cohort)) + theme(plot.title = element_text(size=14, face="bold"), legend.text = element_text(size=14),axis.title.x = element_blank(),axis.text.x = element_blank(),axis.ticks.x = element_blank() ) + ggtitle(paste0("Distribution of ",toupper(input$vgene)," gene expression (z-score)"))
-    geom_boxplot(aes(fill = cohort)) + theme(plot.title = element_text(size=14, face="bold"), legend.text = element_text(size=14),axis.title.x = element_blank(), axis.text.x = element_text(angle = 45) ) + ggtitle(paste0("Distribution of ",toupper(input$vgene)," gene expression"))
+     
+     ##geom_boxplot(aes(fill = cohort)) + theme(plot.title = element_text(size=14, face="bold"), legend.text = element_text(size=14),axis.title.x = element_blank(),axis.text.x = element_blank(),axis.ticks.x = element_blank() ) + ggtitle(paste0("Distribution of ",toupper(input$vgene)," gene expression (z-score)"))
+  
+      geom_boxplot(aes(fill = cohort)) + theme(plot.title = element_text(size=14, face="bold"), legend.text = element_text(size=14),axis.title.x = element_blank(), axis.text.x = element_text(angle = 45) ) + ggtitle(paste0("Distribution of ",toupper(input$vgene)," gene expression"))
     
-    g <- ggplotly(p,plotWidth=1000,plotHeight=1400)
-    #g1 <- layout(g1, margin=list(t = 75))
+     g <- ggplotly(p,plotWidth=1000,plotHeight=1400)
+
+        ### g <- ggplotly(p,plotWidth=1400,plotHeight=2000)
+        ### g <- layout(g, margin=list(t = 75, b = 0))
     g <- layout(g, margin=list(t = 75), legend = list(font = list(size = 18)))
     g1 <- config(p = g, collaborate=FALSE, cloud=FALSE, displaylogo=FALSE, displayModeBar=TRUE,
                  modeBarButtonsToRemove=c("select2d", "sendDataToCloud", "pan2d", "resetScale2d",
@@ -177,7 +182,7 @@ shinyServer(function(input, output, session) {
     g1
       })
   
-  #output$tcgaPlot <- renderPlot({distPlot()}, width=1000, height=600)
+  ## output$tcgaPlot <- renderPlot({distPlot()}, width=1100, height=1100)
   output$tcgaPlot <- renderPlotly({distPlot()})
   
 	#----[Reactive Variables]---------------------------------------------------------------
@@ -675,6 +680,10 @@ shinyServer(function(input, output, session) {
   	if ("NAPY" %in% colnames(dlDataTab)) {
   	  dlDataTabCols <- c(dlDataTabCols, "NAPY")
   	}
+  	# new stuff
+  	if ("TNBC" %in% colnames(dlDataTab)) {
+  	  dlDataTabCols <- c(dlDataTabCols, "TNBC")
+  	}
   	
   	dlDataTab <- dlDataTab[, dlDataTabCols]
   	dlDataTab[, 2] <- round(dlDataTab[, 2], 3)
@@ -749,15 +758,19 @@ shinyServer(function(input, output, session) {
 	  else
 	  {
 	    mytype=paste0(input$dataTyp,"A")
-	    if (is.null(srcContent[[input$dataSrc]][["molPharmData"]][[mytype]]) | ncol(srcContent[[input$dataSrc]][["molPharmData"]][[mytype]])==0) {
+	    ## new 
+	    shiny::validate(need(!is.null(srcContent[[input$dataSrc]][["molPharmData"]][[mytype]]), "Non valid data type")) ## for reactivity
+	    if (ncol(srcContent[[input$dataSrc]][["molPharmData"]][[mytype]])==0) {
+	    ## end
+	    ## if (is.null(srcContent[[input$dataSrc]][["molPharmData"]][[mytype]]) | ncol(srcContent[[input$dataSrc]][["molPharmData"]][[mytype]])==0) {
 	      ID=unlist(lapply(rownames(srcContent[[input$dataSrc]][["molPharmData"]][[input$dataTyp]]),function(x) {return(substr(x,4,nchar(x)))}))
 	      myframe=data.frame(ID,stringsAsFactors = F)
 	    }
 	    else
 	    { myframe=srcContent[[input$dataSrc]][["molPharmData"]][[mytype]]
-	      if (input$dataTyp=="swa") {
-	        myframe=myframe[,c(2,1)]
-	      } else 
+	      #if (input$dataTyp=="swa") {
+	      #   myframe=myframe[,c(2,1)]
+	      # } else 
 	        if (input$dataTyp=="exp" & input$dataSrc=="nciSclc")
 	        { myframe=myframe[,c(4,3,5:13,1:2)] 
 	        }
@@ -960,8 +973,8 @@ shinyServer(function(input, output, session) {
                       #           						choices=c("Molecular Data"="molData", "Drug Data"="drug"), 
                      	#											selected="molData")),
                      	
-                     	column(3, HTML(
-                     	  paste("<label class='control-label' for='patternComparisonType'>Pattern Comparison</label>","<select id='patternComparisonType'><option value='moldata' selected>Molecular Data</option><option value='drug'>Drug Data</option></select>")
+                     	column(4, HTML(
+                     	  paste("<label class='control-label' for='patternComparisonType'>Select molecular or activity data</label>","<select id='patternComparisonType'><option value='moldata' selected>Molecular Data</option><option value='drug'>Drug Data</option></select>")
                      	)),
 										 	#column(3, selectInput("patternComparisonSeed", "With Respect to",
 										 	#											choices=c("x-Axis Entry"="xPattern", 
@@ -975,7 +988,8 @@ shinyServer(function(input, output, session) {
 										 	# column(3, HTML(
 										 	#   paste("<label class='control-label' for='crossdb'>Use y-Axis cell line set?</label>","<br><input type='radio' id='crossdb' value='No' checked> No  <input type='radio' id='crossdb' value='Yes'> Yes")
 										 	# ))
-										 	column(3, radioButtons("crossdb", label = "Compare to y-Axis cell line set?", choices = list("No" = "No", "Yes" = "Yes"), selected  = "No", inline=T)
+										 	# column(3, radioButtons("crossdb", label = "Select type of comparison", choices = list("Compare x-Axis input to x-Axis molecular or activity data" = "No", "Compare x-Axis input to y-Axis molecular or activity data" = "Yes"), selected  = "No", inline=F)
+										 	column(8, radioButtons("crossdb", label = NULL, choices = list("Compare x-Axis input to x-Axis molecular or activity data" = "No", "Compare x-Axis input to y-Axis molecular or activity data" = "Yes"), selected  = "No", inline=F, width="100%")       
 										 	 )
 										 	
 										 ),
@@ -1057,7 +1071,7 @@ shinyServer(function(input, output, session) {
 		tags$div(
 		tags$a(visibleText, href=paste(urlString), target = "_blank"),
 		tags$a("   and the DTP",href='https://dtp.cancer.gov', target='_blank'))
-		else tags$a(visibleText, href=paste(urlString), target = "_blank",id="tmd")
+		else tags$a(visibleText, href=paste(urlString), target = "_blank",id="tmd", class ="dm")
 		
 		#  
 		# if (input$mdataSource=="nci60") { 
@@ -1163,12 +1177,14 @@ shinyServer(function(input, output, session) {
   
   
   ### Download data
-  output$downloadExp <- downloadHandler(
+  output$downloadExp_orig <- downloadHandler(
     
     # This function returns a string which tells the client
     # browser what name to use when saving the file.
     filename = function() {
-      paste0("data_",input$mdataSource,"_",input$dataType,".txt")
+      ## paste0("data_",input$mdataSource,"_",input$dataType,".txt")
+      # paste0("data_",metaConfig[[input$mdataSource]][["displayName"]],"_",input$dataType,".txt")
+      paste0("data_",metaConfig[[input$mdataSource]][["displayName"]],"_",input$dataType,".zip")
     },
     # filename = function() {
     #   paste0(input$mdataSource,"_",input$dataType,".zip")
@@ -1176,12 +1192,42 @@ shinyServer(function(input, output, session) {
     # This function should write data to a file given to it by
     # the argument 'file'.
     content = function(file) {
-      
+      file0 = paste0(tempdir(),"/data_",metaConfig[[input$mdataSource]][["displayName"]],"_",input$dataType,".txt")
       wdata=srcContent[[input$mdataSource]][["molPharmData"]][[input$dataType]]
-      rownames(wdata)=substr(rownames(wdata),4,nchar(rownames(wdata)))
+      # new cancel next
+      # rownames(wdata)=substr(rownames(wdata),4,nchar(rownames(wdata)))
+
       # Write to a file specified by the 'file' argument
       #write.table(srcContent[[input$mdataSource]][["molPharmData"]][[input$dataType]], file, sep = "\t",col.names = NA)      
-      write.table(wdata, file, sep = "\t", col.names = NA)  
+      
+      #new -------------------------------------------
+      if (input$dataType!="act") {
+      wdata.A=srcContent[[input$mdataSource]][["molPharmData"]][[paste0(input$dataType,"A")]]
+          gene = substr(rownames(wdata),4,nchar(rownames(wdata)))
+       if (nrow(wdata.A)==0) {
+         
+         # final = cbind(Gene=substr(rownames(wdata),4,nchar(rownames(wdata))),wdata)
+         final = cbind(Gene=gene,wdata)
+       }
+       else{
+          # stopifnot(identical(rownames(wdata),rownames(wdata.A)))
+          stopifnot(identical(gene,as.character(wdata.A[,1])))
+          final = cbind(wdata.A,wdata)
+          ### rownames(final)=rownames(wdata)
+       }
+      }
+      else {
+        wdata.A=srcContent[[input$mdataSource]][["drugInfo"]]
+        stopifnot(identical(rownames(wdata),rownames(wdata.A)))
+        final = cbind(wdata.A,wdata)
+      }
+      ## write.table(final, file, sep = "\t", row.names = F)  
+      write.table(final, file0, sep = "\t", row.names = F)  
+      zip(zipfile=file, files=file0, flags = "-r9Xj")
+      # ------------------------------------------------
+      
+      # new cancel next
+      # write.table(wdata, file, sep = "\t", col.names = NA)  
       
       # myname=paste0(input$mdataSource,"_",input$dataType,".txt")
       # write.table(srcContent[[input$mdataSource]][["molPharmData"]][[input$dataType]], myname, sep = "\t",
@@ -1193,9 +1239,70 @@ shinyServer(function(input, output, session) {
       #                          "Platform/Assay", "PubMed Ref. ID")
       # write.table(t(jsonFrame[which(jsonFrame$DataType==input$dataType),]),"footnotes.txt",sep="\t",col.names=F)
       # zip(zipfile=file, files=c(myname,"footnotes.txt"))
-    }
+    },
+    contentType = "application/zip"
   )
 ##
+
+  ### Download data
+  output$downloadExp <- downloadHandler(
+    
+    # This function returns a string which tells the client
+    # browser what name to use when saving the file.
+    filename = function() {
+      ## paste0("data_",input$mdataSource,"_",input$dataType,".txt")
+      # paste0("data_",metaConfig[[input$mdataSource]][["displayName"]],"_",input$dataType,".txt")
+      paste0("data_",metaConfig[[input$mdataSource]][["displayName"]],"_",input$dataType,".zip")
+    },
+    content = function(file) {
+      myfile = paste0("downloads/data_",metaConfig[[input$mdataSource]][["displayName"]],"_",input$dataType,".zip")
+       
+      # if (!file.exists(myfile)) showModal(modalDialog(title="Error", p("file does not exists")))
+      #  file.copy(myfile, file)  
+      
+      if (file.exists(myfile)) file.copy(myfile, file)  
+      else {
+        file0 = paste0(tempdir(),"/data_",metaConfig[[input$mdataSource]][["displayName"]],"_",input$dataType,".txt")
+        wdata=srcContent[[input$mdataSource]][["molPharmData"]][[input$dataType]]
+
+        #new -------------------------------------------
+        if (input$dataType!="act") {
+          wdata.A=srcContent[[input$mdataSource]][["molPharmData"]][[paste0(input$dataType,"A")]]
+          gene = substr(rownames(wdata),4,nchar(rownames(wdata)))
+          if (nrow(wdata.A)==0) {
+            
+            # final = cbind(Gene=substr(rownames(wdata),4,nchar(rownames(wdata))),wdata)
+            final = cbind(Gene=gene,wdata)
+          }
+          else{
+            # stopifnot(identical(rownames(wdata),rownames(wdata.A)))
+            if (input$mdataSource == "nciSclc" & input$dataType =="exp" ) {
+              stopifnot(identical(gene,as.character(wdata.A[,4]))) 
+            } else 
+            {
+               stopifnot(identical(gene,as.character(wdata.A[,1]))) 
+            }
+            
+            final = cbind(wdata.A,wdata)
+          }
+        }
+        else {
+          wdata.A=srcContent[[input$mdataSource]][["drugInfo"]]
+          stopifnot(identical(rownames(wdata),rownames(wdata.A)))
+          final = cbind(wdata.A,wdata)
+        }
+        ## write.table(final, file, sep = "\t", row.names = F)  
+        write.table(final, file0, sep = "\t", row.names = F)  
+        zip(zipfile=file, files=file0, flags = "-r9Xj")
+        
+      }
+      
+    },
+    contentType = "application/zip"
+  )
+  ##
+  
+  
 ## -----------Download Cell line info
   output$downloadCell <- downloadHandler(
     
@@ -1222,7 +1329,9 @@ shinyServer(function(input, output, session) {
     # This function returns a string which tells the client
     # browser what name to use when saving the file.
     filename = function() {
-      paste0("footnotes_",input$mdataSource,"_",input$dataType,".csv")
+      # paste0("footnotes_",input$mdataSource,"_",input$dataType,".csv")
+      paste0("footnotes_",metaConfig[[input$mdataSource]][["displayName"]],"_",input$dataType,".csv")
+      
     },
     # filename = function() {
     #   paste0(input$mdataSource,"_",input$dataType,".zip")
@@ -1242,10 +1351,15 @@ shinyServer(function(input, output, session) {
       jsonFrame <- as.data.frame(configSelect)
        
       colnames(jsonFrame) <- c("DataType", "Description", "Units", 
-                                "Platform/Assay", "PubMed Ref. ID")
+                                "Platform/Assay", "PubMed Ref. ID(s)")
       mydata=t(jsonFrame[which(jsonFrame$DataType==input$dataType),])
-      colnames(mydata)=paste("footnotes for data source:",input$mdataSource)
-       write.csv(mydata,file)
+      ##
+      nr=nrow(mydata)
+      mydata = rbind(" ",metaConfig[[input$mdataSource]][["displayName"]],mydata," ","For the 'Download Data' table for this data source, row one contains the cell line names,","column one contains the 'Data Type' identifier, and the numerical values are ","the 'Units' for the 'Platform/Assay', as described in more detail in the 'PubMed Reference' above.","The source of the data may be accessed to by clicking the 'Select here to learn more about ...' link.")
+      rownames(mydata)[1:2]=c("Footnotes:","Cell Line Set")
+      rownames(mydata)[nr+4]="Remarks"
+      ## colnames(mydata)=paste("footnotes for data source:",input$mdataSource)
+       write.table(mydata,file,col.names = F,sep=",")
        #write.table(t(jsonFrame[which(jsonFrame$DataType==input$dataType),]),file,sep="\t",col.names=F)
        # zip(zipfile=file, files=c(myname,"footnotes.txt"))
     }

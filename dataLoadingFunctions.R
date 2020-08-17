@@ -45,6 +45,14 @@ getTissue2SamplesMap <- function(sampleData, typeLevelSeparator = ":"){
 	  tissueToSamples <- c(tissueToSamples, tmp)
 	}
 	# ----------------------------------------------------------------------------
+	# Additional phenotype-based sample sets -------------------------------------
+	if ("TNBC" %in% colnames(sampleData)) {
+	  emtSampleData <- sampleData[!is.na(sampleData$TNBC), , drop = FALSE]
+	  tmp <- split(emtSampleData$Name, emtSampleData$TNBC)
+	  stopifnot(length(intersect(names(tmp), names(tissueToSamples))) == 0)
+	  tissueToSamples <- c(tissueToSamples, tmp)
+	}
+	# ----------------------------------------------------------------------------
 	
 	return(tissueToSamples)
 }

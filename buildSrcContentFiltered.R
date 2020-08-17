@@ -1,12 +1,12 @@
 library(rcellminer)
 
-config <- jsonlite::fromJSON("config_filtered.json") # could be original config file
+config <- jsonlite::fromJSON("config_fil_sclc.json") # could be original config file
 
 source("appUtils.R")
 source("dataLoadingFunctions.R")
 # here an example for SCLC
-# srcContent <- lapply(config, loadSourceContentFiltered,onco1="Lung",onco2="Small Cell Lung Cancer (SCLC)")
-srcContent <- lapply(config, loadSourceContentFiltered,onco1=NA,onco2="sarcoma")
+srcContent <- lapply(config, loadSourceContentFiltered,onco1="Lung",onco2="Small Cell Lung Cancer (SCLC)")
+#srcContent <- lapply(config, loadSourceContentFiltered,onco1=NA,onco2="sarcoma")
 
 isLoadedSrc <- vapply(srcContent, function(x) { !is.null(x) }, logical(1))
 if (any(!isLoadedSrc)){

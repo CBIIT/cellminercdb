@@ -3,6 +3,13 @@ library(rcellminer)
 library(shinycssloaders)
 library(plotly)
 
+# library(BiocManager)
+# options(repos = BiocManager::repositories())   ## bioconductor 3.8
+# options(repos = BiocInstaller::biocinstallRepos()) ## bioconductor 3.7
+# options(repos = union(BiocManager::repositories(),BiocInstaller::biocinstallRepos()))
+# xx = c(BiocManager::repositories(),BiocInstaller::biocinstallRepos())[-10]
+# options(repos = xx)
+# getOption("repos")
 # library(microplot)
 #--------------------------------------------------------------------------------------------------
 # LOAD CONFIGURATION AND REQUIRED DATA SOURCE PACKAGES.
@@ -199,7 +206,7 @@ shinyUI(
 	       
 	        ),
         mainPanel(
-          div(style="font-size: 16px", align="center", "CellMinerCDB enables exploration and analysis of cancer cell line pharmacogenomic data across different sources. If publishing results based on this site, please cite: ", a("Rajapakse.VN, Luna.A, Yamade.M et al. iScience, Cell Press. 2018 Dec 12.", href="https://www.cell.com/iscience/fulltext/S2589-0042(18)30219-0", target = "_blank", style="font-size: 16px;")),
+          div(style="font-size: 16px", align="center", "CellMinerCDB enables exploration and analysis of cancer cell line pharmacogenomic data across different sources. If publishing results based on this site, please cite: ", a("Rajapakse.VN, Luna.A, Yamade.M et al. iScience, Cell Press. 2018 Dec 12.", href="https://www.cell.com/iscience/fulltext/S2589-0042(18)30219-0", target = "_blank", style="font-size: 16px;", class = "dm")),
         	uiOutput('tabsetPanel')
         )
     	 )
@@ -318,6 +325,7 @@ shinyUI(
 		tabPanel("Help",
 		         tags$a(id="skiplink"),
 		         includeMarkdown("www/files/guide.md")
+		         ## includeHTML("www/files/guide2.html")
 		         #h1("For testing"),
 		         #textOutput("ipAddress")
 		),
@@ -353,7 +361,7 @@ tags$a(" Developmental Therapeutics Branch (DTB), ",href='https://ccr.cancer.gov
 tags$a("Center for Cancer Research (CCR), ", href="https://ccr.cancer.gov/", target = "_blank",style="font-size: 12px;"),
 tags$a("National Cancer Institute (NCI) ", href="https://www.cancer.gov/", target = "_blank",style="font-size: 12px;"),
 "prepared in collaboration with the ",
-tags$a("cBio Center", href="http://www.sanderlab.org/", target = "_blank",style="font-size: 12px;"),
+tags$a("cBio Center", href="http://www.sanderlab.org/", target = "_blank",style="font-size: 12px;", class = "dm"),
 " at the Dana-Farber Cancer Institute.",
 br(),br(),
 # tags$html("Please email 'Webadmin@discover.nci.nih.gov' with any problems, questions or feedback on the tool",style="font-size: 12px; float: left"),
