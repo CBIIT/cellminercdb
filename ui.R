@@ -286,42 +286,42 @@ shinyUI(
 		         ) #end fluidPage
 		), #end tabPane
 		#-----[NavBar Tab: About]------------------------------------------------------------------------
-		tabPanel("TCGA distribution",
-		            fluidPage(	
-		              sidebarLayout(
-		                sidebarPanel(
-		                  width=3, 
-		                  tags$div(
-		                    id="input_container", 
-		                    tags$a(id="skiplink"),
-		                    #selectInput("mdataSource", "Data Source", choices=metaChoices, selected = "nci60")
-		                    HTML(
-		                      paste("<label class='control-label' for='mdataSource'>Cell Line Set</label>","<select id='cmpSource'>",metaoptions,"</select>")
-		                    ),
-		                    br(),br(),
-		                    textInput("vgene", "Gene symbol: ", "SLFN11"),
-		                    #uiOutput("cmpTypeUi"),
-		                    br(),br(),
-		                    checkboxInput("zsid","z-score ",value=T),
-		                    br(),br(),
-		                    br(),br(),
-		                    HTML("<b>Compare current cell line set expression to TCGA</b>"),
-		                    br(),
-		                    actionButton('subtcga', 'Submit'),
-		                    br(),br(),br(),br(),
-		                    br(),br(),br(),br()
-		                  )
-		                ), #end sidebarPanel
-		                mainPanel(
-		                  #htmlOutput('sourceLink'),
-		                  #uiOutput('sourceLink'),
-		                  ## includeMarkdown("www/files/tcga.md"),
-		                  withSpinner(plotlyOutput('tcgaPlot'))
-		                  
-		                )
-		              )
-		            ) #end fluidPage
-           ), 
+# 		tabPanel("TCGA distribution",
+# 		            fluidPage(	
+# 		              sidebarLayout(
+# 		                sidebarPanel(
+# 		                  width=3, 
+# 		                  tags$div(
+# 		                    id="input_container", 
+# 		                    tags$a(id="skiplink"),
+# 		                    #selectInput("mdataSource", "Data Source", choices=metaChoices, selected = "nci60")
+# 		                    HTML(
+# 		                      paste("<label class='control-label' for='mdataSource'>Cell Line Set</label>","<select id='cmpSource'>",metaoptions,"</select>")
+# 		                    ),
+# 		                    br(),br(),
+# 		                    textInput("vgene", "Gene symbol: ", "SLFN11"),
+# 		                    #uiOutput("cmpTypeUi"),
+# 		                    br(),br(),
+# 		                    checkboxInput("zsid","z-score ",value=T),
+# 		                    br(),br(),
+# 		                    br(),br(),
+# 		                    HTML("<b>Compare current cell line set expression to TCGA</b>"),
+# 		                    br(),
+# 		                    actionButton('subtcga', 'Submit'),
+# 		                    br(),br(),br(),br(),
+# 		                    br(),br(),br(),br()
+# 		                  )
+# 		                ), #end sidebarPanel
+# 		                mainPanel(
+# 		                  #htmlOutput('sourceLink'),
+# 		                  #uiOutput('sourceLink'),
+# 		                  ## includeMarkdown("www/files/tcga.md"),
+# 		                  withSpinner(plotlyOutput('tcgaPlot'))
+# 		                  
+# 		                )
+# 		              )
+# 		            ) #end fluidPage
+#            ), 
 		tabPanel("Help",
 		         tags$a(id="skiplink"),
 		         includeMarkdown("www/files/guide.md")
