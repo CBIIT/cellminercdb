@@ -196,6 +196,20 @@
         		"platform":"reverse-phase protein array",
         		"ref_pmid":"31068700"
         	},
+        	 {
+        		"dataType":"mtb",
+        		"description":"Metabolites",
+        		"units":"metabolites intensities",
+        		"platform":"Liquid Chromatography-Mass Spectrometry (LC-MS)",
+        		"ref_pmid":"31068703"
+        	},
+        	 {
+        		"dataType":"rrb",
+        		"description":"DNA RRBS Methylation",
+        		"units":"average of beta values for gene-associated promoter CpG clusters; 0 (no methylation), 1 (complete methylation)",
+        		"platform":"Reduced representation bisulfite sequencing (RRBS)",
+        		"ref_pmid":"31068700"
+        	},        	
         	{
         		"dataType":"mda",
         		"description":"cell line metadata (phenotypic measures)",
@@ -515,6 +529,31 @@
         		"units":"Average z-score from NCI Sarcoma, CCLE, GDSC, CTRP",
         		"platform":"NA",
         		"ref_pmid":"NA"
+        	}
+        	]
+      }
+    }
+  },
+  "achilles":{
+    "displayName":"Achilles project",
+    "fullName": "Project Achilles",
+    "url": "https://depmap.org/portal/achilles/",
+    "packages":{
+      "achillesData":{
+        "MetaData":[
+          {
+        		"dataType":"cri",
+        		"description":"Achilles gene effect ",
+        		"units":"CERES gene score",
+        		"platform":"CRISPR knockout",
+        		"ref_pmid":"https://www.biorxiv.org/content/10.1101/720243v1"
+        	},
+        	 {
+        		"dataType":"mda",
+        		"description":"cell line metadata (phenotypic measures)",
+        		"units":"measure-specific",
+        		"platform":"measure-specific",
+        		"ref_pmid":"na"
         	}
         	]
       }

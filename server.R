@@ -423,7 +423,7 @@ shinyServer(function(input, output, session) {
 	    
 	  } else {
 	    molPharmData <- srcContent[[pcDataset]][["molPharmData"]]
-	    molData <- molPharmData[setdiff(names(molPharmData), c("act","copA","mutA","metA","expA","xaiA","proA","mirA","mdaA","swaA","xsqA","mthA","hisA"))]
+	    molData <- molPharmData[setdiff(names(molPharmData), c("act","copA","mutA","metA","expA","xaiA","proA","mirA","mdaA","swaA","xsqA","mthA","hisA","criA","mtbA","rrbA"))]
 	    shiny::validate(need(length(molData)>0, "No molecular data available for this cell line set"))
 	    ##if (length(molData)==0) stop("No molecular data available for this cell line set")
 	    ## old: molData <- lapply(molData, function(X) X[, selectedLines])

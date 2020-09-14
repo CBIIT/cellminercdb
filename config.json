@@ -103,6 +103,16 @@
             "displayName":"pro: Protein (RPPA)"
           },
           {
+            "eSetListName":"mtb",
+            "featurePrefix":"mtb",
+            "displayName":"mtb: Metabolites"
+          },
+          {
+            "eSetListName":"rrb",
+            "featurePrefix":"rrb",
+            "displayName":"rrb: DNA RRBS Methylation"
+          },
+          {
             "eSetListName":"mda",
             "featurePrefix":"mda",
             "displayName":"mda: Signatures, Miscellaneous data"
@@ -415,6 +425,25 @@
             "eSetListName":"exp",
             "featurePrefix":"exp",
             "displayName":"exp: Average z-score from all sources"
+          },
+          {
+            "eSetListName":"mda",
+            "featurePrefix":"mda",
+            "displayName":"mda: Signatures, Miscellaneous data"
+          }
+        ]
+      }
+    }
+  },
+    "achilles":{
+    "displayName":"Achilles project",
+    "packages":{
+      "achillesData":{
+        "MolData":[
+          {
+            "eSetListName":"cri",
+            "featurePrefix":"cri",
+            "displayName":"cri: Crispr knockout screens"
           },
           {
             "eSetListName":"mda",
