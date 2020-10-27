@@ -402,18 +402,26 @@ shinyServer(function(input, output, session) {
 	    shiny::validate(need(srcContent[[pcDataset]][["molPharmData"]][["act"]], "No drug available for this cell line set"))
 	    #if (is.null(srcContent[[pcDataset]][["molPharmData"]][["act"]])) stop("No drug available for this cell line set")
 	    results <- patternComparison(dat$data,
-	                                 srcContent[[pcDataset]][["molPharmData"]][["act"]][, selectedLines])
+	                                 srcContent[[pcDataset]][["molPharmData"]][["act"]][, selectedLines, drop=FALSE])
 	    results$ids <- rownames(results)
 	    results$NAME <- srcContent[[pcDataset]][["drugInfo"]][rownames(results), "NAME"]
+	    # OLD
+	    # if ("MOA" %in% colnames(srcContent[[pcDataset]][["drugInfo"]])){
+	    #   results$MOA <- srcContent[[pcDataset]][["drugInfo"]][rownames(results), "MOA"]
+	    #   results <- results[, c("ids", "NAME", "MOA", "COR", "PVAL")]
+	    #   colnames(results) <- c("ID", "Name", "MOA", "Correlation", "P-Value")
+	    # } else{
+	    #   results <- results[, c("ids", "NAME", "COR", "PVAL")]
+	    #   colnames(results) <- c("ID", "Name", "Correlation", "P-Value")
+	    # }
 	    
-	    if ("MOA" %in% colnames(srcContent[[pcDataset]][["drugInfo"]])){
-	      results$MOA <- srcContent[[pcDataset]][["drugInfo"]][rownames(results), "MOA"]
-	      results <- results[, c("ids", "NAME", "MOA", "COR", "PVAL")]
-	      colnames(results) <- c("ID", "Name", "MOA", "Correlation", "P-Value")
-	    } else{
-	      results <- results[, c("ids", "NAME", "COR", "PVAL")]
-	      colnames(results) <- c("ID", "Name", "Correlation", "P-Value")
-	    }
+	    #NEW
+	    results$MOA <- srcContent[[pcDataset]][["drugInfo"]][rownames(results), "MOA"]
+	    results$CLINICAL.STATUS <- srcContent[[pcDataset]][["drugInfo"]][rownames(results), "CLINICAL.STATUS"]
+	    results <- results[, c("ids", "NAME", "MOA", "CLINICAL.STATUS", "COR", "PVAL")]
+	    colnames(results) <- c("ID", "Name", "MOA", "CLINICAL.STATUS", "Correlation", "P-Value")
+	    # end new
+	    
 	    DataType <- getMolDataType(results$ID)
 	    DrugID <- removeMolDataType(results$ID)
 	    results$ID <- NULL
@@ -1272,7 +1280,7 @@ shinyServer(function(input, output, session) {
           if (nrow(wdata.A)==0) {
             
             # final = cbind(Gene=substr(rownames(wdata),4,nchar(rownames(wdata))),wdata)
-            final = cbind(Gene=gene,wdata)
+            final = cbind(ID=gene,wdata)
           }
           else{
             # stopifnot(identical(rownames(wdata),rownames(wdata.A)))

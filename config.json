@@ -61,7 +61,8 @@
             "displayName":"act: Drug Activity",
             "drugAnnotIdCol":"NSC",
             "drugAnnotNameCol":"NAME",
-            "drugAnnotMoaCol":"MOA"
+            "drugAnnotMoaCol":"MOA",
+            "drugAnnotClinCol":"FDA_STATUS"
           }
         ]
       }
@@ -122,9 +123,10 @@
           {
             "featurePrefix":"act",
             "displayName":"act: Drug Activity (-log10[IC50M])",
-            "drugAnnotIdCol":"NA",
-            "drugAnnotNameCol":"NA",
-            "drugAnnotMoaCol":"NA"
+            "drugAnnotIdCol":"ccleid",
+            "drugAnnotNameCol":"NAME",
+            "drugAnnotMoaCol":"MOA",
+            "drugAnnotClinCol":"FDA_STATUS"
           }
         ]
       }
@@ -167,7 +169,8 @@
             "displayName":"act: Drug Activity (-log10[IC50M])",
             "drugAnnotIdCol":"EXTENDED_NAME",
             "drugAnnotNameCol":"NAME",
-            "drugAnnotMoaCol":"MOA"
+            "drugAnnotMoaCol":"MOA",
+            "drugAnnotClinCol":"FDA_STATUS"
           }
         ]
       }
@@ -205,7 +208,8 @@
             "displayName":"act: Drug Activity (AUC)",
             "drugAnnotIdCol":"ID",
             "drugAnnotNameCol":"NAME",
-            "drugAnnotMoaCol":"MOA"
+            "drugAnnotMoaCol":"MOA",
+            "drugAnnotClinCol":"FDA_STATUS"
           }
         ]
       }
@@ -222,14 +226,15 @@
             "displayName":"act: Drug Activity (comboscores)",
             "drugAnnotIdCol":"NSC",
             "drugAnnotNameCol":"NAME",
-            "drugAnnotMoaCol":"MOA"
+            "drugAnnotMoaCol":"MOA",
+            "drugAnnotClinCol":"FDA_STATUS"
           }
         ]
       }
     }
   },
     "ncats":{
-    "displayName":"NCATS Matt Hall",
+    "displayName":"NCATS MT",
     "packages":{
       "ncatsData":{
   
@@ -239,14 +244,15 @@
             "displayName":"act: Drug Activity",
             "drugAnnotIdCol":"ID",
             "drugAnnotNameCol":"NAME",
-            "drugAnnotMoaCol":"MOA"
+            "drugAnnotMoaCol":"MOA",
+            "drugAnnotClinCol":"NA"
           }
         ]
       }
     }
   },
   "tncats":{
-    "displayName":"NCATS Craig Thomas",
+    "displayName":"NCATS CT ic50",
     "packages":{
       "tncatsData":{
   
@@ -256,7 +262,26 @@
             "displayName":"act: Drug Activity",
             "drugAnnotIdCol":"ID",
             "drugAnnotNameCol":"NAME",
-            "drugAnnotMoaCol":"MOA"
+            "drugAnnotMoaCol":"MOA",
+            "drugAnnotClinCol":"phase"
+          }
+        ]
+      }
+    }
+  },
+    "ancats":{
+    "displayName":"NCATS CT auc",
+    "packages":{
+      "ancatsData":{
+  
+        "DrugData":[
+          {
+            "featurePrefix":"act",
+            "displayName":"act: Drug Activity",
+            "drugAnnotIdCol":"ID",
+            "drugAnnotNameCol":"NAME",
+            "drugAnnotMoaCol":"MOA",
+            "drugAnnotClinCol":"phase"
           }
         ]
       }
@@ -318,7 +343,8 @@
             "displayName":"act: Drug Activity (-log10[IC50M])",
             "drugAnnotIdCol":"NSC",
             "drugAnnotNameCol":"NAME",
-            "drugAnnotMoaCol":"MOA"
+            "drugAnnotMoaCol":"MOA",
+            "drugAnnotClinCol":"NA"
           }
         ]
       }
@@ -366,7 +392,8 @@
             "displayName":"act: Drug Activity (-log10[IC50M])",
             "drugAnnotIdCol":"NSC",
             "drugAnnotNameCol":"NAME",
-            "drugAnnotMoaCol":"MOA"
+            "drugAnnotMoaCol":"MOA",
+            "drugAnnotClinCol":"FDA_STATUS"
           }
         ]
       }
@@ -498,7 +525,8 @@
             "displayName":"act: Drug Activity (-log10[IC50M])",
             "drugAnnotIdCol":"ID",
             "drugAnnotNameCol":"NAME",
-            "drugAnnotMoaCol":"MOA"
+            "drugAnnotMoaCol":"MOA",
+            "drugAnnotClinCol":"NA"
           }
         ]
       }
@@ -566,12 +594,33 @@
             "displayName":"act: Drug Activity",
             "drugAnnotIdCol":"NSC",
             "drugAnnotNameCol":"NAME",
-            "drugAnnotMoaCol":"MOA"
+            "drugAnnotMoaCol":"MOA",
+            "drugAnnotClinCol":"FDA_STATUS"
+          }
+        ]
+      }
+    }
+  },
+    "ukhyun":{
+    "displayName":"Ukhyun",
+    "packages":{
+      "ukhyun":{
+  
+        "DrugData":[
+          {
+            "featurePrefix":"act",
+            "displayName":"act: Drug Activity",
+            "drugAnnotIdCol":"ID",
+            "drugAnnotNameCol":"NAME",
+            "drugAnnotMoaCol":"MOA",
+            "drugAnnotClinCol":"FDA_STATUS"
           }
         ]
       }
     }
   }
+
+  
   
   
   

@@ -130,6 +130,10 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 		} # end for dType
 		
 # new stuff , rename colnames with response source
+		if (is.null(featureDataMat)) {
+		  shiny::validate(need(FALSE, 
+		                       paste("ERROR: No genes found. Please select another gene set.")))
+		}
 		colnames(featureDataMat) = names(responseVec)
 		
 		# Remove columns with missing values (if requested).

@@ -255,7 +255,7 @@ CellMinerCDB integrates data from the following sources, which provide additiona
 * <a href="http://www.cancerrxgene.org/" target="_blank" class="dm">Sanger/Massachusetts General Hospital Genomics of Drug Sensitivity in Cancer (GDSC)</a>
 * <a href="https://sclccelllines.cancer.gov/sclc/" target="_blank">NCI/DTP Small Cell Lung Cancer Project (SCLC)</a>
 ![Screenshot of CellMinerCDB Application](files/Slide17.jpeg)
-**Figure 16**: Summary of Molecular Drug Activity Data for the six data sources currently included in CellMinerCDB. For the drug data, combo is a two-drug combinations from the NCI60 Almanac. For molecular data types, the numbers indicate the number of genes with a particular data type. Gene level mutation and methylation were computed using specific scripts described in cellminercdb paper (see reference below). A Grey tab indicates that is no data available. Numbers highlighted in blue indices news features and those in red indicates change of number of features compare to the previous release.
+**Figure 16**: Summary of Molecular Drug Activity Data for the six data sources currently included in CellMinerCDB. For the drug data, combo is a two-drug combinations from the NCI60 Almanac. For molecular data types, the numbers indicate the number of genes with a particular data type. Gene level mutation and methylation were computed using specific scripts described in cellminercdb paper (see reference below). A Grey tab indicates that is no data available. Numbers highlighted in red indices news features and those in blue indicates change of number of features compare to version 1.0 release.
 
 ![Screenshot of CellMinerCDB Application](files/Slide18.jpeg)
 **Figure 17**: Cell line overlaps between data sources.
@@ -273,7 +273,7 @@ NCI/DTB CellMiner team, based on surveys of the applicable research literature.
 
 <h2 id="release">Release history</h2>
 
-July 2020: release v1.2
+September 2020: release v1.2
 - New 1075 drug activiy and removed bad experiments for NCI60
 - Updated Swath data for NCI60
 - Added copy number and updated methylation for GDSC
@@ -284,7 +284,7 @@ July 2020: release v1.2
 - New NAPY subtypes for SCLC cell lines 
 - New annotation for Triple Negative Breast Cancer cell lines
 - New Antigen Presentation Machinery (APM), Epithelial-Mesenchymal Transition (EMT) and Neuro-Endocrine (NE) signatures scores
-- New download button 
+- Improved download data button 
 
 May 2019: release v1.1 <a href="https://www.ncbi.nlm.nih.gov/pubmed/31113817" target="_blank"> [pubmed: 31113817]</a>
 - New NCI60 RNASeq data
