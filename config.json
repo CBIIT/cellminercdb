@@ -436,8 +436,8 @@
           {
             "eSetListName":"mda",
             "featurePrefix":"mda",
-            "displayName":"mda: Signatures, Miscellaneous data",
-            "includedFeaturesFile":"Global_Sclc_selectedmda.txt"
+            "displayName":"mda: Signatures, Miscellaneous data"
+   //         "includedFeaturesFile":"Global_Sclc_selectedmda.txt"
           }
         ]
       }
