@@ -550,12 +550,19 @@ loadSourceContentFiltered <- function(srcConfig,onco1=NA,onco2=NA){
           pkgDrugDataInfo[, "drugAnnotMoaCol"] <- "MOA"
           annot[["MOA"]] <- ""
         }
+        ##1  new clinical status
+        if (is.na(pkgDrugDataInfo[, "drugAnnotClinCol"])){
+          pkgDrugDataInfo[, "drugAnnotClinCol"] <- "CLINICAL.STATUS"
+          annot[["CLINICAL.STATUS"]] <- ""
+        }
+        
       } 
       
       # validity checks ---------------------------------------------------------
       expectedAnnotCols <- as.character(pkgDrugDataInfo[, c("drugAnnotIdCol", 
                                                             "drugAnnotNameCol", 
                                                             "drugAnnotMoaCol")])
+      clinstat <- as.character(pkgDrugDataInfo[,"drugAnnotClinCol"])
       
       if (any(is.na(expectedAnnotCols))){
         stop("Check config file: drug annotation table columns ",  
@@ -566,12 +573,16 @@ loadSourceContentFiltered <- function(srcConfig,onco1=NA,onco2=NA){
         stop("Check config file: indicated drug annotation table columns ",  
              "are not found in ", pkgName, " package drugData object.")
       } else{
+        annotbis <- annot
         annot <- annot[expectedAnnotCols]
         colnames(annot) <- c("ID", "NAME", "MOA")
+        if (clinstat %in% colnames(annotbis) ) annot$CLINICAL.STATUS = annotbis[,clinstat]
+        else annot$CLINICAL.STATUS = ""
         # Handle uncommon characters
         annot$ID <- iconv(enc2utf8(as.character(annot$ID)), sub="byte")
         annot$NAME <- iconv(enc2utf8(annot$NAME), sub="byte")
         annot$MOA <- iconv(enc2utf8(annot$MOA), sub="byte")
+        annot$CLINICAL.STATUS <- iconv(enc2utf8(annot$CLINICAL.STATUS), sub="byte")
         rownames(annot) <- annot$ID
       }
       

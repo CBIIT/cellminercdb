@@ -922,7 +922,7 @@ shinyServer(function(input, output, session) {
 		configSelect <- metaConfig[[input$mdataSource]][["packages"]][[1]][["MetaData"]]
 		jsonFrame <- as.data.frame(configSelect)
 		
-		colnames(jsonFrame) <- c("Data Type", "Description", "Units", 
+		colnames(jsonFrame)[1:5] <- c("Data Type", "Description", "Units", 
 														 "Platform/Assay", "PubMed Ref. ID")
 		
 		DT::datatable(jsonFrame, rownames=FALSE, colnames=colnames(jsonFrame),
@@ -1358,7 +1358,7 @@ shinyServer(function(input, output, session) {
       configSelect <- metaConfig[[input$mdataSource]][["packages"]][[1]][["MetaData"]]
       jsonFrame <- as.data.frame(configSelect)
        
-      colnames(jsonFrame) <- c("DataType", "Description", "Units", 
+      colnames(jsonFrame)[1:5] <- c("DataType", "Description", "Units", 
                                 "Platform/Assay", "PubMed Ref. ID(s)")
       mydata=t(jsonFrame[which(jsonFrame$DataType==input$dataType),])
       ##

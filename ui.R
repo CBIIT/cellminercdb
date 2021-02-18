@@ -134,7 +134,8 @@ shinyUI(
 						 							   )
 						 							 ),
 						 							 tags$head(tags$title("CellMinerCDB")),
-						 							 tags$head(tags$meta(name="description",content="CellMiner Cross Database (CellMinerCDB) is the first web application to allow translational researchers to conduct analyses across all major cancer cell line pharmacogenomic data sources from NCI-DTP NCI-60, Sanger GDSC, and Broad CCLE/CTRP")),
+						 							 tags$head(tags$meta(name="description",content="CellMiner Cross Database (CellMinerCDB) is the first web application to allow translational researchers to conduct analyses across all major cancer cell line pharmacogenomic data sources from NCI-DTP NCI-60, Sanger GDSC, and Broad CCLE/CTRP"),
+						 							           tags$meta(name = "viewport", content = "width=1600")),
 						 							 tags$head(HTML("<script type=\"application/ld+json\">
   {
   \"@context\":\"https://schema.org/\",
