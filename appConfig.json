@@ -12,7 +12,7 @@
             "url":"https://dtp.cancer.gov"
           }
           ],
-   "category": "internal",
+   "category": "public",
  //  "banner": "files/banner1d1.jpg",
     "banner": "files/banner1.2.jpg",
    "modal" : "www/files/CellMinerCDB-ver4.mp4"

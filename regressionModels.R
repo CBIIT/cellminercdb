@@ -892,12 +892,12 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 												 showColorTissues = character(0), dataSource = input$dataset, 
 												 srcContent = srcContentReactive(),oncolor=oncolor)
 		# new
-		p1 <- p1 + theme(axis.text = element_text(size=16), plot.title = element_text(size = 16), 
+		p1 <- p1 + theme(axis.text = element_text(size=16), plot.title = element_text(size = 16, hjust = 0.5), 
 		                 axis.title.x = element_text(size = 16), axis.title.y = element_text(size = 16))
 		g1 <- ggplotly(p1, width=plotWidth, height=plotHeight, tooltip=tooltipCol)
 		# g1 <- layout(g1, margin=list(t = 75))
 		g1 <- layout(g1, margin=list(t = 75), legend = list(font = list(size = 18)))
-		g2 <- config(p = g1, collaborate=FALSE, cloud=FALSE, displaylogo=FALSE,displayModeBar=TRUE,
+		g2 <- config(p = g1, cloud=FALSE, displaylogo=FALSE,displayModeBar=TRUE,
 								 modeBarButtonsToRemove=c("select2d", "sendDataToCloud", "pan2d", "resetScale2d",
 								 												 "hoverClosestCartesian", "hoverCompareCartesian",
 								 												 "lasso2d", "zoomIn2d", "zoomOut2d"))
@@ -941,12 +941,12 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 												 showColorTissues = character(0), dataSource = input$dataset, 
 												 srcContent = srcContentReactive(),oncolor=oncolor)
 		# new
-		p1 <- p1 + theme(axis.text = element_text(size=16), plot.title = element_text(size = 16), 
+		p1 <- p1 + theme(axis.text = element_text(size=16), plot.title = element_text(size = 16, hjust = 0.5), 
 		                 axis.title.x = element_text(size = 16), axis.title.y = element_text(size = 16))
 		g1 <- ggplotly(p1, width=plotWidth, height=plotHeight, tooltip=tooltipCol)
 		# g1 <- layout(g1, margin=list(t = 75))
 		g1 <- layout(g1, margin=list(t = 75), legend = list(font = list(size = 18)))
-		g2 <- config(p = g1, collaborate=FALSE, cloud=FALSE, displaylogo=FALSE,displayModeBar=TRUE,
+		g2 <- config(p = g1, cloud=FALSE, displaylogo=FALSE,displayModeBar=TRUE,
 								 modeBarButtonsToRemove=c("select2d", "sendDataToCloud", "pan2d", "resetScale2d",
 								 												 "hoverClosestCartesian", "hoverCompareCartesian",
 								 												 "lasso2d", "zoomIn2d", "zoomOut2d"))
@@ -1043,7 +1043,7 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 		          colors= colorpanel(75,low="blue",mid="white",high="red"),fontsize_col = 10 ,fontsize_row = 14,
 		          dendrogram="none",label_names=c("row","column","scaled_value"))   %>% plotly::layout(margin=list(t = 10))
 		# g1 <- layout(g1, margin=list(t = 75))
-		g2 <- config(p = g1, collaborate=FALSE, cloud=FALSE, displaylogo=FALSE, displayModeBar=TRUE,
+		g2 <- config(p = g1, cloud=FALSE, displaylogo=FALSE, displayModeBar=TRUE,
 		             modeBarButtonsToRemove=c("select2d", "sendDataToCloud", "pan2d", "resetScale2d",
 		                                      "hoverClosestCartesian", "hoverCompareCartesian",
 		                                      "lasso2d", "zoomIn2d", "zoomOut2d","autoScale2d","toggleSpikelines","zoom2d"))
@@ -1217,13 +1217,23 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 		## xx=paste0(opt0,"end")
 		## print(xx)
 		## print("*")
-		choices1 = srcContentReactive()[[input$dataset]][["featurePrefixes"]]
+	  ## old stuff	
+	# 	choices1 = srcContentReactive()[[input$dataset]][["featurePrefixes"]]
+	# 	mysel1 = input$predDataTypes # could cause issue if NULL
+	# 	##--------
+	#   if (is.null(mysel1))
+	# 	{
+	# 	  mysel1= srcContentReactive()[[input$dataset]][["defaultFeatureX"]]
+	# 	  if (is.na(mysel1)) mysel1= srcContentReactive()[[input$dataset]][["defaultFeatureY"]]
+	#   }
+		## new stuff
+		choices1 = srcContentReactive()[[input$Pdataset]][["featurePrefixes"]]
 		mysel1 = input$predDataTypes # could cause issue if NULL
 		##--------
-	  if (is.null(mysel1))
+		if (is.null(mysel1))
 		{
-		  mysel1= srcContentReactive()[[input$dataset]][["defaultFeatureX"]]
-		  if (is.na(mysel1)) mysel1= srcContentReactive()[[input$dataset]][["defaultFeatureY"]]
+		  mysel1= srcContentReactive()[[input$Pdataset]][["defaultFeatureX"]]
+		  if (is.na(mysel1)) mysel1= srcContentReactive()[[input$Pdataset]][["defaultFeatureY"]]
 		}
 		##--------
 		opt1 = ""

@@ -1,5 +1,4 @@
 library(shiny)
-#library(d3heatmap)
 library(rcellminer)
 library(rcellminerElasticNet)
 library(geneSetPathwayAnalysis)
@@ -72,19 +71,30 @@ if(!file.exists("srcContent.rds")) {
  if (any(is.na(dataSourceChoices))){
 	stop("Check configuration file: one or more required data source packages must be installed.")
  } 
+ ## new staff -------------------------------------------------------
+  cat("creating RDS content file\n")
+  srcContent <- lapply(config, loadSourceContent)
+  isLoadedSrc <- vapply(srcContent, function(x) { !is.null(x) }, logical(1))
+  if (any(!isLoadedSrc)){
+    srcContent <- srcContent[isLoadedSrc]
+  }
+  
+  # For NCI-60, replace default color map to use CellMiner tissue type colors.
+  nci60ColorTab <- loadNciColorSet(returnDf=TRUE)
+  nci60ColorTab$OncoTree1 <- srcContent$nci60$sampleData$OncoTree1
+  srcContent$nci60$tissueColorMap <- c(by(nci60ColorTab, nci60ColorTab$OncoTree1, 
+                                          FUN = function(x) unique(x$colors)))
+  
+  saveRDS(srcContent, "srcContent.rds", compress = FALSE)
+  cat("RDS content file created ! \n")
+ ## end new staff ---------------------------------------------------
 	
 } else {
 	srcContent <- readRDS("srcContent.rds")
 }
 #--------------------------------------------------------------------------------------------------
 
-#if("rCharts" %in% installed.packages()) {
-#	options(RCHART_LIB='highcharts')	
-#	library(rCharts)
-#	hasRCharts <- TRUE
-#} else {
-#	hasRCharts <- FALSE
-#}
+
 
 colorSet <- loadNciColorSet(returnDf=TRUE)
 
@@ -95,12 +105,17 @@ options("DT.TOJSON_ARGS" = list(na = "string")) ## try dev version of DT
 #--------------------------------------------------------------------------------------------------
 sysinfo <- Sys.info()
 if (sysinfo["nodename"]=="discovery.nci.nih.gov" | sysinfo["nodename"]=="ncias-d2059-v.nci.nih.gov") {
-db <- cache_filesystem("/srv/shiny-server/cellminercdb_internal/.rcache")
+db <- cache_filesystem("/data/cellminercdb/.rcache")
+downpath <- "/data/cellminercdb-downloads"
  } else {
   if (sysinfo["nodename"]=="discover.nci.nih.gov" | sysinfo["nodename"]=="ncias-p2122-v.nci.nih.gov")  {
-    db <- cache_filesystem("/srv/shiny-server/cellminercdb/.rcache") }
+    ## db <- cache_filesystem("/data/cellminercdb/.rcache") ###!!!
+    db <- cache_filesystem("/data/.rcache") ###!!!
+    downpath <- "/data/cellminercdb-downloads"
+    }
    else {
      db <- cache_filesystem("/Users/elloumif/.rcache")
+     downpath <- "/Users/elloumif/cellminercdb-downloads"
    }
 }
 patternComparison <- memoise(rcellminer::patternComparison, cache = db)
@@ -112,11 +127,30 @@ removeMolDataType <- memoise(rcellminer::removeMolDataType, cache = db)
 # print(sessionInfo())
 # sink()
 
-library(bigrquery)
-library(httpuv)
-aproject <-"isb-cgc-fathi"
+# library(bigrquery)
+# library(httpuv)
+# aproject <-"isb-cgc-fathi"
+
+## authentication
+# credentials <- data.frame(
+#   user = c("shiny", "shiny2"), # mandatory
+#   password = c("shiny", "shiny2"), # mandatory
+#   start = c("2019-04-15"), # optimal (all others)
+#   expire = c(NA, "2021-01-31"),
+#   admin = c(TRUE, FALSE),
+#   comment = "Simple and secure authentification mechanism
+#   for single ‘Shiny’ applications.",
+#   stringsAsFactors = FALSE
+# )
+
+## appUsers <- jsonlite::fromJSON("appUsers.json")
 
 shinyServer(function(input, output, session) {
+  # ## authentication
+  # shiny:::flushReact() ## new
+  # res_auth <- secure_server(
+  #   check_credentials = check_credentials(appUsers$Users)
+  # )
   ##########-------------------#################
   distPlot <-eventReactive(input$subtcga,{
     prefixChoices <- srcContent[[input$cmpSource]][["featurePrefixes"]]
@@ -175,7 +209,7 @@ shinyServer(function(input, output, session) {
         ### g <- ggplotly(p,plotWidth=1400,plotHeight=2000)
         ### g <- layout(g, margin=list(t = 75, b = 0))
     g <- layout(g, margin=list(t = 75), legend = list(font = list(size = 18)))
-    g1 <- config(p = g, collaborate=FALSE, cloud=FALSE, displaylogo=FALSE, displayModeBar=TRUE,
+    g1 <- config(p = g, cloud=FALSE, displaylogo=FALSE, displayModeBar=TRUE,
                  modeBarButtonsToRemove=c("select2d", "sendDataToCloud", "pan2d", "resetScale2d",
                                           "hoverClosestCartesian", "hoverCompareCartesian",
                                           "lasso2d", "zoomIn2d", "zoomOut2d"))
@@ -431,7 +465,7 @@ shinyServer(function(input, output, session) {
 	    
 	  } else {
 	    molPharmData <- srcContent[[pcDataset]][["molPharmData"]]
-	    molData <- molPharmData[setdiff(names(molPharmData), c("act","copA","mutA","metA","expA","xaiA","proA","mirA","mdaA","swaA","xsqA","mthA","hisA","criA","mtbA","rrbA"))]
+	    molData <- molPharmData[setdiff(names(molPharmData), c("act","copA","mutA","metA","expA","xaiA","proA","mirA","mdaA","swaA","xsqA","mthA","hisA","hs4A","criA","mtbA","rrbA","bmtA"))]
 	    shiny::validate(need(length(molData)>0, "No molecular data available for this cell line set"))
 	    ##if (length(molData)==0) stop("No molecular data available for this cell line set")
 	    ## old: molData <- lapply(molData, function(X) X[, selectedLines])
@@ -649,13 +683,13 @@ shinyServer(function(input, output, session) {
 												 showColorTissues = input$showColorTissues, dataSource = input$xDataset, 
 												 xLimVals = xLimits, yLimVals = yLimits,
 												 srcContent = srcContentReactive(),oncolor=oncolor)
-		p1 <- p1 + theme(axis.text = element_text(size=16), plot.title = element_text(size = 16), 
+		p1 <- p1 + theme(axis.text = element_text(size=16), plot.title = element_text(size = 16, hjust = 0.5), 
 		                 axis.title.x = element_text(size = 16), axis.title.y = element_text(size = 16))
 	  #theme_update(legend.position = c(0,0))
 		g1 <- ggplotly(p1, width=plotWidth, height=plotHeight, tooltip=tooltipCol)
 		#g1 <- layout(g1, margin=list(t = 75))
 		g1 <- layout(g1, margin=list(t = 75), legend = list(font = list(size = 18)))
-		g2 <- config(p = g1, collaborate=FALSE, cloud=FALSE, displaylogo=FALSE, displayModeBar=TRUE,
+		g2 <- config(p = g1, cloud=FALSE, displaylogo=FALSE, displayModeBar=TRUE,
 								 modeBarButtonsToRemove=c("select2d", "sendDataToCloud", "pan2d", "resetScale2d",
 								 												 "hoverClosestCartesian", "hoverCompareCartesian",
 								 												 "lasso2d", "zoomIn2d", "zoomOut2d"))
@@ -1263,8 +1297,8 @@ shinyServer(function(input, output, session) {
       paste0("data_",metaConfig[[input$mdataSource]][["displayName"]],"_",input$dataType,".zip")
     },
     content = function(file) {
-      myfile = paste0("downloads/data_",metaConfig[[input$mdataSource]][["displayName"]],"_",input$dataType,".zip")
-       
+      # myfile = paste0("downloads/data_",metaConfig[[input$mdataSource]][["displayName"]],"_",input$dataType,".zip")
+      myfile = paste0(downpath,"/data_",metaConfig[[input$mdataSource]][["displayName"]],"_",input$dataType,".zip")  
       # if (!file.exists(myfile)) showModal(modalDialog(title="Error", p("file does not exists")))
       #  file.copy(myfile, file)  
       
@@ -1383,8 +1417,13 @@ shinyServer(function(input, output, session) {
     },
     
      content = function(file) {
-      
-      write.table(findDrugIDs("*"), file, sep = "\t", row.names = F,quote=F)  
+      ## to update
+      ## write.table(findDrugIDs("*"), file, sep = "\t", row.names = F,quote=F)  
+       mtemp = findDrugIDs("*")
+       nc = ncol(mtemp)
+       ismiss = apply(mtemp,1,function(x) length(which(x[2:nc]=="NA")))
+       mtemp = mtemp[which(ismiss<(nc-1)),]
+       write.table(mtemp, file, sep = "\t", row.names = F,quote=F)
       
      }
   )
@@ -1580,6 +1619,10 @@ shinyServer(function(input, output, session) {
 
   ##
   output$showColorTissuesUi <- renderUI({
+    #new
+    shiny::validate(need(length(analysisTissueTypes()) > 0, 
+                         "There are no cell lines of the selected tissue type(s)."))
+    # end new
   	#tissueChoices <- analysisTissueTypes()
   	tissueChoices <- getSampleSetTissueTypes(
   		sampleSet = rownames(req(matchedCellLinesTab())), 
