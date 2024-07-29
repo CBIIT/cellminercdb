@@ -46,6 +46,9 @@ source("dataLoadingFunctions.R")
 #	appTitle <- "CellMiner"
 #}
 
+cacheDir <- appConfig$cacheDir
+downloadDir <- appConfig$downloadDir
+
 # Construct named character vector mapping displayed data source names to
 # internally used source identifiers.
 dataSourceChoices <- setNames(names(config),
@@ -114,8 +117,10 @@ downpath <- "/data/cellminercdb-downloads"
     downpath <- "/data/cellminercdb-downloads"
     }
    else {
-     db <- cache_filesystem("/Users/elloumif/.rcache")
-     downpath <- "/Users/elloumif/cellminercdb-downloads"
+     # db <- cache_filesystem("/Users/elloumif/.rcache")
+     # downpath <- "/Users/elloumif/cellminercdb-downloads"
+     db <- cache_filesystem(cacheDir)
+     downpath <- downloadDir
    }
 }
 patternComparison <- memoise(rcellminer::patternComparison, cache = db)

@@ -2,6 +2,8 @@
   "appName":"CellMinerCDB",
   "runParCorsInParallel":true,
   "runParCorsInParallelThreshold":2000,
+  "cacheDir" : "/Users/elloumif/.rcache",
+  "downloadDir": "/Users/elloumif/cellminercdb-downloads",
    "TopLinks":[
           {
             "label":" CellMiner NCI-60 ",

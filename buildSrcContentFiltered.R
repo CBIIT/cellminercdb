@@ -19,4 +19,4 @@ if (any(!isLoadedSrc)){
 # srcContent$nci60$tissueColorMap <- c(by(nci60ColorTab, nci60ColorTab$OncoTree1, 
 # 																				FUN = function(x) unique(x$colors)))
 
-saveRDS(srcContent, "srcContent_filtered.rds", compress = FALSE)
+saveRDS(srcContent, "srcContent.rds", compress = FALSE)
