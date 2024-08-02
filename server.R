@@ -36,7 +36,7 @@ metaConfig <- jsonlite::fromJSON("configMeta.json")
 oncolor <- read.delim("oncotree1_colors.txt",row.names = 1,stringsAsFactors = F)
 rownames(oncolor)=toupper(rownames(oncolor))
 
-source("modal1.R")
+source("modal.R")
 source("appUtils.R")
 source("dataLoadingFunctions.R")
 
