@@ -117,7 +117,19 @@ shinyUI(
 						 							 tags$head(includeScript("www/js/leaving.js")),
 						 							 # load Javascript snippet to parse the query string.
 						 							 #tags$script(includeScript("www/js/parse_input.js")),
-						 							 tags$head(includeScript("www/js/google-analytics.js")),
+						 							 ## tags$head(includeScript("www/js/google-analytics.js")), ## old Google analytics
+						 							 ## new GA4
+						 							 tags$head(HTML(
+						 							   "<script async src='https://www.googletagmanager.com/gtag/js?id=G-2Y2FCKE28Y'></script>
+						 							 <script>
+						 							     window.dataLayer = window.dataLayer || [];
+						 							   function gtag(){dataLayer.push(arguments);}
+						 							   gtag('js', new Date());
+						 							   
+						 							   gtag('config', 'G-2Y2FCKE28Y');
+						 							   </script>"
+						 							 )),
+						 							 ## end GA4
 						 							 tags$head(HTML("<script async type='text/javascript' src='https://dap.digitalgov.gov/Universal-Federated-Analytics-Min.js?agency=HHS&subagency=NCI' id='_fed_an_ua_tag'> </script>")),
 						 							 tags$head(
 						 							   tags$style(type="text/css", ".irs-grid-text { font-size: 8pt;color: black; }",
