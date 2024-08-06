@@ -1,0 +1,71 @@
+ {
+  "nci60":{
+    "displayName":"NCI-60",
+    "packages":{
+      "rcellminerData":{
+        "MolData":[
+          {
+            "eSetListName":"exp",
+            "featurePrefix":"exp",
+            "displayName":"exp: mRNA Expression (Z-Score)"
+          },
+          {
+            "eSetListName":"xai",
+            "featurePrefix":"xai",
+            "displayName":"xai: mRNA Expression (Avg. log2 Int.)"
+          },
+          {
+            "eSetListName":"xsq",
+            "featurePrefix":"xsq",
+            "displayName":"xsq: RNA-seq Expression (log2 FPKM+1.)"
+          },
+          {
+            "eSetListName":"met",
+            "featurePrefix":"met",
+            "displayName":"met: DNA 450K Methylation"
+          },
+          {
+            "eSetListName":"mut",
+            "featurePrefix":"mut",
+            "displayName":"mut: DNA Mutation"
+          },
+          {
+            "eSetListName":"cop",
+            "featurePrefix":"cop",
+            "displayName":"cop: DNA Copy Number"
+          },
+          {
+            "eSetListName":"mir",
+            "featurePrefix":"mir",
+            "displayName":"mir: MicroRNA"
+          },
+          {
+            "eSetListName":"mda",
+            "featurePrefix":"mda",
+            "displayName":"mda: Signatures, Miscellaneous data"
+          },
+          {
+            "eSetListName":"pro",
+            "featurePrefix":"pro",
+            "displayName":"pro: Protein (RPPA)"
+          },
+          {
+            "eSetListName":"swa",
+            "featurePrefix":"swa",
+            "displayName":"swa: Protein (Mass spec.-SWATH)"
+          }
+        ],
+        "DrugData":[
+          {
+            "featurePrefix":"act",
+            "displayName":"act: Drug Activity",
+            "drugAnnotIdCol":"NSC",
+            "drugAnnotNameCol":"NAME",
+            "drugAnnotMoaCol":"MOA",
+            "drugAnnotClinCol":"FDA_STATUS"
+          }
+        ]
+      }
+    }
+  }
+}

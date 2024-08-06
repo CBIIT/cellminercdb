@@ -1,6 +1,12 @@
 # CellminerCDB
 CellMinerCDB is a Shiny/R app that simplifies access and  exploration of cancer cell line pharmacogenomic data across different sources.
 
+# Quickstart 
+To run the app, run the following commands in R inside the project folder:
+```
+shiny::runApp()
+```
+
 # Dependencies and Source Repositories
 ## DTB Created Dependencies 
 * rcellminer: https://github.com/CBIIT/rcellminer

@@ -262,8 +262,13 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 ##
 		originalId <- trimws(input$responseId)
 ##
-		responseId <- getMatchedIds(input$responseDataType, trimws(input$responseId), 
-																input$dataset, srcContent = srcContentReactive())
+		if(!appConfig$skipMatchIds) {
+			responseId <- getMatchedIds(input$responseDataType, trimws(input$responseId), 
+										input$dataset, srcContent = srcContentReactive())			
+		} else {
+			responseId <- trimws(input$responseId)
+		}
+
 		if (length(responseId) == 0) {
 			shiny::validate(need(FALSE, 
 				paste("ERROR:", paste0("(", input$responseDataType, ") ", input$responseId), "not found. Please use the Univariate Analyses Search IDs tab to find available IDs for each dataset.")))

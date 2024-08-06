@@ -190,7 +190,7 @@ shinyUI(
 	        	    paste("<label class='control-label' for='xDataset'>x-Axis Cell Line Set</label>","<select id='xDataset'>",options,"</select>")
 	        	  ),
 	        	  uiOutput("xPrefixUi"),
-	            textInput("xId", "Identifier: (e.g. topotecan or SLFN11)", "SLFN11"),
+	            textInput("xId", "Identifier: (e.g. topotecan or SLFN11)", appConfig$initialXId),
 	        	  conditionalPanel(condition="input.ts==1 || input.ts==2 || input.ts==4",
 	        	  uiOutput("xAxisRangeUi") ),
 	        	  br(),br(),
@@ -200,7 +200,7 @@ shinyUI(
 	        	  ),
 	        	  conditionalPanel(condition="input.ts==1 || input.ts==2 || input.ts==4",
 	        	  uiOutput("yPrefixUi"),
-	          	textInput("yId", "Identifier: (e.g. topotecan or SLFN11)", "topotecan"),
+	          	textInput("yId", "Identifier: (e.g. topotecan or SLFN11)", appConfig$initialYId),
 	          	uiOutput("yAxisRangeUi"),
 	          	
 	            # checkboxInput("showColor", "Show Color?", value=TRUE),

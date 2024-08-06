@@ -552,14 +552,19 @@ shinyServer(function(input, output, session) {
     ## new
 	  shiny::validate(need(!is.na(match(input$xPrefix,srcContentReactive()[[input$xDataset]][["featurePrefixes"]])), "Non valid data type"))
 	  ##
+
 		xPrefix <- input$xPrefix
 		if (!is.character(xPrefix)){
 			xPrefix <- srcContentReactive()[[input$xDataset]][["defaultFeatureX"]]
 		}
-		#
+		
 		originalId <- trimws(input$xId)
-		# 
-		xId <- getMatchedIds(xPrefix, trimws(input$xId), input$xDataset, srcContent = srcContentReactive())
+		
+		if(!appConfig$skipIdMatching) {
+		  xId <- getMatchedIds(xPrefix, trimws(input$xId), input$xDataset, srcContent = srcContentReactive())
+		} else {
+		  xId <- trimws(input$xId)
+		}
 		
 		if (length(xId) == 0){
 			shiny::validate(need(FALSE, paste("ERROR:", paste0(xPrefix, input$xId), "not found. Please use the Search IDs tab to find available IDs for each dataset.")))
@@ -598,12 +603,15 @@ shinyServer(function(input, output, session) {
 		if (!is.character(yPrefix)){
 			yPrefix <- srcContentReactive()[[input$yDataset]][["defaultFeatureY"]]
 		}
-		#
+
 		originalId <- trimws(input$yId)
-		# 
 		
-		yId <- getMatchedIds(yPrefix, trimws(input$yId), input$yDataset, srcContent = srcContentReactive())
-		
+		if(!appConfig$skipIdMatching) {
+  		yId <- getMatchedIds(yPrefix, trimws(input$yId), input$yDataset, srcContent = srcContentReactive())
+		} else {
+		  yId <- trimws(input$yId)
+		}
+  				
 		if (length(yId) == 0){
 			shiny::validate(need(FALSE, paste("ERROR:", paste0(yPrefix, input$yId), "not found. Please use the Search IDs tab to find available IDs for each dataset.")))
 		} else{
