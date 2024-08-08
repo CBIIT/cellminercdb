@@ -8,7 +8,7 @@ shiny::runApp()
 ```
 
 # Dependencies and Source Repositories
-## DTB Created Dependencies 
+## Dependencies Created by the NCI DTB Team 
 * rcellminer: https://github.com/CBIIT/rcellminer
 * rcellminerData: https://github.com/CBIIT/rcellminerData
 * rcellminerUtilsCDB: https://github.com/CBIIT/rcellminerUtilsCDB
@@ -28,8 +28,9 @@ shiny::runApp()
 * parallel
 
 ## Data packages 
+* sarcoma: FIXME
 * nciSclcData: https://github.com/CBIIT/nciSclcData
-* ccleData: NA
-* gdsc: NA 
-* ctrpData: NA
-* nciAlmanac: NA 
+* ccleData: TBA
+* gdsc: TBA
+* ctrpData: TBA
+* nciAlmanac: TBA 

@@ -6,7 +6,7 @@
   "downloadDir": "~/cellminercdb-downloads",
   "skipIdMatching": true,
   "initialXId": "SLFN11",
-  "initialYId": "740",
+  "initialYId": "topotecan",
   "TopLinks":[
     {
       "label":" CellMiner NCI-60 ",

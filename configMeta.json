@@ -1,8 +1,8 @@
 {
-    "ncisarcoma": {
+    "sarcoma": {
         "displayName": "NCI Sarcoma",
         "fullName": "NCI Sarcoma",
-        "url": "FIXME",
+        "url": "https://discover.nci.nih.gov/rsconnect/SarcomaCellMinerCDB/",
         "packages": {
             "nciSarcomaData": {
                 "MetaData": [

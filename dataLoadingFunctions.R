@@ -352,6 +352,7 @@ loadSourceContent <- function(srcConfig){
   
   return(src)
 }
+
 ###-------------------------------------------------------------###
 loadSourceContentFiltered <- function(srcConfig,onco1=NA,onco2=NA){
   # Load necessary packages; return NULL otherwise. ----------------------------
@@ -420,19 +421,21 @@ loadSourceContentFiltered <- function(srcConfig,onco1=NA,onco2=NA){
       
       if (!is.na(onco1) & !is.na(onco2)) {
         selindex = which(toupper(sampleData$OncoTree1)==toupper(onco1) & toupper(sampleData$OncoTree2)==toupper(onco2))
-      }
-      else 
-      { if (!is.na(onco1)) 
-        selindex = which(toupper(sampleData$OncoTree1)==toupper(onco1))
-      else 
-        { if (!is.na(onco2)) 
-          selindex = grep(onco2,sampleData$OncoTree2,ignore.case = T) 
-        else 
-           stop("Check onco1 and onco2 parameters")
+      } else { 
+        if (!is.na(onco1)) {
+          selindex = which(toupper(sampleData$OncoTree1)==toupper(onco1))
+        } else { 
+          if (!is.na(onco2)) {
+            selindex = grep(onco2, sampleData$OncoTree2, ignore.case = T) 
+          } else {
+            stop("Check onco1 and onco2 parameters")
+          }
         }
       }
+      
       cat(onco1, ",", onco2, ",",length(selindex),"\n")
-      if (length(selindex)==0) stop("Filtering by cell lines is not possible for package: ",pkgName)
+      
+      if (length(selindex)==0) stop("Filtering by cell lines is not possible for package: ", pkgName)
       # new sample data
       sampleData <- sampleData[selindex,]
       cat(pkgName,"\n")

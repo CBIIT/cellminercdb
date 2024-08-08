@@ -560,11 +560,7 @@ shinyServer(function(input, output, session) {
 		
 		originalId <- trimws(input$xId)
 		
-		if(!appConfig$skipIdMatching) {
-		  xId <- getMatchedIds(xPrefix, trimws(input$xId), input$xDataset, srcContent = srcContentReactive())
-		} else {
-		  xId <- trimws(input$xId)
-		}
+	  xId <- getMatchedIds(xPrefix, trimws(input$xId), input$xDataset, srcContent = srcContentReactive())
 		
 		if (length(xId) == 0){
 			shiny::validate(need(FALSE, paste("ERROR:", paste0(xPrefix, input$xId), "not found. Please use the Search IDs tab to find available IDs for each dataset.")))
@@ -606,11 +602,7 @@ shinyServer(function(input, output, session) {
 
 		originalId <- trimws(input$yId)
 		
-		if(!appConfig$skipIdMatching) {
-  		yId <- getMatchedIds(yPrefix, trimws(input$yId), input$yDataset, srcContent = srcContentReactive())
-		} else {
-		  yId <- trimws(input$yId)
-		}
+		yId <- getMatchedIds(yPrefix, trimws(input$yId), input$yDataset, srcContent = srcContentReactive())
   				
 		if (length(yId) == 0){
 			shiny::validate(need(FALSE, paste("ERROR:", paste0(yPrefix, input$yId), "not found. Please use the Search IDs tab to find available IDs for each dataset.")))

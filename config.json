@@ -1,5 +1,5 @@
  {
-  "ncisarcoma":{
+  "sarcoma":{
     "displayName":"NCI Sarcoma",
     "packages":{
       "nciSarcomaData":{
