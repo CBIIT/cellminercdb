@@ -262,12 +262,9 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 ##
 		originalId <- trimws(input$responseId)
 ##
-		if(!appConfig$skipMatchIds) {
-			responseId <- getMatchedIds(input$responseDataType, trimws(input$responseId), 
-										input$dataset, srcContent = srcContentReactive())			
-		} else {
-			responseId <- trimws(input$responseId)
-		}
+
+		responseId <- getMatchedIds(input$responseDataType, trimws(input$responseId), 
+                                input$dataset, srcContent = srcContentReactive())
 
 		if (length(responseId) == 0) {
 			shiny::validate(need(FALSE, 
