@@ -4,16 +4,18 @@
   "runParCorsInParallelThreshold":2000,
   "cacheDir" : "~/.rcache",
   "downloadDir": "~/cellminercdb-downloads",
-   "TopLinks":[
-          {
-            "label":" CellMiner NCI-60 ",
-            "url":"https://discover.nci.nih.gov/cellminer/"
-          },
-          {
-            "label":" NCI/DCTD/DTP ",
-            "url":"https://dtp.cancer.gov"
-          }
-          ],
+  "initialXId": "SLFN11",
+  "initialYId": "topotecan",
+  "TopLinks":[
+    {
+      "label":" CellMiner NCI-60 ",
+      "url":"https://discover.nci.nih.gov/cellminer/"
+    },
+    {
+      "label":" NCI/DCTD/DTP ",
+      "url":"https://dtp.cancer.gov"
+    }
+   ],
    "category": "public",
    "banner": "files/banner1.2.jpg",
    "modal" : "www/files/CellMinerCDB-ver4.mp4"
