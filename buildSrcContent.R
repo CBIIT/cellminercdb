@@ -1,5 +1,25 @@
 library(rcellminer)
-
+library(prismData)
+# new staff
+library(ccleData)
+library(gdscDataDec15)
+library(ctrpData)
+library(mdaMillsData)
+library(almanacData)
+# library(uniSarcomaData)
+# library(genSarcomaData)
+library(nciSclcData)
+# library(genSclcData)
+# library(utswData)
+library(achillesData)
+# library(accorgData)
+# library(pdxcellColoradoData)
+library(gdsc1Data)
+library(gdsc2Data)
+library(tncatsData)
+library(ancatsData)
+library(nci60Hts384Data)
+## end new staff
 config <- jsonlite::fromJSON("config.json")
 
 source("appUtils.R")
@@ -10,5 +30,11 @@ isLoadedSrc <- vapply(srcContent, function(x) { !is.null(x) }, logical(1))
 if (any(!isLoadedSrc)){
 	srcContent <- srcContent[isLoadedSrc]
 }
+
+# For NCI-60, replace default color map to use CellMiner tissue type colors.
+nci60ColorTab <- loadNciColorSet(returnDf=TRUE)
+nci60ColorTab$OncoTree1 <- srcContent$nci60$sampleData$OncoTree1
+srcContent$nci60$tissueColorMap <- c(by(nci60ColorTab, nci60ColorTab$OncoTree1, 
+																				FUN = function(x) unique(x$colors)))
 
 saveRDS(srcContent, "srcContent.rds", compress = FALSE)

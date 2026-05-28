@@ -1,6 +1,6 @@
 # NOTE: Size is not automatically set for rChartsAlternative output
 plotHeight <- 1100
-plotWidth <- 1400
+plotWidth <- 1100
 
 tooltipCol <- "tooltip"
 
@@ -16,7 +16,7 @@ isDrugActivityDataType <- function(prefix){
 
 isGeneProtDataType <- function(prefix){
 	# TO DO: Make configurable. this is for regression models
-	geneProtDataTypePrefixes <- c("cop", "mut", "met", "exp", "xai","pro","swa", "xsq","mth","his","cri","rrb","bmt","hs4")
+	geneProtDataTypePrefixes <- c("cop", "mut", "met", "exp", "xai","pro","swa", "xsq","mth","his","cri","rrb","bmt","hs4","sur")
 	if (prefix %in% geneProtDataTypePrefixes){
 		return(TRUE)
 	} else{

@@ -262,10 +262,8 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 ##
 		originalId <- trimws(input$responseId)
 ##
-
 		responseId <- getMatchedIds(input$responseDataType, trimws(input$responseId), 
-                                input$dataset, srcContent = srcContentReactive())
-
+																input$dataset, srcContent = srcContentReactive())
 		if (length(responseId) == 0) {
 			shiny::validate(need(FALSE, 
 				paste("ERROR:", paste0("(", input$responseDataType, ") ", input$responseId), "not found. Please use the Univariate Analyses Search IDs tab to find available IDs for each dataset.")))
@@ -892,7 +890,7 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 		
 		p1 <- makePlotStatic(xData = predResponseData, yData = responseData, showColor = T, 
 												 showColorTissues = character(0), dataSource = input$dataset, 
-												 srcContent = srcContentReactive(),oncolor=oncolor)
+												 srcContent = srcContentReactive(),oncolor=oncolor,showCells=c())
 		# new
 		p1 <- p1 + theme(axis.text = element_text(size=16), plot.title = element_text(size = 16, hjust = 0.5), 
 		                 axis.title.x = element_text(size = 16), axis.title.y = element_text(size = 16))
@@ -941,7 +939,7 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 		
 		p1 <- makePlotStatic(xData = cvPredResponseData, yData = responseData, showColor = T, 
 												 showColorTissues = character(0), dataSource = input$dataset, 
-												 srcContent = srcContentReactive(),oncolor=oncolor)
+												 srcContent = srcContentReactive(),oncolor=oncolor,showCells=c())
 		# new
 		p1 <- p1 + theme(axis.text = element_text(size=16), plot.title = element_text(size = 16, hjust = 0.5), 
 		                 axis.title.x = element_text(size = 16), axis.title.y = element_text(size = 16))
@@ -983,7 +981,7 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 		colnames(dat) = gsub("Dec15","",colnames(dat))
 ##
 		DT::datatable(dat, rownames=FALSE, colnames=colnames(dat), filter='top', selection = "none",extensions='Buttons',
-		               style='bootstrap', options=list(pageLength = nrow(dat),language=list(paginate = list(previous = 'Previous page', `next`= 'Next page')) ,dom='lipBt',buttons = list('copy', 'print', list(extend = 'collection',buttons = list(list(extend='csv',filename='regression_data',title='Exported data from CellMinerCDB'), list(extend='excel',filename='regression_data',title='Exported data from CellMinerCDB'), list(extend='pdf',filename='regression_data',title='Exported data from CellMinerCDB')),text = 'download'))))
+		               style='bootstrap4', options=list(pageLength = nrow(dat),language=list(paginate = list(previous = 'Previous page', `next`= 'Next page')) ,dom='lipBt',buttons = list('copy', 'print', list(extend = 'collection',buttons = list(list(extend='csv',filename='regression_data',title='Exported data from CellMinerCDB'), list(extend='excel',filename='regression_data',title='Exported data from CellMinerCDB'), list(extend='pdf',filename='regression_data',title='Exported data from CellMinerCDB')),text = 'download'))))
 		
 			})
 	
@@ -1161,7 +1159,7 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 		 #               filter='top', style='bootstrap', selection = "none",
 		 #               options=list(lengthMenu = c(10, 50, 100, nrow(pcResults)),pageLength = 100,language=list(paginate = list(previous = 'Previous page', `next`= 'Next page')) ,dom='lipBt', buttons = list('copy', 'print', list(extend = 'collection',buttons = list(list(extend='csv',filename='partial_corr',title='Exported data from CellMinerCDB'), list(extend='excel',filename='partial_corr',title='Exported data from CellMinerCDB'), list(extend='pdf',filename='partial_corr',title='Exported data from CellMinerCDB')),text = 'Download'))))
 		 DT::datatable(pcResults, rownames=FALSE, colnames=colnames(pcResults),
-		               filter='top', style='bootstrap', selection = "none",
+		               filter='top', style='bootstrap4', selection = "none",
 		               options=list(lengthMenu = c(10, 50, 100, 500),pageLength = 100,language=list(paginate = list(previous = 'Previous page', `next`= 'Next page')) ,dom='lipt'))
 		  
 		 
@@ -1183,7 +1181,7 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 		deResults$QVAL <- signif(deResults$QVAL, 3)
 		
 		DT::datatable(deResults, rownames=FALSE, colnames=colnames(deResults), filter='top', 
-									style='bootstrap', selection = "none",
+									style='bootstrap4', selection = "none",
 									options=list(lengthMenu = c(10, 25, 50, 100), pageLength = 10,language=list(paginate = list(previous = 'Previous page', `next`= 'Next page'))))
 	})
 	
@@ -1191,7 +1189,7 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 		enResults <- enrichmentResultsTab()
 		
 		DT::datatable(enResults, rownames=FALSE, colnames=colnames(enResults), 
-									filter='top', style='bootstrap', selection = "none",
+									filter='top', style='bootstrap4', selection = "none",
 									options=list(lengthMenu = c(10, 25, 50, 100), pageLength = 10,language=list(paginate = list(previous = 'Previous page', `next`= 'Next page'))))
 	})
 	
@@ -1219,7 +1217,7 @@ regressionModels <- function(input, output, session, srcContentReactive, appConf
 		## xx=paste0(opt0,"end")
 		## print(xx)
 		## print("*")
-	  ## old stuff	
+		## old stuff
 	# 	choices1 = srcContentReactive()[[input$dataset]][["featurePrefixes"]]
 	# 	mysel1 = input$predDataTypes # could cause issue if NULL
 	# 	##--------

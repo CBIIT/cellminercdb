@@ -1,34 +1,537 @@
 {
-    "sarcoma": {
-        "displayName": "NCI Sarcoma",
-        "fullName": "NCI Sarcoma",
-        "url": "https://discover.nci.nih.gov/rsconnect/SarcomaCellMinerCDB/",
-        "packages": {
-            "nciSarcomaData": {
-                "MetaData": [
-                    {
-                        "dataType": "act",
-                        "description": "Drug activity generated at the National Cancer Institute (NCI). Further details are in the PubMed reference",
-                        "units": "negative log[IC50(molar)]",
-                        "platform": "NA",
-                        "ref_pmid": "26351324"
-                    },
-                    {
-                        "dataType": "exp",
-                        "description": "mRNA expression",
-                        "units": "microarray log2 intensity",
-                        "platform": "Affymetrix Exon array",
-                        "ref_pmid": "26351324"
-                    },
-                    {
-                        "dataType": "mir",
-                        "description": "microRNA expression",
-                        "units": "log2 normalized counts",
-                        "platform": "NanoString microRNA array",
-                        "ref_pmid": "26351324"
-                    }
-                ]
-            }
-        }
+  "nci60":{
+    "displayName":"NCI-60",
+    "fullName": "CellMiner NCI-60",
+    "url":"https://discover.nci.nih.gov/cellminer/datasets.do",
+    "packages":{
+      "rcellminerData":{
+        "MetaData":[
+        	{
+        		"dataType":"act",
+        		"description":"drug activity <br><a href='https://dtp.cancer.gov' target='_blank'>source DTP</a>",
+        		"units":"z-score from negative log10[GI50(molar)] data across NCI-60 for single drugs",
+        		"platform":"sulforhodamine B total protein cytotoxicity assay, 48hrs post-treatment",
+        		"ref_pmid":"26048278-28446463"
+        	},
+        	{
+        		"dataType":"exp",
+        		"description":"mRNA expression",
+        		"units":"z-score from microarray log2 intensity data across NCI-60",
+        		"platform":"Affymetrix HG-U95, HG-U133, HG-U133 Plus 2.0; GeneChip Human Exon 1.0 ST array; Agilent Whole Human Genome Oligo Microarray",
+        		"ref_pmid":"26048278"
+        	},
+        	{
+        		"dataType":"xai",
+        		"description":"mRNA expression",
+        		"units":"multi-platform microarray average log2 intensity",
+        		"platform":"Affymetrix HG-U95, HG-U133, HG-U133 Plus 2.0; GeneChip Human Exon 1.0 ST array; Agilent Whole Human Genome Oligo Microarray",
+        		"ref_pmid":"26048278"
+        	},
+                {
+                        "dataType":"xsq",
+                        "description":"mRNA expression",
+                        "units":"RNA-seq composite log2 FPKM+1",
+                        "platform":"HiSeq 2000 (Illumina)",
+                        "ref_pmid":"31113817"
+                },
+        	{
+        		"dataType":"met",
+        		"description":"DNA methylation",
+        		"units":"average of beta values for gene-associated probes; 0 (no methylation), 1 (complete methylation)",
+        		"platform":"Illumina Infinium Human Methylation 450",
+        		"ref_pmid":"27923837"
+        	},
+        	{
+        		"dataType":"mut",
+        		"description":"DNA mutation, summation of protein function affecting variant(s), by gene. Variant data is from the whole exome DNA sequencing in the NCI-60 done as described previously (Abaan et al, Cancer Res., 2013). As part of our normalization step, we have removed any variant that maps to more than one genomic location and any that occur in segmental duplications. Included are those variants defined as missense, nonsense, splice-sense, frameshift, read-through, non-frameshift insertions or deletions. Not included are variants found in more than 13 cell lines. In addition, variants must be absent from both the 1000 Genomes and ESP5400, and at least one  of the following conditions must be true: 1) if there is a sift score it must be less than or equal to 0.05; 2) if there is a polyphen score it must be greater than or equal to 0.85; or 3) the variant type must be defined as either a nonsense, splice-sense, or frameshift.",
+        		"units":"probability of homozygous, function-impacting mutation",
+        		"platform":"exome sequencing",
+        		"ref_pmid":"25032700"
+        	},
+        	{
+        		"dataType":"cop",
+        		"description":"DNA copy number",
+        		"units":"average log2 probe intensity ratio for the cell line (gene-specific chromosomal segment) DNA relative to normal DNA",
+        		"platform":"Agilent Human Genome CGH Microarray 44A; Roche NimbleGen Systems H19 CGH 385K WG Tiling v2.0 array; Affymetrix GeneChip Human Mapping 500 k Array Set; Illumina Human Human1 Mv1_C Beadchip array",
+        		"ref_pmid":"24670534"
+        	},
+        	{
+        		"dataType":"mir",
+        		"description":"microRNA expression",
+        		"units":"average log2 microarray probe intensity",
+        		"platform":"Agilent Technologies Human miRNA Microarray V2",
+        		"ref_pmid":"20442302"
+        	},
+        	{
+        		"dataType":"mda",
+        		"description":"cell line metadata (phenotypic measures)",
+        		"units":"measure-specific",
+        		"platform":"measure-specific",
+        		"ref_pmid":"26048278"
+        	},
+        	{
+        		"dataType":"pro",
+        		"description":"protein expression (RPPA)",
+        		"units":"protein intensities",
+        		"platform":"reverse-phase protein array",
+        		"ref_pmid":"17339364"
+        	},
+                {
+                        "dataType":"swa",
+                        "description":"protein expression (SWATH-MS)",
+                        "units":"protein intensities",
+                        "platform":"MS protein array",
+                        "ref_pmid":"NA"
+                },
+               	 {
+        		"dataType":"his",
+        		"description":"Active enhancer/promoter signal marked by H3K27ac. Peaks were identified using MACS2. For each gene, the peak with strongest average signal in cell lines was assigned. Cell line replicates were combined by calculating the mean signal for each promoter",
+        		"units":"log2(TMM_FPKM+1)",
+        		"platform":"Chip seq",
+        		"ref_pmid":"33658503"
+        	},
+        	 {
+        		"dataType":"hs4",
+        		"description":"Active promoter signal marked by H3K4me3. Peaks were identified using MACS2. For each gene, the peak with strongest average signal in cell lines was assigned. Cell line replicates were combined by calculating the mean signal for each promoter",
+        		"units":"log2(TMM_FPKM+1)",
+        		"platform":"Chip seq",
+        		"ref_pmid":"33658503"
+        	},
+        	{
+        		"dataType":"sur",
+        		"description":"sur: Protein (Surface Receptor)",
+        		"units":"mean fluorescence intensity (MFI) values in log2",
+        		"platform":"Flow Cytometry",
+        		"ref_pmid":"36221114"
+        	}
+        ]
+      }
     }
+  },
+    "nci60Hts384":{
+    "displayName":"NCI-60 HTS384",
+    "fullName": "CellMiner NCI-60 HTS384 protocol",
+    "url":"https://discover.nci.nih.gov/cellminer/datasets.do",
+    "packages":{
+      "nci60Hts384Data":{
+        "MetaData":[
+        	{
+        		"dataType":"act",
+        		"description":"drug activity <br><a href='https://dtp.cancer.gov' target='_blank'>source DTP</a>",
+        		"units":"z-score from negative log10[GI50(molar)] data across NCI-60 for single drugs",
+        		"platform":"ATP assay, 72 hrs post-treatment",
+        		"ref_pmid":"38861359"
+        	}
+        ]
+      }
+    }
+  },
+  	"gdscDec15":{
+		"displayName":"GDSC-MGH-Sanger",
+		"fullName": "Sanger/MGH Genomics of Drug Sensitivity in Cancer",
+		"url" : "http://www.cancerrxgene.org/help",
+		"packages":{
+	  "gdscDataDec15":{
+	    "MetaData":[
+	    		{
+        		"dataType":"act",
+        		"description":"drug activity",
+        		"units":"negative log10[IC50(molar)]",
+        		"platform":"Adherent cells: fluorescent nucleic acid stain (Syto 60); Suspended cells: oxidation-reduction levels (Resazurin); NCI/DTB-submitted compounds: ATP measurements (Cell Titer Glo); all assays at 72 hours post-treatment",
+        		"ref_pmid":"27397505"
+        	},
+	      	{
+        		"dataType":"exp",
+        		"description":"mRNA expression",
+        		"units":"microarray log2 intensity",
+        		"platform":"Affymetrix Human Genome U219",
+        		"ref_pmid":"27397505"
+        	},
+        	 {
+        		"dataType":"xsq",
+        		"description":"mRNA expression. Version 2021-03-16",
+        		"units":"RNA-seq log2 RPKM+1",
+        		"platform":"Illumina HiSeq 2000",
+        		"ref_pmid":"NA"
+        	},
+        	{
+        		"dataType":"met",
+        		"description":"DNA methylation",
+        		"units":"average of beta values for gene-associated probes; 0 (no methylation), 1 (complete methylation)",
+        		"platform":"Illumina Infinium Human Methylation 450",
+        		"ref_pmid":"27397505"
+        	},
+        	{
+        		"dataType":"mut",
+        		"description":"DNA mutation",
+        		"units":"probability of homozygous, function-impacting mutation",
+        		"platform":"exome capture sequencing",
+        		"ref_pmid":"27397505"
+        	},
+        	{
+        		"dataType":"cop",
+        		"description":"DNA copy number",
+        		"units":"gene-level copy number estimate (11/01/2019) downloaded from Sanger website ",
+        		"platform":"Affymetrix SNP6.0 Arrays",
+        		"ref_pmid":"27397505"
+        	},
+        	{
+        		"dataType":"mda",
+        		"description":"cell line metadata (phenotypic measures)",
+        		"units":"measure-specific",
+        		"platform":"measure-specific",
+        		"ref_pmid":"na"
+        	}
+	  	 ]
+	  	}
+		}
+  },
+    "gdsc1":{
+    "displayName":"GDSC1 drugs",
+    "fullName": "Sanger/MGH Genomics of Drug Sensitivity in Cancer",
+    "url": "http://www.cancerrxgene.org",
+    "packages":{
+      "gdsc1Data":{
+        "MetaData":[
+          {
+        		"dataType":"act",
+        		"description":"drug activity, release July 2022",
+        		"units":"negative log10[IC50(micromolar)]",
+        		"platform":"Resazurin or Syto60 assay, 72 hours",
+        		"ref_pmid":"23180760"
+        	}
+       	]
+      }
+    }
+  },
+  "gdsc2":{
+    "displayName":"GDSC2 drugs",
+    "fullName": "Sanger/MGH Genomics of Drug Sensitivity in Cancer",
+    "url": "http://www.cancerrxgene.org",
+    "packages":{
+      "gdsc2Data":{
+        "MetaData":[
+          {
+        		"dataType":"act",
+        		"description":"drug activity, release July 2022",
+        		"units":"negative log10[IC50(micromolar)]",
+        		"platform":"CellTitreGlo assay, 72 hours",
+        		"ref_pmid":"23180760"
+        	}
+       	]
+      }
+    }
+  },
+  "ccle":{
+    "displayName":"CCLE-Broad-MIT",
+    "fullName": "Broad/Novartis Cancer Cell Line Encyclopedia",
+    "url":"https://portals.broadinstitute.org/ccle/about",
+    "packages":{
+      "ccleData":{
+        "MetaData":[
+        	{
+        		"dataType":"act",
+        		"description":"drug activity",
+        		"units":"negative log10[IC50(molar)]",
+        		"platform":"ATP measurements (Cell Titer Glo), 72 hours post-treatment",
+        		"ref_pmid":"22460905"
+        	},
+        	{
+        		"dataType":"exp",
+        		"description":"mRNA expression",
+        		"units":"microarray log2 intensity",
+        		"platform":"Affymetrix HG-U133 Plus 2.0",
+        		"ref_pmid":"22460905"
+        	},
+        	{
+        		"dataType":"xsq",
+        		"description":"mRNA expression. Version 2016-06-17",
+        		"units":"RNA-seq composite log2 RPKM+1",
+        		"platform":"NA",
+        		"ref_pmid":"NA"
+        	},
+        	{
+        		"dataType":"mir",
+        		"description":"microRNA expression. Version 2018-05-25",
+        		"units":"log2 normalized counts",
+        		"platform":"Nanostring microRNA",
+        		"ref_pmid":"NA"
+        	},
+        	{
+        		"dataType":"mut",
+        		"description":"DNA mutation",
+        		"units":"probability of homozygous, function-impacting mutation",
+        		"platform":"exome capture sequencing",
+        		"ref_pmid":"22460905"
+        	},
+        	{
+        		"dataType":"cop",
+        		"description":"DNA copy number",
+        		"units":"gene-level copy number estimate, log2 intensity ratio",
+        		"platform":"Affymetrix SNP6.0 Arrays",
+        		"ref_pmid":"22460905"
+        	},
+        	 {
+        		"dataType":"pro",
+        		"description":"protein expression (RPPA)",
+        		"units":"protein intensities",
+        		"platform":"reverse-phase protein array",
+        		"ref_pmid":"31068700"
+        	},
+            {
+        		"dataType":"mtb",
+        		"description":"Metabolites",
+        		"units":"metabolites intensities",
+        		"platform":"Liquid Chromatography-Mass Spectrometry (LC-MS)",
+        		"ref_pmid":"31068703"
+        	},
+        	 {
+        		"dataType":"rrb",
+        		"description":"DNA RRBS Methylation",
+        		"units":"average of beta values for gene-associated promoter CpG clusters; 0 (no methylation), 1 (complete methylation)",
+        		"platform":"Reduced representation bisulfite sequencing (RRBS)",
+        		"ref_pmid":"31068700"
+        	},        	
+        	{
+        		"dataType":"mda",
+        		"description":"cell line metadata (phenotypic measures)",
+        		"units":"measure-specific",
+        		"platform":"measure-specific",
+        		"ref_pmid":"na"
+        	}
+        ]
+      }
+    }
+  },
+  "ctrp":{
+    "displayName":"CTRP-Broad-MIT",
+    "fullName": "Broad Cancer Therapeutics Response Portal",
+    "url":"http://portals.broadinstitute.org/ctrp/",
+    "packages":{
+      "ctrpData":{
+        "MetaData":[
+        	{
+        		"dataType":"act",
+        		"description":"drug activity",
+        		"units":"activity area (area above 16-pt dose-response curve)",
+        		"platform":"ATP measurements (Cell Titer Glo), 72 hours post-treatment",
+        		"ref_pmid":"26656090"
+        	},
+        	{
+        		"dataType":"exp",
+        		"description":"mRNA expression",
+        		"units":"microarray log2 intensity",
+        		"platform":"Affymetrix HG-U133 Plus 2.0 (from CCLE)",
+        		"ref_pmid":"26656090"
+        	},
+        	{
+        		"dataType":"mut",
+        		"description":"DNA mutation",
+        		"units":"probability of homozygous, function-impacting mutation",
+        		"platform":"exome capture sequencing (from CCLE)",
+        		"ref_pmid":"26656090"
+        	},
+        	{
+        		"dataType":"cop",
+        		"description":"DNA copy number",
+        		"units":"gene-level copy number estimate",
+        		"platform":"Affymetrix SNP6.0 Arrays (from CCLE)",
+        		"ref_pmid":"26656090"
+        	},
+        	 {
+        		"dataType":"mda",
+        		"description":"cell line metadata (phenotypic measures)",
+        		"units":"measure-specific",
+        		"platform":"measure-specific",
+        		"ref_pmid":"na"
+        	}
+        ]
+      }
+    }
+  },
+  "nciSclc":{
+    "displayName":"NCI-DTP SCLC",
+    "fullName": "NCI-DTP Small Cell Lung Cancer Project",
+    "url": "https://sclccelllines.cancer.gov/sclc/",
+    "packages":{
+      "nciSclcData":{
+        "MetaData":[
+        	{
+        		"dataType":"exp",
+        		"description":"mRNA expression",
+        		"units":"microarray log2 intensity",
+        		"platform":"Affymetrix GeneChip Human Exon 1.0 ST array",
+        		"ref_pmid":"27247353"
+        	},
+                 {
+                        "dataType":"mir",
+                        "description":"microRNA expression",
+                        "units":"log2 plus 1 normalized counts",
+                        "platform":"Nanostring microRNA",
+                        "ref_pmid":"27247353"
+                },
+        	{
+        		"dataType":"mth",
+        		"description":"DNA methylation based on 850K probes",
+        		"units":"average of beta values for gene-associated probes; 0 (no methylation), 1 (complete methylation)",
+        		"platform":"Illumina EPIC Beadchip 850K",
+        		"ref_pmid":"na"
+        	},
+        	 {
+        		"dataType":"bmt",
+        		"description":"Body DNA methylation based on 850K probes",
+        		"units":"average of beta values for gene-associated probes; 0 (no methylation), 1 (complete methylation)",
+        		"platform":"Illumina EPIC Beadchip 850K",
+        		"ref_pmid":"na",
+        		"Comments":"Probes that overlap CpG islands or gene promoters (2.5kb upstream and downstream from transcription start site) were excluded from the analysis and the most positive correlating transcript was selected"
+        	},
+
+        	 {
+        		"dataType":"cop",
+        		"description":"DNA copy number",
+        		"units":"average log2 probe intensity ratio for the cell line (gene-specific chromosomal segment) DNA relative to normal DNA",
+        		"platform":"Data generated from methylation data",
+        		"ref_pmid":""
+        	},
+                 {
+        		"dataType":"act",
+        		"description":"drug activity",
+        		"units":"negative log10[GI50(molar)]",
+        		"platform":"sulforhodamine B total protein cytotoxicity assay, 48hrs post-treatment",
+        		"ref_pmid":"27247353"
+        	},
+        	 {
+        		"dataType":"pro",
+        		"description":"protein expression (WB)",
+        		"units":"protein intensities (log2)",
+        		"platform":"Western Blot",
+        		"ref_pmid":""
+        	},
+                {
+                        "dataType":"mda",
+                        "description":"cell line metadata (phenotypic measures)",
+                        "units":"measure-specific",
+                        "platform":"measure-specific",
+                        "ref_pmid":"na"
+                }
+       	]
+      }
+    }
+  },
+    "prism":{
+    "displayName":"PRISM-Broad-MIT",
+    "fullName": "BROAD MIT PRISM secondary screening project",
+    "url": "https://www.theprismlab.org/",
+    "packages":{
+      "prismData":{
+        "MetaData":[
+          {
+        		"dataType":"act",
+        		"description":"drug activity",
+        		"units":"negative z-score AUC across all cell lines",
+        		"platform":"Prism",
+        		"ref_pmid":"32613204"
+        	}
+       	]
+      }
+    }
+  },
+  "almanac":{
+    "displayName":"NCI60-DTP Almanac",
+    "fullName": "NCI60-DTP FDA 105 paired Drug Project",
+    "url": "https://dtp.cancer.gov/ncialmanac/initializePage.do",
+    "packages":{
+      "almanacData":{
+        "MetaData":[
+          {
+        		"dataType":"act",
+        		"description":"drug activity",
+        		"units":"Combo scores",
+        		"platform":"sulforhodamine B total protein cytotoxicity assay, 48hrs post-treatment",
+        		"ref_pmid":"28446463"
+        	}
+       	]
+      }
+    }
+  },
+  "achilles":{
+    "displayName":"Achilles project",
+    "fullName": "NCI DTB",
+    "url": "https://depmap.org/portal/achilles/",
+    "packages":{
+      "achillesData":{
+        "MetaData":[
+          {
+        		"dataType":"cri",
+        		"description":"Achilles gene effect ",
+        		"units":"CERES gene score",
+        		"platform":"CRISPR (Clustered Regularly Interspaced Short Palindromic Repeats) knockout",
+        		"ref_pmid":"https://www.biorxiv.org/content/10.1101/720243v1"
+        	},
+        	 {
+        		"dataType":"mda",
+        		"description":"cell line metadata (phenotypic measures)",
+        		"units":"measure-specific",
+        		"platform":"measure-specific",
+        		"ref_pmid":"na"
+        	}
+        	]
+      }
+    }
+  },
+    "mdaMills":{
+    "displayName":"MD Anderson",
+    "fullName": "MD Anderson Cell Lines Project",
+    "url": "http://tcpaportal.org/mclp/#/",
+    "packages":{
+      "mdaMillsData":{
+        "MetaData":[
+          {
+        		"dataType":"pro",
+        		"description":"protein expression (RPPA)",
+        		"units":"protein intensities",
+        		"platform":"reverse-phase protein array",
+        		"ref_pmid":"28196595"
+        	}
+       	]
+      }
+    }
+  },
+     "tncats":{
+    "displayName":"NCATS IC50",
+    "fullName": "National Center for Advancing Transational Sciences - NIH",
+    "url": "https://ncats.nih.gov/",
+    "packages":{
+      "tncatsData":{
+        "MetaData":[
+          {
+                        "dataType":"act",
+                        "description":"drug activity",
+                        "units":"negative log10[IC50(micromolar))]",
+                        "platform":"NA",
+                        "ref_pmid":"NA"
+                }
+        ]
+      }
+    }
+  },
+   "ancats":{
+    "displayName":"NCATS AUC",
+    "fullName": "National Center for Advancing Transational Sciences - NIH",
+    "url": "https://ncats.nih.gov/",
+    "packages":{
+      "ancatsData":{
+        "MetaData":[
+          {
+        		"dataType":"act",
+        		"description":"drug activity",
+        		"units":"negative z-score AUC (across cell lines)",
+        		"platform":"NA",
+        		"ref_pmid":"NA"
+        	}
+       	]
+      }
+    }
+  }
+ 
 }

@@ -12,7 +12,8 @@ library(shinycssloaders)
 library(gplots)
 library(heatmaply)
 library(memoise)
-
+library(shinyTree)
+library(shinyWidgets)
 
 ## library(shinyHeatmaply)
 #library(dplyr)
@@ -36,7 +37,22 @@ metaConfig <- jsonlite::fromJSON("configMeta.json")
 oncolor <- read.delim("oncotree1_colors.txt",row.names = 1,stringsAsFactors = F)
 rownames(oncolor)=toupper(rownames(oncolor))
 
-source("modal.R")
+# cellinfo <- read.delim("info23_cell_lines_lim.txt",stringsAsFactors = F)
+# cellinfo = cellinfo[,c(1:2,4:9,3)]
+
+# cellinfo <- read.csv("cell_lines_onco_levels_all_sources_uniques_prod_links.csv",stringsAsFactors = F, row.names = 1)
+## cellinfo <- read.csv("cell_lines_onco_levels_all_sources_uniques_devel_links_v5.csv",stringsAsFactors = F, row.names = 1)
+# cellinfo = cellinfo[,c(10,3:7,12)]
+
+cellinfo <- read.csv("cell_lines_pages_discovery.csv",stringsAsFactors = F, row.names = 1)
+cellinfo = cellinfo[,c("celloidx","ot1","ot2","ot3","ot4","TNBC","link")]
+colnames(cellinfo) = c("Cell line","OncoTree1","OncoTree2","OncoTree3","OncoTree4","Triple.Negative.status","Link")
+
+druginfo <- read.csv("drugs_info_public_from_diffsources.csv",stringsAsFactors = F, row.names = 1)
+druginfo$html_file_name = NULL
+colnames(druginfo) = c("Drug Name", "Synonyms", "MOA","Clinical.Status", "Data.Sources.Number","Link")
+  
+## source("modal1.R")
 source("appUtils.R")
 source("dataLoadingFunctions.R")
 
@@ -45,6 +61,8 @@ source("dataLoadingFunctions.R")
 #} else{
 #	appTitle <- "CellMiner"
 #}
+
+category <- appConfig$category
 
 cacheDir <- appConfig$cacheDir
 downloadDir <- appConfig$downloadDir
@@ -77,12 +95,18 @@ if(!file.exists("srcContent.rds")) {
  ## new staff -------------------------------------------------------
   cat("creating RDS content file\n")
   srcContent <- lapply(config, loadSourceContent)
+  # cat("done with call \n")
   isLoadedSrc <- vapply(srcContent, function(x) { !is.null(x) }, logical(1))
   if (any(!isLoadedSrc)){
     srcContent <- srcContent[isLoadedSrc]
   }
   
-
+  # For NCI-60, replace default color map to use CellMiner tissue type colors.
+  # nci60ColorTab <- loadNciColorSet(returnDf=TRUE)
+  # nci60ColorTab$OncoTree1 <- srcContent$nci60$sampleData$OncoTree1
+  # srcContent$nci60$tissueColorMap <- c(by(nci60ColorTab, nci60ColorTab$OncoTree1, 
+  #                                         FUN = function(x) unique(x$colors)))
+  
   saveRDS(srcContent, "srcContent.rds", compress = FALSE)
   cat("RDS content file created ! \n")
  ## end new staff ---------------------------------------------------
@@ -101,21 +125,38 @@ colorSet <- loadNciColorSet(returnDf=TRUE)
 options("DT.TOJSON_ARGS" = list(na = "string")) ## try dev version of DT
 
 #--------------------------------------------------------------------------------------------------
+if (category=="public") {
+  cellinfo$Link <-  gsub("discovery","discover",cellinfo$Link)
+  druginfo$Link <-  gsub("discovery","discover",druginfo$Link)
+  
+}
 sysinfo <- Sys.info()
-if (sysinfo["nodename"]=="discovery.nci.nih.gov" | sysinfo["nodename"]=="ncias-d2059-v.nci.nih.gov") {
-db <- cache_filesystem("/data/cellminercdb/.rcache")
-downpath <- "/data/cellminercdb-downloads"
+if (sysinfo["nodename"]=="discovery.nci.nih.gov" | sysinfo["nodename"]=="ncias-d2059-v.nci.nih.gov" | sysinfo["nodename"]=="ncias-d3134-v.nci.nih.gov") {
+   db <- cache_filesystem("/data/cellminercdb/.rcache")
+   downpath <- "/data/cellminercdb-downloads"
  } else {
+   
   if (sysinfo["nodename"]=="discover.nci.nih.gov" | sysinfo["nodename"]=="ncias-p2122-v.nci.nih.gov")  {
-    ## db <- cache_filesystem("/data/cellminercdb/.rcache") ###!!!
-    db <- cache_filesystem("/data/.rcache") ###!!!
+    db <- cache_filesystem("/data/.rcache") 
     downpath <- "/data/cellminercdb-downloads"
+    # cellinfo$Link <-  gsub("discovery","discover",cellinfo$Link)
+    # druginfo$Link <-  gsub("discovery","discover",druginfo$Link)
+    ### no need 
+    ### if (category=="public")     cellinfo$Link <-  gsub("cellminercdb_public","cellminercdb",cellinfo$Link) else
+    ###  cellinfo$Link <-  gsub("cellminercdb_public","cellminercdb_new_release",cellinfo$Link)
     }
    else {
      # db <- cache_filesystem("/Users/elloumif/.rcache")
      # downpath <- "/Users/elloumif/cellminercdb-downloads"
+     
      db <- cache_filesystem(cacheDir)
      downpath <- downloadDir
+     #local
+     ##  cellinfo$Link <-  gsub("https:\\/\\/discovery\\.nci\\.nih\\.gov\\/rsconnect\\/cellminercdb_public","file:\\/\\/\\/Users\\/elloumif\\/Devpackages\\/cellminercdb_public\\/www",cellinfo$Link) ## to remove
+     
+     ### no need , use links to discovery
+     ### cellinfo$Link <-  gsub("https:\\/\\/discovery\\.nci\\.nih\\.gov\\/rsconnect\\/cellminercdb_public\\/","",cellinfo$Link) 
+     
    }
 }
 patternComparison <- memoise(rcellminer::patternComparison, cache = db)
@@ -131,26 +172,10 @@ removeMolDataType <- memoise(rcellminer::removeMolDataType, cache = db)
 # library(httpuv)
 # aproject <-"isb-cgc-fathi"
 
-## authentication
-# credentials <- data.frame(
-#   user = c("shiny", "shiny2"), # mandatory
-#   password = c("shiny", "shiny2"), # mandatory
-#   start = c("2019-04-15"), # optimal (all others)
-#   expire = c(NA, "2021-01-31"),
-#   admin = c(TRUE, FALSE),
-#   comment = "Simple and secure authentification mechanism
-#   for single ‘Shiny’ applications.",
-#   stringsAsFactors = FALSE
-# )
-
-## appUsers <- jsonlite::fromJSON("appUsers.json")
+Gxid <- "SLFN11"
+Gyid <- "topotecan"
 
 shinyServer(function(input, output, session) {
-  # ## authentication
-  # shiny:::flushReact() ## new
-  # res_auth <- secure_server(
-  #   check_credentials = check_credentials(appUsers$Users)
-  # )
   ##########-------------------#################
   distPlot <-eventReactive(input$subtcga,{
     prefixChoices <- srcContent[[input$cmpSource]][["featurePrefixes"]]
@@ -234,6 +259,11 @@ shinyServer(function(input, output, session) {
 				srcContent <- srcContent[isLoadedSrc]
 			}
 
+			# For NCI-60, replace default color map to use CellMiner tissue type colors.
+			# nci60ColorTab <- loadNciColorSet(returnDf=TRUE)
+			# nci60ColorTab$OncoTree1 <- srcContent$nci60$sampleData$OncoTree1
+			# srcContent$nci60$tissueColorMap <- c(by(nci60ColorTab, nci60ColorTab$OncoTree1,
+			# 																				FUN = function(x) unique(x$colors)))
 		}
 		
 		return(srcContent)
@@ -288,6 +318,21 @@ shinyServer(function(input, output, session) {
 	# mutually exclusive, given the nested OncoTree structure.
 	# NOTE: with added data packages, always verify that matched cell
 	# line OncoTree tissue type annotations are consistent across packages.
+
+	selectedTissues <- reactive({
+	  tree <- input$tree
+	  req(tree)
+	  ## zz = get_selected(tree, format = "names")
+	  selectedTissues = names(unlist(get_selected(tree, format = "slices")))
+	  selectedTissues = gsub("\\.",":", selectedTissues)
+	  selectedTissues = gsub("all:","", selectedTissues)
+	  selectedTissues = gsub("none:","", selectedTissues)
+	  ## cat(selectedTissues," tree \n")
+	  return(sort(selectedTissues))
+	  
+	})
+	
+	
 	analysisTissueTypes <- reactive({
 		# Note: We want this code to re-run whenever either 
 		# input$tissueSelectionMode OR  input$selectedTissues change.
@@ -306,7 +351,8 @@ shinyServer(function(input, output, session) {
 		# a second run. This behavior causes a bug-like re-drawing of
 		# the 2D plot, etc.)
 		tissueSelectionMode <- isolate(input$tissueSelectionMode)
-		selectedTissues <- input$selectedTissues
+		# selectedTissues <- input$selectedTissues
+		selectedTissues = selectedTissues()
 		
 		# cat("--- Entering analysisTissueTypes()", sep = "\n")
 		# cat(paste0("Selection Mode: ", tissueSelectionMode), sep = "\n")
@@ -341,6 +387,76 @@ shinyServer(function(input, output, session) {
 		return(sort(unique(tissueTypes)))
 	})
 	
+	convertListTree <- function(vect)
+	{
+	  mylist = list()
+	  for (k in 1:length(vect))
+	  {
+	    rec = unlist(strsplit(vect[k], ":")) # take all levels, we assume 4 levels max
+	    stopifnot(length(rec)>=1)
+	    # first element
+	    if ( is.null(mylist[[rec[1]]]) ) { 
+	      # mylist = c(mylist, list())
+	      mylist = c(mylist, list(list()))
+	      names(mylist)[length(mylist)] = rec[1]
+	    }
+	    mylist
+	    # 2nd element, label is different LATER
+	    if (!is.na(rec[2])) { 
+	      temp = mylist[[rec[1]]]
+	      if ( is.null(temp[[rec[2]]]) ) { 
+	        if (length(temp)!=0) temp = c(temp, list(list())) else temp=list(list())
+	        names(temp)[length(temp)] = rec[2]
+	        mylist[[rec[1]]] = temp
+	      }
+	      
+	      # 3rd element, label is different LATER
+	      if (!is.na(rec[3])) { 
+	        temp3 = temp[[rec[2]]]
+	        if ( is.null(temp3[[rec[3]]]) ) { 
+	          if (length(temp3)!=0) temp3 = c(temp3, list(list())) else temp3=list(list())
+	          # temp3 = c(temp3, list()) 
+	          names(temp3)[length(temp3)] = rec[3]
+	          temp[[rec[2]]]= temp3
+	          mylist[[rec[1]]] = temp
+	        }
+	        
+	        if (!is.na(rec[4])) { 
+	          temp4 = temp3[[rec[3]]]
+	          if ( is.null(temp4[[rec[4]]]) ) { 
+	            if (length(temp4)!=0) temp4 = c(temp4, list(list())) else temp4=list(list())
+	            # temp4 = c(temp4, list())
+	            names(temp4)[length(temp4)] = rec[4]
+	            temp3[[rec[3]]]= temp4
+	            temp[[rec[2]]]= temp3
+	            mylist[[rec[1]]] = temp
+	          }
+	        }
+	        
+	      } #rec3
+	      
+	    } # rec2
+	    
+	  }
+	  return(mylist)
+	}
+	
+	output$tree <- renderTree({
+	  srcContent <- srcContentReactive()
+	  tissueToSamplesMap <- srcContent[[input$xDataset]][["tissueToSamplesMap"]]
+	  tissueTypes <- sort(unique(names(tissueToSamplesMap)))
+	  ## very new ------------------------------------------------------------------------###
+	  mylist <- convertListTree(tissueTypes)
+	  if (input$tissueSelectionMode == "To include"){
+	    mylist = list(all=structure(mylist, stselected=TRUE, stclass = "proton"))
+	    
+	    
+	  } else{ # input$tissueSelectionMode == "To exclude"
+	    mylist = list(none=structure(mylist, stselected=TRUE, stclass = "proton"))
+	    
+	  }
+	  mylist
+	})
 	# Provides a data frame with columns indicating the matched cell lines between
 	# the input$xDataset (column 1) and the input$yDataset (column 2).
 	# matchedCellLinesTab <- reactive({
@@ -460,7 +576,7 @@ shinyServer(function(input, output, session) {
 	    
 	  } else {
 	    molPharmData <- srcContent[[pcDataset]][["molPharmData"]]
-	    molData <- molPharmData[setdiff(names(molPharmData), c("act","copA","mutA","metA","expA","xaiA","proA","mirA","mdaA","swaA","xsqA","mthA","hisA","hs4A","criA","mtbA","rrbA","bmtA"))]
+	    molData <- molPharmData[setdiff(names(molPharmData), c("act","copA","mutA","metA","expA","xaiA","proA","mirA","mdaA","swaA","xsqA","mthA","hisA","hs4A","criA","mtbA","rrbA","bmtA","surA"))]
 	    shiny::validate(need(length(molData)>0, "No molecular data available for this cell line set"))
 	    ##if (length(molData)==0) stop("No molecular data available for this cell line set")
 	    ## old: molData <- lapply(molData, function(X) X[, selectedLines])
@@ -538,19 +654,23 @@ shinyServer(function(input, output, session) {
 	# current and coupled, reflecting matched cell lines (even when different x any y data 
 	# sources are selected) of whatever tissue types are selected.
 	xData <- reactive({
-		shiny::validate(need(length(input$selectedTissues) > 0, "Please select tissue types."))
+		shiny::validate(need(length(selectedTissues()) > 0, "Please select tissue types."))
     ## new
 	  shiny::validate(need(!is.na(match(input$xPrefix,srcContentReactive()[[input$xDataset]][["featurePrefixes"]])), "Non valid data type"))
 	  ##
-
 		xPrefix <- input$xPrefix
 		if (!is.character(xPrefix)){
 			xPrefix <- srcContentReactive()[[input$xDataset]][["defaultFeatureX"]]
 		}
-		
+		#
 		originalId <- trimws(input$xId)
+		## test april 12
+		# cat("data set: ", input$xDataset, "\n")
+		# cat("Id: ", input$xId, "\n")
+		# cat("prefix: ", xPrefix, "\n")
+		## end test
 		
-	  xId <- getMatchedIds(xPrefix, trimws(input$xId), input$xDataset, srcContent = srcContentReactive())
+		xId <- getMatchedIds(xPrefix, trimws(input$xId), input$xDataset, srcContent = srcContentReactive())
 		
 		if (length(xId) == 0){
 			shiny::validate(need(FALSE, paste("ERROR:", paste0(xPrefix, input$xId), "not found. Please use the Search IDs tab to find available IDs for each dataset.")))
@@ -580,7 +700,7 @@ shinyServer(function(input, output, session) {
 	# current and coupled, reflecting matched cell lines (even when different x any y data 
 	# sources are selected) of whatever tissue types are selected.
 	yData <- reactive({
-		shiny::validate(need(length(input$selectedTissues) > 0, "Please select tissue types."))
+		shiny::validate(need(length(selectedTissues()) > 0, "Please select tissue types."))
 	  ## new
 	  shiny::validate(need(!is.na(match(input$yPrefix,srcContentReactive()[[input$yDataset]][["featurePrefixes"]])), "Non valid data type"))
 	  ##
@@ -589,11 +709,12 @@ shinyServer(function(input, output, session) {
 		if (!is.character(yPrefix)){
 			yPrefix <- srcContentReactive()[[input$yDataset]][["defaultFeatureY"]]
 		}
-
+		#
 		originalId <- trimws(input$yId)
+		# 
 		
 		yId <- getMatchedIds(yPrefix, trimws(input$yId), input$yDataset, srcContent = srcContentReactive())
-  				
+		
 		if (length(yId) == 0){
 			shiny::validate(need(FALSE, paste("ERROR:", paste0(yPrefix, input$yId), "not found. Please use the Search IDs tab to find available IDs for each dataset.")))
 		} else{
@@ -614,6 +735,14 @@ shinyServer(function(input, output, session) {
 		
 		return(yData)
 	})
+	
+	xprevious <- debounce(reactive({
+	  if (is.null(input$xId)) "SLFN11" else input$xId
+	}), 5000)
+
+	yprevious <- debounce(reactive({
+	  if (is.null(input$yId)) "Topotecan" else input$yId
+	}), 5000)
 	
 	#----[outputs]--------------------------------------------------------------------------
 
@@ -675,9 +804,9 @@ shinyServer(function(input, output, session) {
 		#----------------------------------------------------------------------------
 		
 		p1 <- makePlotStatic(xData = xData, yData = yData, showColor = input$showColor, 
-												 showColorTissues = input$showColorTissues, dataSource = input$xDataset, 
+												 showColorTissues = showColorTissues(), dataSource = input$xDataset, 
 												 xLimVals = xLimits, yLimVals = yLimits,
-												 srcContent = srcContentReactive(),oncolor=oncolor)
+												 srcContent = srcContentReactive(),oncolor=oncolor, showCells = input$showCells)
 		p1 <- p1 + theme(axis.text = element_text(size=16), plot.title = element_text(size = 16, hjust = 0.5), 
 		                 axis.title.x = element_text(size = 16), axis.title.y = element_text(size = 16))
 	  #theme_update(legend.position = c(0,0))
@@ -698,7 +827,7 @@ shinyServer(function(input, output, session) {
   	# Column selection below is to restrict to cell line, x, y features,
   	# and tissue type information (source-provided + OncoTree).
   	dlDataTab <- getPlotData(xData = xData(), yData = yData(), showColor = input$showColor, 
-  		showColorTissues = input$showColorTissues, dataSource = input$xDataset, 
+  		showColorTissues = showColorTissues(), dataSource = input$xDataset, 
   		srcContent = srcContentReactive())
   
   	# cat(colnames(dlDataTab),"\n")
@@ -727,7 +856,7 @@ shinyServer(function(input, output, session) {
   	dlDataTab[, 3] <- round(dlDataTab[, 3], 3)
 
   	DT::datatable(dlDataTab, rownames=FALSE, colnames=colnames(dlDataTab),
-  								filter='top', style='bootstrap', selection="none",
+  								filter='top', style='bootstrap4', selection="none",
   								options=list(pageLength = nrow(dlDataTab), language=list(paginate = list(previous = 'Previous page', `next`= 'Next page'))))
   })
 	#--------------------------------------------------------------------------------------
@@ -737,7 +866,7 @@ shinyServer(function(input, output, session) {
 	  rescor= CorrelationTable(xData(),yData(),srcContentReactive())
 	  
 	  DT::datatable(rescor, rownames=FALSE, colnames=colnames(rescor),extensions='Buttons',
-	                filter='top', style='bootstrap', selection="none",
+	                filter='top', style='bootstrap4', selection="none",
 	                options=list(pageLength = nrow(rescor), language=list(paginate = list(previous = 'Previous page', `next`= 'Next page')) ,dom='lipBt', buttons = list('copy', 'print', list(extend = 'collection',buttons = list(list(extend='csv',filename='tissue_correlation',title='Exported data from CellMinerCDB'), list(extend='excel',filename='tissue_correlation',title='Exported data from CellMinerCDB'), list(extend='pdf',filename='tissue_correlation',title='Exported data from CellMinerCDB')),text = 'Download'))))
 	 
 	  })
@@ -778,7 +907,7 @@ shinyServer(function(input, output, session) {
 	  colnames(results) <- c("Data type","ID ", "Drug Name", "Drug MOA")
 	  selsource=metaConfig[[input$xDataset]][["fullName"]]
 	  DT::datatable(results, rownames=FALSE, colnames=colnames(results),
-	                filter='top', style='bootstrap', selection = "none",
+	                filter='top', style='bootstrap4', selection = "none",
 	                options=list(pageLength = 10, language=list(paginate = list(previous = 'Previous page', `next`= 'Next page'))), caption=htmltools::tags$caption(paste0("Ids table for ",selsource),style="color:dodgerblue; font-size: 18px"))
 	})
 		#--------------------------------------------------------------------------------------
@@ -819,7 +948,7 @@ shinyServer(function(input, output, session) {
 	  
 	  selsource=metaConfig[[input$dataSrc]][["fullName"]]
 	  DT::datatable(myframe, rownames=FALSE,extensions='Buttons',
-	                filter='top', style='bootstrap', selection = "none",
+	                filter='top', style='bootstrap4', selection = "none",
 	                options=list(pageLength = 10,language=list(paginate = list(previous = 'Previous page', `next`= 'Next page')) ,dom='lipBt',buttons = list('copy', 'print', list(extend = 'collection',buttons = list(list(extend='csv',filename='search_id',title='Exported data from CellMinerCDB'), list(extend='excel',filename='search_id',title='Exported data from CellMinerCDB'), list(extend='pdf',filename='search_id',title='Exported data from CellMinerCDB')),text = 'Download')))
 	                , caption=htmltools::tags$caption(paste0("Identifier search for ",selsource),style="color:dodgerblue; font-size: 18px")
 	)})
@@ -858,7 +987,7 @@ shinyServer(function(input, output, session) {
 	  colnames(results) <- c("Data type","ID ", "Drug Name", "Drug MOA")
 	  selsource=metaConfig[[input$dataSrc]][["fullName"]]
 	  DT::datatable(results, rownames=FALSE, colnames=colnames(results),extensions='Buttons',
-	                filter='top', style='bootstrap', selection = "none",
+	                filter='top', style='bootstrap4', selection = "none",
 	                options=list(pageLength = 10,language=list(paginate = list(previous = 'Previous page', `next`= 'Next page')) ,dom='lipBt',buttons = list('copy', 'print', list(extend = 'collection',buttons = list(list(extend='csv',filename='search_id'), list(extend='excel',filename='search_id'), list(extend='pdf',filename='search_id')),text = 'Download')))
 	                , caption=htmltools::tags$caption(paste0("Identifier search for ",selsource),style="color:dodgerblue; font-size: 18px")
 	  )})
@@ -936,10 +1065,10 @@ shinyServer(function(input, output, session) {
     
     
 	  # DT::datatable(results, rownames=FALSE, colnames=colnames(results),extensions='Buttons',
-	  # 							filter='top', style='bootstrap', selection = "none",
+	  # 							filter='top', style='bootstrap4', selection = "none",
 	  # 							options=list(lengthMenu = c(10, 50, 100,500), pageLength = 100,language=list(paginate = list(previous = 'Previous page', `next`= 'Next page')) ,dom='lipBt', buttons = list('copy', 'print', list(extend = 'collection',buttons = list(list(extend='csv',filename='pattern_comp',title='Exported data from CellMinerCDB'), list(extend='excel',filename='pattern_comp',title='Exported data from CellMinerCDB'), list(extend='pdf',filename='pattern_comp',title='Exported data from CellMinerCDB')),text = 'Download'))))
 	  DT::datatable(results, rownames=FALSE, colnames=colnames(results),
-	                filter='top', style='bootstrap', selection = "none",
+	                filter='top', style='bootstrap4', selection = "none",
 	                options=list(lengthMenu = c(10, 50, 100,500), pageLength = 100,language=list(paginate = list(previous = 'Previous page', `next`= 'Next page')) ,dom='lipt'))
 	  
 	})
@@ -955,10 +1084,27 @@ shinyServer(function(input, output, session) {
 														 "Platform/Assay", "PubMed Ref. ID")
 		
 		DT::datatable(jsonFrame, rownames=FALSE, colnames=colnames(jsonFrame),
-									filter='top', style='bootstrap', selection = "none",
+									filter='top', style='bootstrap4', selection = "none",
 									options=list(pageLength = 10,language=list(paginate = list(previous = 'Previous page', `next`= 'Next page'))),escape=F)
 	})
 	#---------------------------------------------------------------------------------------
+	
+	#----[Render Data Table in CELL LINE TAB ]-------------------------------------------
+	output$cellinfotab <- DT::renderDataTable({
+	  
+	  DT::datatable(cellinfo, rownames=FALSE, colnames=colnames(cellinfo),
+	                filter='top', style='bootstrap4', selection = "none",
+	                options=list(pageLength = 10,language=list(paginate = list(previous = 'Previous page', `next`= 'Next page'))),escape=F)
+	})
+	
+	output$druginfotab <- DT::renderDataTable({
+	  
+	  DT::datatable(druginfo, rownames=FALSE, colnames=colnames(druginfo),
+	                filter='top', style='bootstrap4', selection = "none",
+	                options=list(pageLength = 10,language=list(paginate = list(previous = 'Previous page', `next`= 'Next page'))),escape=F)
+	})
+	
+	
 	output$log <- renderText({
 			paste(names(input), collapse=" ")
 			query <- parseQueryString(session$clientData$url_search)
@@ -1049,8 +1195,11 @@ shinyServer(function(input, output, session) {
 #									tab1, tab2, tab3
 #			)
 #		} else {
-			plotPanel <- tabPanel("Plot Data", value=1, plotlyOutput("rChartsAlternative", width = plotWidth, height = plotHeight),
-														br(), br(), p("Plot point tooltips provide additional information."))
+			# plotPanel <- tabPanel("Plot Data", value=1, plotlyOutput("rChartsAlternative", width = plotWidth, height = plotHeight),
+			# 											br(), br(), p("Plot point tooltips provide additional information."))
+			plotPanel <- tabPanel("Plot Data", value=1, uiOutput("showCellsUi"), plotlyOutput("rChartsAlternative", width = plotWidth, height = plotHeight),
+			                      br(), br(), p("Plot point tooltips provide additional information."))
+			
 			#tsPanel <- tabsetPanel(plotPanel, tab1, tab2, tab3)
 			tsPanel <- tabsetPanel(id="ts",plotPanel, tab1, tab3,tab4)
 #		}
@@ -1138,7 +1287,7 @@ shinyServer(function(input, output, session) {
     },
     content = function(file) {
       df <- getPlotData(xData = xData(), yData = yData(), showColor = input$showColor, 
-                        showColorTissues = input$showColorTissues, dataSource = input$xDataset, 
+                        showColorTissues = showColorTissues(), dataSource = input$xDataset, 
                         srcContent = srcContentReactive())
       
       # Column selection below is to restrict to cell line, x, y features,
@@ -1293,7 +1442,7 @@ shinyServer(function(input, output, session) {
     },
     content = function(file) {
       # myfile = paste0("downloads/data_",metaConfig[[input$mdataSource]][["displayName"]],"_",input$dataType,".zip")
-      myfile = paste0(downpath,"/data_",metaConfig[[input$mdataSource]][["displayName"]],"_",input$dataType,".zip")  
+      myfile = paste0(downpath,"/data_",metaConfig[[input$mdataSource]][["displayName"]],"_",input$dataType,".zip") 
       # if (!file.exists(myfile)) showModal(modalDialog(title="Error", p("file does not exists")))
       #  file.copy(myfile, file)  
       
@@ -1329,7 +1478,7 @@ shinyServer(function(input, output, session) {
           final = cbind(wdata.A,wdata)
         }
         ## write.table(final, file, sep = "\t", row.names = F)  
-        write.table(final, file0, sep = "\t", row.names = F)  
+        write.table(final, file0, sep = "\t", row.names = F, fileEncoding = "UTF-8")  
         zip(zipfile=file, files=file0, flags = "-r9Xj")
         
       }
@@ -1412,14 +1561,12 @@ shinyServer(function(input, output, session) {
     },
     
      content = function(file) {
-      ## to update
-      ## write.table(findDrugIDs("*"), file, sep = "\t", row.names = F,quote=F)  
-       mtemp = findDrugIDs("*")
-       nc = ncol(mtemp)
-       ismiss = apply(mtemp,1,function(x) length(which(x[2:nc]=="NA")))
-       mtemp = mtemp[which(ismiss<(nc-1)),]
-       write.table(mtemp, file, sep = "\t", row.names = F,quote=F)
-      
+      mtemp = findDrugIDs("*")
+      nc = ncol(mtemp)
+      ismiss = apply(mtemp,1,function(x) length(which(x[2:nc]=="NA")))
+      mtemp = mtemp[which(ismiss<(nc-1)),]
+      # write.table(findDrugIDs("*"), file, sep = "\t", row.names = F,quote=F)  
+      write.table(mtemp, file, sep = "\t", row.names = F,quote=F)
      }
   )
   ##
@@ -1515,6 +1662,7 @@ shinyServer(function(input, output, session) {
   })
   
   output$xAxisRangeUi <- renderUI({
+    # cat("x axis range \n")
   	srcContent <- srcContentReactive()
   	
   	# Note: req() ensures values are available or 'truthy' (not NULL, "", FALSE, empty, etc.),
@@ -1528,7 +1676,8 @@ shinyServer(function(input, output, session) {
   	valRange <- srcContent[[req(input$xDataset)]][["featureValRanges"]][[req(input$xPrefix)]]
   	
   	xData <- NULL
-  	try(xData <- xData())
+    try(xData <- xData())
+  	
   	if (is.null(xData)){
   		xInitSliderVals <- valRange
   	} else{
@@ -1575,71 +1724,251 @@ shinyServer(function(input, output, session) {
   # })
   
   output$selectTissuesUi <- renderUI({
-  	srcContent <- srcContentReactive()
-  	tissueToSamplesMap <- srcContent[[input$xDataset]][["tissueToSamplesMap"]]
-  	tissueTypes <- sort(unique(names(tissueToSamplesMap)))
+  	# srcContent <- srcContentReactive()
+  	# tissueToSamplesMap <- srcContent[[input$xDataset]][["tissueToSamplesMap"]]
+  	# tissueTypes <- sort(unique(names(tissueToSamplesMap)))
+
+  	## very new ------------------------------------------------------------------------###
   	
-  	#if (input$tissueSelectionMode == "Include"){
-  	#	selectInput("selectedTissues", label = NULL, choices=c("all", tissueTypes),
-  	#							multiple=TRUE, selected="all")
-  	#} else{ # input$tissueSelectionMode == "Exclude"
-  	#	selectInput("selectedTissues", label = NULL, choices=c("none", tissueTypes),
-  	#							multiple=TRUE, selected="none")
-  	#}
-  	
-  	## new code
-  	if (input$tissueSelectionMode == "To include"){
-  	       choices=c("all", tissueTypes); mysel="all"
-  	              
-  	} else{ # input$tissueSelectionMode == "To exclude"
-  	       choices=c("none", tissueTypes); mysel="none"
-  	}
-  	opt = "";
-  	for(y in 1:length(choices)){
-  	  # style works only for browser Chrome
-  	  if (choices[y]==mysel)
-  	  {
-  	    opt =  paste0(opt,"<option style='white-space: pre-wrap' selected>",choices[y],"</option>;");
-  	  }
-  	  else {
-  	  opt =  paste0(opt,"<option style='white-space: pre-wrap'>",choices[y],"</option>;");
-  	  }
-  	}
-  	HTML(
-  	  paste("<label class='control-label' for='selectedTissues'>Select Tissue/s of Origin</label>","<select id='selectedTissues' style='word-wrap:break-word; width: 100%;' multiple>",opt,"</select>")
-  	)
-  	
+  	# HTML("<p><b>Select Tissue/s of Origin</b></p>")
+  	shinyTree("tree", checkbox = F, theme = "proton")
+    ## shinyTree("tree", checkbox = F)
+    # treeInput(
+    #   inputId = "tree",
+    #   label = "Select tissues:",
+    #   choices = create_tree(df_tissues),
+    #   selected = "all",
+    #   returnValue = "text",
+    #   closeDepth = 0
+    # )
+    ## shinyTree("tree", checkbox = F)
+  	# ## new code
+  	# if (input$tissueSelectionMode == "To include"){
+  	#        choices=c("all", tissueTypes); mysel="all"
+  	#               
+  	# } else{ # input$tissueSelectionMode == "To exclude"
+  	#        choices=c("none", tissueTypes); mysel="none"
+  	# }
+  	# opt = "";
+  	# for(y in 1:length(choices)){
+  	#   # style works only for browser Chrome
+  	#   if (choices[y]==mysel)
+  	#   {
+  	#     opt =  paste0(opt,"<option style='white-space: pre-wrap' selected>",choices[y],"</option>;");
+  	#   }
+  	#   else {
+  	#   opt =  paste0(opt,"<option style='white-space: pre-wrap'>",choices[y],"</option>;");
+  	#   }
+  	# }
+  	# HTML(
+  	#   paste("<label class='control-label' for='selectedTissues'>Select Tissue/s of Origin</label>","<select id='selectedTissues' style='word-wrap:break-word; width: 100%;' multiple>",opt,"</select>")
+  	# )
+  	# 
   	## 
   })
 
   ##
   output$showColorTissuesUi <- renderUI({
-    #new
-    shiny::validate(need(length(analysisTissueTypes()) > 0, 
+   ## cat("hello\n", input$yId, "\n")
+   shiny::validate(need(length(analysisTissueTypes()) > 0,
                          "There are no cell lines of the selected tissue type(s)."))
-    # end new
-  	#tissueChoices <- analysisTissueTypes()
-  	tissueChoices <- getSampleSetTissueTypes(
-  		sampleSet = rownames(req(matchedCellLinesTab())), 
-  		dataSource = input$xDataset, 
-  		srcContent = srcContentReactive()
-  		) 
-  	opt = "";
-  	for(y in 1:length(tissueChoices)){
-  	    # style works only for browser Chrome
-  	    opt =  paste0(opt,"<option style='white-space: pre-wrap'>",tissueChoices[y],"</option>;");
-  	}
-  	HTML(
-  	  paste("<label class='control-label' for='showColorTissues' id='lsc'>Select Tissues to Color</label>","<select id='showColorTissues' style='word-wrap:break-word; width: 100%;' multiple>",opt,"</select>")
-  	)
-  	# selectInput("showColorTissues", "Tissues to Color",choices = tissueChoices, multiple = TRUE)
+
+    matchedCellLinesTab = matchedCellLinesTab() ## take care of no matching cell lines
+    ## cat("before display tree2 \n")
+    shinyTree("tree2", checkbox = F, theme = "proton")
+    ## shinyTree("tree2", checkbox = F)
+    
+  #   #new
+  #   shiny::validate(need(length(analysisTissueTypes()) > 0, 
+  #                        "There are no cell lines of the selected tissue type(s)."))
+  #   # end new
+  #   matchedCellLinesTab = matchedCellLinesTab()
+  # 	#tissueChoices <- analysisTissueTypes()
+  # 	tissueChoices <- getSampleSetTissueTypes(
+  # 		## sampleSet = rownames(req(matchedCellLinesTab())), 
+  # 		sampleSet = rownames(matchedCellLinesTab),
+  # 		dataSource = input$xDataset, 
+  # 		srcContent = srcContentReactive()
+  # 		) 
+  # 	opt = "";
+  # 	for(y in 1:length(tissueChoices)){
+  # 	    # style works only for browser Chrome
+  # 	    opt =  paste0(opt,"<option style='white-space: pre-wrap'>",tissueChoices[y],"</option>;");
+  # 	}
+  # 	HTML(
+  # 	  paste("<label class='control-label' for='showColorTissues' id='lsc'>Select Tissues to Color</label>","<select id='showColorTissues' style='word-wrap:break-word; width: 100%;' multiple>",opt,"</select>")
+  # 	)
+  # 	# selectInput("showColorTissues", "Tissues to Color",choices = tissueChoices, multiple = TRUE)
 	})
+  
+  showColorTissues <- reactive({
+    tree2 <- input$tree2
+    req(tree2)
+    ## zz = get_selected(tree, format = "names")
+    
+    showColorTissues = names(unlist(get_selected(tree2, format = "slices")))
+    showColorTissues = gsub("\\.",":", showColorTissues)
+    showColorTissues = gsub("no_selection:","", showColorTissues)
+    ## cat(showColorTissues," tree2 \n")
+    showColorTissues = setdiff(showColorTissues,"no_selection")
+    return(sort(showColorTissues))
+    
+  })
+  
+  output$tree2 <- renderTree({
+    
+    # shiny::validate(need(length(analysisTissueTypes()) > 0, 
+    #                      "There are no cell lines of the selected tissue type(s)."))
+    # end new
+    matchedCellLinesTab = matchedCellLinesTab()
+    
+    tissueChoices <- getSampleSetTissueTypes(
+      sampleSet = rownames(matchedCellLinesTab),
+      ## sampleSet = rownames(req(matchedCellLinesTab())), 
+      dataSource = input$xDataset, 
+      srcContent = srcContentReactive()
+    ) 
+    # opt = "";
+    # for(y in 1:length(tissueChoices)){
+    #   # style works only for browser Chrome
+    #   opt =  paste0(opt,"<option style='white-space: pre-wrap'>",tissueChoices[y],"</option>;");
+    # }
+    # HTML(
+    #   paste("<label class='control-label' for='showColorTissues' id='lsc'>Select Tissues to Color</label>","<select id='showColorTissues' style='word-wrap:break-word; width: 100%;' multiple>",opt,"</select>")
+    # )
+    # print(tissueChoices)
+    mylist2 <- convertListTree(tissueChoices)
+    mylist2 = list(no_selection=structure(mylist2, stselected=TRUE, stclass = "proton"))
+    mylist2
+  })
+  
+  output$showCellsUi <- renderUI({
+    #new
+    #shiny::validate(need(length(analysisTissueTypes()) > 0, 
+    #                     "There are no cell lines of the selected tissue type(s)."))
+    # end new
+    #tissueChoices <- analysisTissueTypes()
+    # cellChoices <- getSampleSetTissueTypes(
+    #   sampleSet = rownames(req(matchedCellLinesTab())), 
+    #   dataSource = input$xDataset, 
+    #   srcContent = srcContentReactive()
+    # ) 
+    
+    dlDataTab <- getPlotData(xData = xData(), yData = yData(), showColor = input$showColor, 
+                             showColorTissues = showColorTissues(), dataSource = input$xDataset, 
+                             srcContent = srcContentReactive())
+    
+    
+    
+    shiny::validate(need(nrow(dlDataTab)>0, paste("ERROR:", " No common complete data found.")))
+    cellChoices <- dlDataTab[,1]
+    ### cellChoices <- rownames(req(matchedCellLinesTab()))
+    opt = "";
+    for(y in 1:length(cellChoices)){
+      # style works only for browser Chrome
+      opt =  paste0(opt,"<option style='white-space: pre-wrap'>",cellChoices[y],"</option>;");
+    }
+    # HTML(
+    #   paste("<label class='control-label' for='showCells' id='lcells'>Select Cell line to Color</label>","<select id='showCells' style='word-wrap:break-word; width: 100%;' multiple>",opt,"</select>")
+    # )
+    selectInput("showCells", "Select Cell line to highlight",choices = cellChoices, multiple = TRUE)
+  })
+  
+  output$searchCells <- renderUI({
+    
+    DT::dataTableOutput("cellinfotab")
+    
+   # #tlist = c("blabla", "https://discovery.nci.nih.gov/rsconnect/cellminercdb_public/cell_lines/786o_cellminercdb.html", "https://discovery.nci.nih.gov/rsconnect/cellminercdb_public/cell_lines/a498_cellminercdb.html")
+   # tlist = c("blabla", "cccccc", "ddddd")
+   # # names(tlist)= c("Please select a celline", "786a","a498")  
+   # names(tlist)= c("Please", "786a","a498")  
+   # selectInput("helpCells", "Here the list of all cell lines",choices = tlist, multiple = F)
+   #  cat("hello \n")
+  
+    })
+  
+  output$searchDrugs <- renderUI({
+    
+    DT::dataTableOutput("druginfotab")
+    
+    # #tlist = c("blabla", "https://discovery.nci.nih.gov/rsconnect/cellminercdb_public/cell_lines/786o_cellminercdb.html", "https://discovery.nci.nih.gov/rsconnect/cellminercdb_public/cell_lines/a498_cellminercdb.html")
+    # tlist = c("blabla", "cccccc", "ddddd")
+    # # names(tlist)= c("Please select a celline", "786a","a498")  
+    # names(tlist)= c("Please", "786a","a498")  
+    # selectInput("helpCells", "Here the list of all cell lines",choices = tlist, multiple = F)
+    #  cat("hello \n")
+    
+  })
   
   output$ipAddress <- renderText({
   	# debug
   	text <- readLines("http://api.ipify.org")
   })
 
+  ## new for metadata
+  output$xIdUi <- renderUI({
+    
+     if ( length(input$xPrefix)!=0 )  {
+     
+        if (input$xPrefix == "mda") {
+          cellChoices2 <- srcContent[[input$xDataset]][["molPharmData"]][["mdaA"]][,1]
+          ## cat("choices: ", cellChoices2, "\n")
+          selectInput("xId", "Please select a signature",choices = cellChoices2, selected = "RepStress")
+        } 
+            else 
+       { 
+         
+         # if (!is.null(input$xId)) textInput("xId", "Identifier: (e.g. topotecan or SLFN11)", input$xId) ## new version
+         # else
+         #   textInput("xId", "Identifier: (e.g. topotecan or SLFN11)", "SLFN11") 
+         # 
+         
+         ## textInput("xId", "Identifier: (e.g. topotecan or SLFN11)", input$xId) ## new version
+         
+         textInput("xId", "Identifier: (e.g. topotecan or SLFN11)", xprevious()) ## new version
+         
+         }
+      
+   }
+      else {
+
+        textInput("xId", "Identifier: (e.g. topotecan or SLFN11)", "SLFN11")
+
+    }
+    
+  })
+  
+  output$yIdUi <- renderUI({
+    
+  if ( length(input$yPrefix)!=0 )  {
+     
+    if (input$yPrefix == "mda") {
+          cellChoices2 <- srcContent[[input$yDataset]][["molPharmData"]][["mdaA"]][,1]
+          ## cat("choices: ", cellChoices2, "\n")
+          selectInput("yId", "Please select a signature",choices = cellChoices2, selected = "APM")
+        } else 
+        { 
+        
+          # if (!is.null(input$yId)) textInput("yId", "Identifier: (e.g. topotecan or SLFN11)", input$yId) ## new version
+          # else
+          #     textInput("yId", "Identifier: (e.g. topotecan or SLFN11)", "topotecan")  ## old version
+          
+          ## textInput("yId", "Identifier: (e.g. topotecan or SLFN11)", input$yId) ## new version
+          
+          textInput("yId", "Identifier: (e.g. topotecan or SLFN11)", yprevious()) ## new version
+        }
+      
+    }
+    else {
+
+      textInput("yId", "Identifier: (e.g. topotecan or SLFN11)", "topotecan")
+
+    }
+    
+  })
+  
+  
+  
   #----[observers]-----------------------------------------------------------------------
 
   # Observe reactive variable and send message to Javascript code

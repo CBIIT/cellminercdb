@@ -1,8 +1,8 @@
  {
-  "sarcoma":{
-    "displayName":"NCI Sarcoma",
+  "nci60":{
+    "displayName":"NCI-60",
     "packages":{
-      "nciSarcomaData":{
+      "rcellminerData":{
         "MolData":[
           {
             "eSetListName":"exp",
@@ -10,9 +10,65 @@
             "displayName":"exp: mRNA Expression (Z-Score)"
           },
           {
+            "eSetListName":"xai",
+            "featurePrefix":"xai",
+            "displayName":"xai: mRNA Expression (Avg. log2 Int.)"
+          },
+          {
+            "eSetListName":"xsq",
+            "featurePrefix":"xsq",
+            "displayName":"xsq: RNA-seq Expression (log2 FPKM+1.)"
+          },
+          {
+            "eSetListName":"met",
+            "featurePrefix":"met",
+            "displayName":"met: DNA Methylation"
+          },
+          {
+            "eSetListName":"mut",
+            "featurePrefix":"mut",
+            "displayName":"mut: DNA Mutation"
+          },
+          {
+            "eSetListName":"cop",
+            "featurePrefix":"cop",
+            "displayName":"cop: DNA Copy Number"
+          },
+          {
             "eSetListName":"mir",
             "featurePrefix":"mir",
             "displayName":"mir: MicroRNA"
+          },
+          {
+            "eSetListName":"mda",
+            "featurePrefix":"mda",
+            "displayName":"mda: Signatures, Miscellaneous data"
+    //        "includedFeaturesFile":"NCI60_selected_mda.txt"
+          },
+          {
+            "eSetListName":"pro",
+            "featurePrefix":"pro",
+            "displayName":"pro: Protein (RPPA)"
+          },
+          {
+            "eSetListName":"swa",
+            "featurePrefix":"swa",
+            "displayName":"swa: Protein (SWATH-MS)"
+          },
+                     {
+            "eSetListName":"his",
+            "featurePrefix":"his",
+            "displayName":"his: Histone H3K27ac"
+          },
+            {
+            "eSetListName":"hs4",
+            "featurePrefix":"hs4",
+            "displayName":"hs4: Histone H3K4me3"
+          },
+            {
+            "eSetListName":"sur",
+            "featurePrefix":"sur",
+            "displayName":"sur: Protein (Surface Receptor)"
           }
         ],
         "DrugData":[
@@ -27,5 +83,374 @@
         ]
       }
     }
+  },
+  
+    "nci60Hts384":{
+    "displayName":"NCI-60 HTS384",
+    "packages":{
+      "nci60Hts384Data":{
+        "DrugData":[
+          {
+            "featurePrefix":"act",
+            "displayName":"act: Drug Activity",
+            "drugAnnotIdCol":"NSC",
+            "drugAnnotNameCol":"NAME",
+            "drugAnnotMoaCol":"MOA",
+            "drugAnnotClinCol":"FDA_STATUS"
+          }
+        ]
+      }
+    }
+  },
+  "ccle":{
+    "displayName":"CCLE-Broad-MIT",
+    "packages":{
+      "ccleData":{
+        "MolData":[
+          {
+            "eSetListName":"exp",
+            "featurePrefix":"exp",
+            "displayName":"exp: mRNA Expression (log2)"
+          },
+          {
+            "eSetListName":"xsq",
+            "featurePrefix":"xsq",
+            "displayName":"xsq: RNA-seq Expression (log2 RPKM+1.)"
+          },
+          {
+            "eSetListName":"mir",
+            "featurePrefix":"mir",
+            "displayName":"mir: MicroRNA"
+          },
+          {
+            "eSetListName":"mut",
+            "featurePrefix":"mut",
+            "displayName":"mut: DNA Mutation"
+          },
+          {
+            "eSetListName":"cop",
+            "featurePrefix":"cop",
+            "displayName":"cop: DNA Copy Number"
+          },
+          {
+            "eSetListName":"pro",
+            "featurePrefix":"pro",
+            "displayName":"pro: Protein (RPPA)"
+          },
+          {
+            "eSetListName":"mtb",
+            "featurePrefix":"mtb",
+            "displayName":"mtb: Metabolites"
+          },
+          {
+            "eSetListName":"rrb",
+            "featurePrefix":"rrb",
+            "displayName":"rrb: DNA RRBS Methylation"
+          },  
+         {
+            "eSetListName":"mda",
+            "featurePrefix":"mda",
+            "displayName":"mda: Signatures, Miscellaneous data",
+            "includedFeaturesFile":"Ccle_selected_mda.txt"
+          }
+        ],
+        "DrugData":[
+          {
+            "featurePrefix":"act",
+            "displayName":"act: Drug Activity (-log10[IC50M])",
+            "drugAnnotIdCol":"ccleid",
+            "drugAnnotNameCol":"NAME",
+            "drugAnnotMoaCol":"MOA",
+            "drugAnnotClinCol":"FDA_STATUS"
+          }
+        ]
+      }
+    }
+  },
+  "gdscDec15":{
+    "displayName":"GDSC-MGH-Sanger",
+    "packages":{
+      "gdscDataDec15":{
+        "MolData":[
+          {
+            "eSetListName":"exp",
+            "featurePrefix":"exp",
+            "displayName":"exp: mRNA Expression (log2)"
+          },
+          {
+            "eSetListName":"xsq",
+            "featurePrefix":"xsq",
+            "displayName":"xsq: RNA-seq Expression (log2 FPKM+1.)"
+          },
+          {
+            "eSetListName":"met",
+            "featurePrefix":"met",
+            "displayName":"met: DNA Methylation"
+          },
+          {
+            "eSetListName":"mut",
+            "featurePrefix":"mut",
+            "displayName":"mut: DNA Mutation"
+          },
+          {
+            "eSetListName":"cop",
+            "featurePrefix":"cop",
+            "displayName":"cop: DNA Copy Number"
+          },
+          {
+            "eSetListName":"mda",
+            "featurePrefix":"mda",
+            "displayName":"mda: Signatures, Miscellaneous data",
+            "includedFeaturesFile":"Gdsc_selected_mda.txt"
+          }
+        ],
+        "DrugData":[
+          {
+            "featurePrefix":"act",
+            "displayName":"act: Drug Activity (-log10[IC50M])",
+            "drugAnnotIdCol":"EXTENDED_NAME",
+            "drugAnnotNameCol":"NAME",
+            "drugAnnotMoaCol":"MOA",
+            "drugAnnotClinCol":"FDA_STATUS"
+          }
+        ]
+      }
+    }
+  },
+    "gdsc1":{
+    "displayName":"GDSC1 drugs",
+    "packages":{
+      "gdsc1Data":{
+  
+        "DrugData":[
+          {
+            "featurePrefix":"act",
+            "displayName":"act: Drug Activity (-log10[IC50m])",
+            "drugAnnotIdCol":"ID",
+            "drugAnnotNameCol":"NAME",
+            "drugAnnotMoaCol":"MOA",
+            "drugAnnotClinCol":"NA"
+          }
+        ]
+      }
+    }
+  },
+   "gdsc2":{
+    "displayName":"GDSC2 drugs",
+    "packages":{
+      "gdsc2Data":{
+  
+        "DrugData":[
+          {
+            "featurePrefix":"act",
+            "displayName":"act: Drug Activity (-log10[IC50m])",
+            "drugAnnotIdCol":"ID",
+            "drugAnnotNameCol":"NAME",
+            "drugAnnotMoaCol":"MOA",
+            "drugAnnotClinCol":"NA"
+          }
+        ]
+      }
+    }
+  },
+  "ctrp":{
+    "displayName":"CTRP-Broad-MIT",
+    "packages":{
+      "ctrpData":{
+        "MolData":[
+          {
+            "eSetListName":"exp",
+            "featurePrefix":"exp",
+            "displayName":"exp: mRNA Expression (log2)"
+          },
+          {
+            "eSetListName":"mut",
+            "featurePrefix":"mut",
+            "displayName":"mut: DNA Mutation"
+          },
+          {
+            "eSetListName":"cop",
+            "featurePrefix":"cop",
+            "displayName":"cop: DNA Copy Number"
+          },
+          {
+            "eSetListName":"mda",
+            "featurePrefix":"mda",
+            "displayName":"mda: Signatures, Miscellaneous data",
+            "includedFeaturesFile":"Ctrp_selected_mda.txt"
+          }
+        ],
+        "DrugData":[
+          {
+            "featurePrefix":"act",
+            "displayName":"act: Drug Activity (AUC)",
+            "drugAnnotIdCol":"ID",
+            "drugAnnotNameCol":"NAME",
+            "drugAnnotMoaCol":"MOA",
+            "drugAnnotClinCol":"FDA_STATUS"
+          }
+        ]
+      }
+    }
+  },
+  "nciSclc":{
+    "displayName":"NCI-DTP SCLC",
+    "packages":{
+      "nciSclcData":{
+        "MolData":[
+          {
+            "eSetListName":"exp",
+            "featurePrefix":"exp",
+            "displayName":"exp: mRNA Expression (log2)"
+          },
+          {
+            "eSetListName":"mth",
+            "featurePrefix":"mth",
+            "displayName":"mth: DNA 850K Methylation"
+          },
+          {
+            "eSetListName":"bmt",
+            "featurePrefix":"bmt",
+            "displayName":"bmt: Body DNA 850K Methylation"
+          },
+           {
+            "eSetListName":"cop",
+            "featurePrefix":"cop",
+            "displayName":"cop: DNA Copy Number"
+          },
+          {
+            "eSetListName":"mir",
+            "featurePrefix":"mir",
+            "displayName":"mir: MicroRNA"
+          },
+          {
+            "eSetListName":"pro",
+            "featurePrefix":"pro",
+            "displayName":"pro: Protein (WB)"
+          },
+          {
+            "eSetListName":"mda",
+            "featurePrefix":"mda",
+            "displayName":"mda: Signatures, Miscellaneous data",
+            "includedFeaturesFile":"Nci_Sclc_selected_mda.txt"
+          }
+        ],
+        "DrugData":[
+          {
+            "featurePrefix":"act",
+            "displayName":"act: Drug Activity (-log10[IC50M])",
+            "drugAnnotIdCol":"NSC",
+            "drugAnnotNameCol":"NAME",
+            "drugAnnotMoaCol":"MOA",
+            "drugAnnotClinCol":"FDA_STATUS"
+          }
+        ]
+      }
+    }
+  },
+    "prism":{
+    "displayName":"PRISM-Broad-MIT",
+    "packages":{
+      "prismData":{
+  
+        "DrugData":[
+          {
+            "featurePrefix":"act",
+            "displayName":"act: Drug Activity [negative z-score(AUC)]",
+            "drugAnnotIdCol":"ID",
+            "drugAnnotNameCol":"NAME",
+            "drugAnnotMoaCol":"MOA",
+            "drugAnnotClinCol":"clinical_phase"
+          }
+        ]
+      }
+    }
+  },
+  "almanac":{
+    "displayName":"NCI60-DTP Almanac",
+    "packages":{
+      "almanacData":{
+  
+        "DrugData":[
+          {
+            "featurePrefix":"act",
+            "displayName":"act: Drug Activity (comboscores)",
+            "drugAnnotIdCol":"NSC",
+            "drugAnnotNameCol":"NAME",
+            "drugAnnotMoaCol":"MOA",
+            "drugAnnotClinCol":"FDA_STATUS"
+          }
+        ]
+      }
+    }
+  },
+    "achilles":{
+    "displayName":"Achilles project",
+    "packages":{
+      "achillesData":{
+        "MolData":[
+          {
+            "eSetListName":"cri",
+            "featurePrefix":"cri",
+            "displayName":"cri: Crispr knockout screens"
+          },
+          {
+            "eSetListName":"mda",
+            "featurePrefix":"mda",
+            "displayName":"mda: Signatures, Miscellaneous data"
+          }
+        ]
+      }
+    }
+  },
+  "mdaMills":{
+    "displayName":"MD Anderson",
+    "packages":{
+      "mdaMillsData":{
+        "MolData":[
+          {
+            "eSetListName":"pro",
+            "featurePrefix":"pro",
+            "displayName":"pro: Protein (RPPA)"
+          }
+        ]
+      }
+    }
+  },
+   "tncats":{
+    "displayName":"NCATS IC50",
+    "packages":{
+      "tncatsData":{
+
+        "DrugData":[
+          {
+            "featurePrefix":"act",
+            "displayName":"act: Drug Activity (negative log10[IC50uM])",
+            "drugAnnotIdCol":"ID",
+            "drugAnnotNameCol":"NAME",
+            "drugAnnotMoaCol":"MOA",
+            "drugAnnotClinCol":"clinical_status"
+          }
+        ]
+      }
+    }
+  },
+    "ancats":{
+    "displayName":"NCATS AUC",
+    "packages":{
+      "ancatsData":{
+        "DrugData":[
+          {
+            "featurePrefix":"act",
+            "displayName":"act: Drug Activity (negative z-score AUC)",
+            "drugAnnotIdCol":"ID",
+            "drugAnnotNameCol":"NAME",
+            "drugAnnotMoaCol":"MOA",
+            "drugAnnotClinCol":"clinical_status"
+          }
+        ]
+      }
+    }
   }
+  
 }

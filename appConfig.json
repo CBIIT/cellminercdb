@@ -1,24 +1,31 @@
 {
   "appName":"CellMinerCDB",
+  "appVersion":"2.2",  
+  "appRelease":"July 2025",
   "runParCorsInParallel":true,
   "runParCorsInParallelThreshold":2000,
-  "cacheDir" : "~/.rcache",
-  "downloadDir": "~/cellminercdb-downloads",
-  "initialXId": "SLFN11",
-  "initialYId": "topotecan",
-  "TopLinks":[
-    {
-      "label":" CellMiner NCI-60 ",
-      "url":"https://discover.nci.nih.gov/cellminer/"
-    },
-    {
-      "label":" NCI/DCTD/DTP ",
-      "url":"https://dtp.cancer.gov"
-    }
-   ],
-   "category": "public",
-   "banner": "files/banner1.2.jpg",
-   "modal" : "www/files/CellMinerCDB-ver4.mp4"
+   //"cacheDir" : "~/.rcache",
+   //"downloadDir": "~/cellminercdb-downloads",
+   "cacheDir" : "/mnt/Posit-Share/Posit-Users/DTB/.rcache",
+   "downloadDir": "/mnt/Posit-Share/Posit-Users/DTB",
+   "TopLinks":[
+          {
+            "label":" CellMiner NCI-60 ",
+            "url":"https://discover.nci.nih.gov/cellminer/"
+          },
+          {
+            "label":" SCLC CellMinerCDB ",
+            "url":"https://discover.nci.nih.gov/SclcCellMinerCDB/"
+          },
+          {
+            "label":" NCI/DCTD/DTP ",
+            "url":"https://dtp.cancer.gov"
+          }
+          ],
+  //  "category": "private",
+    "category": "public",
+    "banner": "files/banner1.5r.jpg", 
+    "modal" : "www/files/CellMinerCDB-ver4.mp4"
 }
 
    

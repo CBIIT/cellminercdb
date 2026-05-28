@@ -1,0 +1,462 @@
+BODY{
+  background-color:white;
+  font-family: sans-serif;
+  }
+
+.skiplink {
+    color:black;
+    font-size:9px;
+}
+
+.banner {
+    background-color:#002EA1;
+    font-weight: normal;
+    font-size:12px;
+    text-align: left;
+    color:white;
+    align-content:flex-start;
+    padding:5px;
+    width:100%;
+}
+
+.displayRight {
+    float:right;
+}
+
+.navigation {
+    font-weight: bold;
+    font-size:30px;
+    color:white;
+    align-content:center;
+    width:100%;
+}
+
+.content {
+    background-color:white;
+    color:black;
+    text-align:left;
+    align-content:center;
+    padding:5px;
+    font-size:14px;
+    width:100%;
+}
+
+.footer
+{
+    font-size:12px;
+    float:left;
+    align-content:flex-end;
+    width:100%;
+}
+
+hr { background-color: black; border-color: black; height: 3px; border: 0; }
+
+  .DESCTEXT{
+  font-family: sans-serif;
+  font-size: 14px;
+  color:black;
+  }
+
+  .SPANINNER {
+  background: #d1ffff;
+  font-family: sans-serif;
+  font-size:70%;
+  color:black;
+  }
+
+  .EXAMPLETEXT {
+    font-family: sans-serif;
+    font-size: 12px;
+    font-weight: normal;
+    color: black;
+  }
+
+  .HELPTEXT{
+  font-family: sans-serif;
+  font-weight:400;
+  color:black;
+  }
+
+LABEL.hiddenLabel {
+    color:#d1ffff;
+    font-size:6px;
+}
+
+OPTION {
+    font-family: sans-serif;
+    font-size: 12px;;
+    font-weight: normal;
+    color: black;
+}
+
+TABLE.DOC {
+    font-family: sans-serif;
+    font-size: 12px;
+}
+
+TD.DOCLABEL {
+    font-weight: bold;
+    font-size: 14px;
+    color: black;
+}
+
+TD.DOCLABELRED {
+    font-weight: bold;
+    font-size: 14px;
+    color: red;
+}
+
+TD.DOCLABELBLUE {
+    font-weight: bold;
+    font-size: 14px;
+    color: blue;
+}
+
+TD.DOCDATA {
+    font-weight: normal;
+    color: black;
+    font-size: 14px;
+}
+
+TABLE.DOCDATARED {
+    font-weight: normal;
+    color: red;
+}
+
+TD.DATARED {
+    font-weight: normal;
+    color: red;
+}
+
+TD.DATABLUE {
+    font-weight: normal;
+    color: blue;
+}
+
+TD.REDCELL {
+    background-color: red;
+    color: white;
+}
+
+TD.DESCHEADER {
+    font-family: sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    color: black;
+}
+
+TD.LARGERDESCHEADER {
+    font-family: sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    color: black;
+}
+
+TD.LARGERDESCUNDER {
+    font-family: sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    color: black;
+    text-decoration:underline;
+    white-space: nowrap;
+}
+
+P.DESCHEADER {
+    /*font-family: sans-serif;*/
+    /*font-size: 16px;*/
+    font-weight: bold;
+    color: blue;
+}
+
+.STEP {
+font-family: sans-serif;
+font-size:120%;
+font-weight:600;
+}
+
+.HIGHLIGHTTEXT{
+font-family: sans-serif;
+font-size:160%;
+color:#C11919;
+}
+
+p.BOX {
+  font-size:16px;
+  }
+
+span.BOX {
+  float: left;
+  clear: both;
+  color: black;
+  font-family: sans-serif;
+  font-size:16px;
+  padding: 0 0.15em;
+  margin-left: 5%;
+  margin-right: 5%;
+  background: #d1ffff;
+  border: 3px outset #2e8b57;
+  width: 90%;
+  }
+
+table.BOX {
+  float: left;
+  clear: both;
+  font-family: sans-serif;
+  font-size:16px;
+  padding: 0 0.15em;
+  margin-left: 5%;
+  margin-right: 5%;
+  background: #d1ffff;
+  border: 3px outset #2e8b57;
+  width: 90%;
+  }
+
+  .RESULTS{
+  font-family: sans-serif;
+  font-size:80%;
+  color:black;
+  background-color:#FFFFC6;
+  }
+
+  .RESULTSHEAD{
+  font-family: sans-serif;
+  font-size:120%;
+  font-weight:bolder;
+  color:olive;
+  }
+
+  .DATATEXT{
+  font-family: sans-serif;
+  font-weight:800;
+  }
+
+  .FOOTERTEXT{
+  font-family: sans-serif;
+  font-size:12px;
+  color:black;
+  }
+
+  P, TD, LI, DD {
+  font-family: sans-serif;
+  color:black;
+  }
+
+  P.notice, LI.notice  {
+  font-family: sans-serif;
+  color:#C11919;
+  }
+
+  H1 {
+      font-family: sans-serif;
+      color:#C11919;
+      font-size:18px;
+      font-weight:bold;
+  }
+
+H2 {
+    font-family: sans-serif;
+    color:blue;
+    font-size:16px;
+    font-weight:bold;
+}
+
+  H3, H4, H5, H6 {
+  font-family: sans-serif;
+  color:#C11919;
+  }
+
+  TH, DT {
+  font-family: sans-serif;
+  font-size:100%;
+  font-weight:600;
+  color:#C11919;
+  }
+
+  TH.BOLDBLACK {
+      font-family: sans-serif;
+      font-size:100%;
+      font-weight:800;
+      color:black;
+  }
+
+TH.LARGERDESCHEADER {
+    font-family: sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    color: black;
+}
+
+TH.LARGERDESCUNDER {
+    font-family: sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    color: black;
+    text-decoration:underline;
+    white-space: nowrap;
+}
+
+  A {
+  color:#002EA1;
+  }
+
+  A.header {
+  color:#C10000;
+  text-decoration:underline;
+  }
+
+  A.LINK {
+  color:#002EA1;
+  text-decoration:underline;
+  }
+
+  .EXAMPLE {
+   font-style:normal;
+   font-size:110%;
+   }
+
+  .PIZAZZ {
+   color:#C11919;
+   font-style:italic;
+  font-weight:bold;
+  font-size:130%;
+    }
+
+  .MENU{
+  font-style:normal;
+  color:#002EA1;
+  font-size:80%;
+  }
+
+  .SCHEMA {
+  color: #000000;
+  }
+
+  .HIGHLIGHT {
+  border-color: #C11919;
+  color: #C11919;
+  }
+
+.thdrcell {
+    background: #F3F0E7;
+    font-family: arial,sans-serif;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 5px;
+    border-bottom: 1px solid #C8BA92;
+}
+
+.tdatacell {
+    font-family: arial,sans-serif;
+    font-size: 12px;
+    padding: 5px;
+    background: #FFFFFF
+}
+
+.dvhdr1 {
+    background: #F3F0E7;
+    font-family: arial,sans-serif;
+    font-size: 12px;
+    font-weight: bold;
+    border: 1px solid #C8BA92;
+    padding: 5px;
+    width: 175px;
+}
+
+.dvbdy1 {
+    background: #FFFFFF;
+    font-family: arial,sans-serif;
+    font-size: 12px;
+    border-left: 1px solid #C8BA92;
+    border-right: 1px solid #C8BA92;
+    border-bottom: 1px solid #C8BA92;
+    padding: 5px;
+    width: 175px;
+}
+
+.pgdiv {
+    width: 320px;
+    height: 250px;
+    background: #E9EFF4;
+    border: 1px solid #C4D5E3;
+    padding: 10px;
+    margin-bottom: 20px;
+    font-family: arial,sans-serif;
+    font-size: 12px;
+}
+
+  TBODY.MENUBAR, TR.MENBAR  {
+  font-family: sans-serif;
+  font-weight:bold;
+  padding:5px;
+  margin:5px;
+  }
+
+  FONT.SELECTED, TD.SELECTED{
+  font-family: sans-serif;
+  font-weight:bold;
+  background-color:#C11919;
+  color:white;
+  padding:5px;
+  margin:5px;
+  }
+
+  A.SELECTED {
+      text-decoration:none;
+  }
+
+  FONT.MENUCHOICE, A.MENUCHOICE {
+  font-family: sans-serif;
+  font-weight:bold;
+  color:white;
+  background-color:#002EA1;
+  text-decoration:none;
+  }
+
+  TD.MENUBUTTON{
+  background-color:#002EA1;
+  padding:5px;
+  margin:5px;
+  }
+
+  BUTTON{
+  background-color:#0084A5;
+  font-family: sans-serif;
+  padding:5px;
+  margin:5px;
+  }
+
+  FONT.SUBMENUCHOICE, A.SUBMENUCHOICE {
+  font-family: sans-serif;
+  font-size:125%;
+  font-weight:bold;
+  color:white;
+  text-decoration:none;
+  }
+
+  TD.SUBMENUBUTTON{
+  background-color:#C11919;
+  padding:0;
+  margin:0;
+  }
+
+  TD.SUBMENUBUTTONSELECTED{
+  background-color:black;
+  padding:0;
+  margin:0;
+  }
+
+  FONT.SUBMENUCHOICESELECTED, A.SUBMENUCHOICESELECTED {
+  font-family: sans-serif;
+  font-size:125%;
+  font-weight:bold;
+  color:white;
+  text-decoration:none;
+  }
+
+td.menubar {
+ font-size:12px;
+ color:white;
+ background-color:#3366FF;
+ padding:1px;
+   }
+   

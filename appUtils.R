@@ -22,8 +22,8 @@ getMatchedIds <- function(prefix, id, dataSource, srcContent){
 		if (require(rcellminerUtilsCDB) && isDrugActivityDataType(prefix)){
 			matchedIds <- rcellminerUtilsCDB::getDbDrugIds(drugName = id, dbName = dataSource)
 			matchedIds <- intersect(matchedIds, idSet)
-			## new final search with drug name
-			if (length(matchedIds)==0 & nchar(id)>=3) {
+			## new final search with drug name, be sure is not all digits
+			if (length(matchedIds)==0 & nchar(id)>=3 & is.na(as.numeric(id)) ) {
 			  vnames <- srcContent[[dataSource]][["drugInfo"]]
 			  matchedIds <- vnames[grep(toupper(id),toupper(vnames[,2])),1]
 			}
@@ -151,11 +151,17 @@ getPlotData <- function(xData, yData, showColor, showColorTissues, dataSource=NU
 			}
 			#cat(highlightedLineSet,"22 \n")
 			if (length(highlightedLineSet) > 0){
-				colorsToUse <- rep("rgba(0,0,255,0.3)", nrow(df)) #blue
+				### colorsToUse <- rep("rgba(0,0,255,0.3)", nrow(df)) #blue
+				colorsToUse <- rep("rgba(192,192,192,0.3)", nrow(df)) # Grey
+				
 				names(colorsToUse) <- rownames(df)
 				# colorsToUse[highlightedLineSet] <- "rgba(255,0,0,0.7)" # red
-				sel4=c("red","green","blue","orange")
-
+				## sel4=c("red","green","blue","orange")
+				## sel7=c("red1","green1","blue1","brown","darkturquoise","khaki2","violet")
+				
+				sel10=c("red1","green1","blue1","brown","darkturquoise","khaki2","violet","cyan","orange"
+				        , "darkgreen")
+				
 				sampleTissueTypes <- rep("others", nrow(df))
 				names(sampleTissueTypes) <- rownames(df)
 				for (k in 1:length(showColorTissues)) { 
@@ -163,7 +169,8 @@ getPlotData <- function(xData, yData, showColor, showColorTissues, dataSource=NU
 				  ## sampleTissueTypes[ind]=showColorTissues[k] 
 				  sampleTissueTypes[ind]=gsub(":","\n",showColorTissues[k])
 				  ##
-				  if (k >=1 & k<=4) colorsToUse[ind] <- sel4[k] else colorsToUse[ind] <-  "rgba(255,160,122,0.7)" # lightsalmon
+				  ## if (k >=1 & k<=4) colorsToUse[ind] <- sel4[k] else colorsToUse[ind] <-  "rgba(255,160,122,0.7)" # lightsalmon
+				  if (k >=1 & k<=10) colorsToUse[ind] <- sel10[k] else colorsToUse[ind] <-  "rgba(255,160,122,0.7)" # lightsalmon
 				  ##
 				  }
 			
@@ -174,13 +181,16 @@ getPlotData <- function(xData, yData, showColor, showColorTissues, dataSource=NU
 				# colorsToUse <- srcContent[[dataSource]]$tissueColorMap[sampleTissueTypes]
 				
 				sampleTissueTypes <- rep("others", nrow(df))
-				colorsToUse <- rep("rgba(0,0,255,0.3)", nrow(df)) #blue
+				### colorsToUse <- rep("rgba(0,0,255,0.3)", nrow(df)) #blue
+				colorsToUse <- rep("rgba(192,192,192,0.3)", nrow(df)) # Grey
 			}
 			## ------
 			df$sampleTissueTypes <- sampleTissueTypes
 			## ------
 		} else{
-			colorsToUse <- rep("rgba(0,0,255,0.3)", nrow(df)) #blue
+		  df$sampleTissueTypes <- srcContent[[dataSource]]$sampleData[rownames(df), "OncoTree1"]
+			### colorsToUse <- rep("rgba(0,0,255,0.3)", nrow(df)) #blue
+			colorsToUse <- rep("rgba(192,192,192,0.3)", nrow(df)) # Grey
 		}
 		df$color <- colorsToUse
 		
@@ -304,7 +314,7 @@ getPlotData <- function(xData, yData, showColor, showColorTissues, dataSource=NU
 # 
 
 makePlotStatic <- function(xData, yData, showColor, showColorTissues, dataSource, 
-													 srcContent, xLimVals = NULL, yLimVals = NULL,oncolor) {
+													 srcContent, xLimVals = NULL, yLimVals = NULL,oncolor, showCells) {
 	df <- getPlotData(xData, yData, showColor, showColorTissues, dataSource, srcContent)
 	# contains column color
 	shiny::validate(need(nrow(df)>0, paste("ERROR:", " No common complete data found.")))
@@ -343,8 +353,32 @@ makePlotStatic <- function(xData, yData, showColor, showColorTissues, dataSource
 	     classCol <- "sampleTissueTypes"
 	     colorPalette <- df[, "color"]
 	     
-	     	}
-	
+	   }
+	   ## new -----------------------------
+	   ## cat(showCells,  "1 \n")
+	   if (length(showCells) > 0 & showColor)  {
+	     # classCol <- "color"
+	     # leg <- FALSE
+	     # cat(showCells, " \n")
+	     mm= match(showCells, df$name)
+	    if (!any(is.na(mm))) { 
+	    ## if (!is.na(mm)) {
+	     df[, "sampleTissueTypes"] <- "others"
+	     df[mm, "sampleTissueTypes"] <- showCells
+	     # colorsToUse <- rep("rgba(0,0,255,0.3)", nrow(df)) #blue
+	     # names(colorsToUse) <- rownames(df)
+	     # colorsToUse[match(showCells, df$name)] <- "rgba(255,0,0,0.7)"
+	     
+	     ### df[, "color"] <- "rgba(0,0,255,0.3)"
+	     df[, "color"] <- "rgba(192,192,192,0.3)" # Grey
+	     df[mm, "color"] <- "rgba(255,0,0,0.7)"
+	     classCol <- "sampleTissueTypes"
+	     colorPalette <- df[, "color"]
+	     }
+	   }
+	   ## cat(df[,"color"], "2 \n")
+	   ## end new -------------------------
+	   
 	df[, classCol] <- as.factor(df[, classCol])
 	
 	#colorPalette <- df[, "color"]

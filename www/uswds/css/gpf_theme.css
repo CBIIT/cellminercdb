@@ -1,0 +1,42 @@
+@charset "UTF-8";
+/* Custom gpf_theme css */
+body > .container-fluid { padding: 0 !important; }
+.navbar-header { display: none; }
+.usa-footer--slim .usa-footer__address { margin-bottom: 0; }
+.usa-footer__secondary-section a,
+.usa-identifier__identity-disclaimer a {
+  text-decoration: underline;
+}
+.usa-nav__submenu { z-index: 99999; }
+.gpf-content h1.site-page-title { font-weight: bold }
+.ribbon {
+  width: 150px;
+  height: 150px;
+  overflow: hidden;
+  position: absolute;
+  z-index: 99999;
+}
+.ribbon span {
+  position: absolute;
+  display: block;
+  width: 225px;
+	padding: 15px 0;
+  background-color: #3498db;
+  box-shadow: 0 5px 10px rgba(0,0,0,.1);
+  color: #fff;
+  font: 700 18px/1 'Lato', sans-serif;
+  text-shadow: 0 1px 1px rgba(0,0,0,.2);
+  text-transform: uppercase;
+  text-align: center;
+}
+
+/* top left*/
+.ribbon-top-left {
+  top: 0px;
+  left: 0px;
+}
+.ribbon-top-left span {
+  right: -25px;
+  top: 30px;
+  transform: rotate(-45deg);
+}
