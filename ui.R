@@ -1,4 +1,5 @@
 library(shiny)
+library(dtbuswds)
 library(rcellminer)
 library(shinycssloaders)
 library(plotly)
@@ -98,7 +99,10 @@ shinyUI(
 
   #JMR2 START - new USWDS header, how you know and skip to main
   ### includeHTML("www/uswds/ui/header2.html"), ## works without search Box !!!!!!!!!!!!!!!!!!!!!****************************
-  includeHTML("www/uswds/ui/header.html"), ## new update JW***
+  # Shared DTB-USWDS head (favicon, styles.css, uswds-init.js, DAP), banner and GPF nav
+  gpf_head(),
+  gpf_page_top(current = "TOOLS"),
+  gpf_breadcrumb("Tools", "/tools.jsp", "CellMinerCDB"),
   ## tags$div(class="ribbon ribbon-top-left",tags$span(HTML(mytitle))), ## RIBBON not needed
 
   # tags$div(tags$span(HTML(listlinks))), OK
@@ -138,9 +142,6 @@ shinyUI(
 						 inverse=FALSE,
 						 header = list(tags$head(includeCSS("www/css/hacks.css")),
 						               #JMR4 USWDS Update
-						               tags$head(tags$link(rel="icon", type="image/png", href="uswds/img/favicons/favicon-32x32.png")),
-						               tags$head(includeCSS("www/uswds/css/styles.css")),
-						               tags$head(includeCSS("www/uswds/css/gpf_theme.css")),
 						               #
 						               #tags$head(includeCSS("www/css/tooltip.css")),
 						 							 # Add/run startup Javascript
@@ -165,8 +166,6 @@ shinyUI(
 						 							 )),
 						 							 ## end GA4
 						 							 #JMR USWDS Update JW***
-						 							 tags$head(tags$script(src="uswds/js/uswds-init.min.js")),
-						 							 tags$head(HTML("<script async type='text/javascript' src='https://dap.digitalgov.gov/Universal-Federated-Analytics-Min.js?agency=HHS&subagency=NCI' id='_fed_an_ua_tag'> </script>")),
 						 							 # tags$head(includeScript("www/js/dispstatic.js")),
 						 							 # new static pages ***********************************
 						 					###### >> ## tags$head(includeScript("www/js/addstatic.js")),
@@ -475,8 +474,8 @@ shinyUI(
   ),# end big div
 
 #JMR5 USWDS Update - add footer and JS
-includeHTML("www/uswds/ui/footer.html"),
-tags$div(includeScript("www/uswds/js/uswds.min.js")) 
+# Shared DTB-USWDS footer (includes uswds.min.js)
+gpf_footer()
 # new
 # tags$script(HTML("
 #     async function fetchData() {
